@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Курьеры{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">🚴 Курьеры</h2>
+
+    {% if couriers %}
+        <table class="table table-striped shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Транспорт</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for courier in couriers %}
+                <tr>
+                    <td>{{ courier.name }}</td>
+                    <td>{{ courier.phone }}</td>
+                    <td>{{ courier.get_vehicle_display }}</td>
+                    <td>
+                        <a href="{% url 'courier_detail' courier.id %}" class="btn btn-sm btn-primary">Подробнее</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">Курьеров пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}

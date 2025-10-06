@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Оплата картой</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        button:hover { background: #0056b3; }
+        .error { color: red; margin: 10px 0; padding: 10px; background: #ffeaea; border-radius: 4px; }
+        .success { color: green; margin: 10px 0; padding: 10px; background: #eaffea; border-radius: 4px; }
+        .order-info { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .form-hint { font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>💳 Оплата заказа</h1>
+    
+    <div class="order-info">
+        <h3>Информация о заказе:</h3>
+        <p><strong>Номер заказа:</strong> #{{ order.id }}</p>
+        <p><strong>Сумма:</strong> {{ order.total_price }} UZS</p>
+    </div>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="card_number">Номер карты:</label>
+            <input type="text" id="card_number" name="card_number" 
+                   placeholder="0000 0000 0000 0000" maxlength="19" required
+                   pattern="[0-9\s]{19}" title="Введите 16 цифр номера карты">
+            <div class="form-hint">Введите 16 цифр номера вашей карты</div>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Номер телефона:</label>
+            <input type="tel" id="phone" name="phone" 
+                   placeholder="+998 90 123 45 67" required
+                   pattern="\+998\s\d{2}\s\d{3}\s\d{2}\s\d{2}" title="Формат: +998 90 123 45 67">
+            <div class="form-hint">Формат: +998 XX XXX XX XX</div>
+        </div>
+
+        <button type="submit">Отправить код подтверждения</button>
+    </form>
+
+    <div class="mt-3">
+      <a href="{% url 'order_list' %}" class="btn btn-secondary">← Назад к заказам</a>
+  </div>
+
+    <script>
+        // Форматирование номера карты (16 цифр)
+        document.getElementById('card_number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            
+            // Ограничение 16 цифр
+            if (value.length > 16) {
+                value = value.substr(0, 16);
+            }
+            
+            // Добавляем пробелы каждые 4 цифры
+            let formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = formatted;
+        });
+
+        // Форматирование узбекского номера телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Если начинается с 998, оставляем как есть
+            if (value.startsWith('998')) {
+                value = value.substr(3);
+            }
+            
+            // Ограничение 9 цифр (без кода страны)
+            if (value.length > 9) {
+                value = value.substr(0, 9);
+            }
+            
+            // Форматирование: +998 XX XXX XX XX
+            let formatted = '+998 ';
+            if (value.length > 0) {
+                formatted += value.substr(0, 2);
+            }
+            if (value.length > 2) {
+                formatted += ' ' + value.substr(2, 3);
+            }
+            if (value.length > 5) {
+                formatted += ' ' + value.substr(5, 2);
+            }
+            if (value.length > 7) {
+                formatted += ' ' + value.substr(7, 2);
+            }
+            
+            e.target.value = formatted;
+        });
+
+        // Предотвращаем ввод нецифровых символов в номер карты
+        document.getElementById('card_number').addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Доставка заказа #{{ delivery.order.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>🚚 Доставка заказа #{{ delivery.order.id }}</h2>
+    <p><strong>Курьер:</strong> {{ delivery.courier|default:"Не назначен" }}</p>
+    <p><strong>Адрес:</strong> {{ delivery.address }}</p>
+    <p><strong>Статус:</strong> {{ delivery.get_status_display }}</p>
+
+    <a href="{% url 'delivery_list' %}" class="btn btn-secondary mt-3">⬅ Назад</a>
+</div>
+{% endblock %}
+    

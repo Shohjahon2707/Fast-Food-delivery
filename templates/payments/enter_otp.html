@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Подтверждение оплаты</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 18px; text-align: center; letter-spacing: 3px; }
+        button { background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #218838; }
+        .error { color: red; margin: 15px 0; padding: 10px; background: #ffeaea; border-radius: 5px; }
+        .info { background: #e7f3ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .test-hint { background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>🔐 Подтверждение оплаты</h1>
+    
+    <div class="info">
+        <p><strong>Заказ:</strong> #{{ payment.order.id }}</p>
+        <p><strong>Карта:</strong> **** **** **** {{ payment.card_last4 }}</p>
+        <p><strong>Телефон:</strong> {{ payment.phone }}</p>
+        <p>На вашу почту отправлен код подтверждения</p>
+        
+        <!-- Подсказка для разработки -->
+        <div class="test-hint">
+            <strong>Для тестирования:</strong><br>
+            Код: <strong>{{ payment.otp_code }}</strong><br>
+            Email: {{ payment.user.email }}
+        </div>
+    </div>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="otp_code">Код подтверждения (6 цифр):</label>
+            <input type="text" id="otp_code" name="otp_code" 
+                   placeholder="123456" maxlength="6" required
+                   pattern="[0-9]{6}" title="Введите 6-значный код">
+        </div>
+
+        <button type="submit">Подтвердить оплату</button>
+    </form>
+
+    <script>
+        document.getElementById('otp_code').focus();
+        document.getElementById('otp_code').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    </script>
+</body>
+</html>

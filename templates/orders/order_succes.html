@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Order Success #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <div class="alert alert-success shadow-sm" role="alert">
+        🎉 Ваш заказ #{{ order.id }} успешно оформлен!
+    </div>
+
+    <!-- КНОПКИ ОПЛАТЫ - ДОБАВЛЕНО -->
+    {% if order.status == 'pending' %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            💰 Оплата заказа
+        </div>
+        <div class="card-body">
+            <p>Выберите способ оплаты:</p>
+            <a href="{% url 'pay_with_card' order.id %}" class="btn btn-success btn-lg me-3">💳 Оплатить картой</a>
+            <form method="post" action="{% url 'orders:mark_as_paid' order.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning btn-lg">💵 Оплата наличными</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Таблица с товарами -->
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Item</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-end">Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.menu_item.name }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-end">{{ item.menu_item.price }} UZS</td>
+                    <td class="text-end">{{ item.total }} UZS</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="mb-4">Общая сумма: <strong>{{ order.total_price }} UZS</strong></h4>
+
+    <!-- Информация о доставке -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            🚚 Delivery Information
+        </div>
+        <div class="card-body">
+            <p><strong>Адрес доставки:</strong> {{ order.address }}</p>
+            <p>
+                <strong>Курьер:</strong>
+                {% if order.courier %}
+                    {{ order.courier.name }} ({{ order.courier.get_vehicle_display }})
+                {% else %}
+                    Информация будет назначена позже
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-primary me-2">🏠 На главную</a>
+    <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">📦 Мои заказы</a>
+</div>
+
+<style>
+    .table th, .table td { vertical-align: middle; }
+    .card { border-radius: 10px; }
+</style>
+{% endblock %}

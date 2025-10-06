@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Оплата успешно завершена</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 100px auto; padding: 20px; text-align: center; }
+        .success { color: green; font-size: 24px; margin: 20px 0; }
+        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <div class="success">✅ Оплата прошла успешно!</div>
+    <p>Ваш заказ #{{ order.id }} оплачен и передан на приготовление.</p>
+    <div>
+        <a href="{% url 'order_list' %}" class="btn">📦 Перейти к моим заказам</a>
+        <a href="{% url 'home' %}" class="btn">🏠 На главную</a>
+    </div>
+</body>
+</html>
