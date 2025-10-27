@@ -1,146 +1,98 @@
 import random
 import re
+from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from .models import Payment
 from apps.orders.models import Order
-from django.conf import settings
 
-@login_required
-def start_payment_card(request, order_id):
-    """
-    Старт оплаты картой: форма ввода 16-значного номера карты и телефона.
-    Создаём Payment, генерируем otp, отправляем email и редиректим на подтверждение.
-    """
-    order = get_object_or_404(Order, id=order_id, user=request.user)
 
-    if request.method == "POST":
-        card_number = request.POST.get("card_number", "").replace(" ", "")  # убираем пробелы
-        phone = request.POST.get("phone", "").strip()
+def _render_error(request, template, order, msg):
 
-        # Валидация 16 цифр
-        if not (card_number.isdigit() and len(card_number) == 16):
-            return render(request, "payments/pay_with_card.html", {
-                "order": order,
-                "error": "Введите корректный 16-значный номер карты (ровно 16 цифр)",
-            })
+    return render(request, template, {"order": order, "error": msg})
 
-        # Валидация узбекского номера телефона
-        phone_digits = re.sub(r'\D', '', phone)  # убираем все нецифровые символы
-        
-        # Проверяем формат +998 XX XXX XX XX (12 цифр с кодом страны)
-        if not (phone_digits.startswith('998') and len(phone_digits) == 12):
-            return render(request, "payments/pay_with_card.html", {
-                "order": order,
-                "error": "Введите корректный номер телефона Узбекистана в формате +998 XX XXX XX XX",
-            })
 
-        # Только последние 4 цифры сохраняем
-        last4 = card_number[-4:]
+def _send_otp_email(user, order, otp):
 
-        # Генерация OTP — 6 цифр
-        otp_code = str(random.randint(100000, 999999))
-
-        # Создаем или обновляем платеж
-        payment, created = Payment.objects.get_or_create(
-            order=order,
-            defaults={
-                "user": request.user,
-                "method": "card",
-                "card_last4": last4,
-                "phone": phone,
-                "otp_code": otp_code,
-                "status": "pending",
-            }
-        )
-        
-        if not created:
-            # Обновляем поля и код
-            payment.card_last4 = last4
-            payment.phone = phone
-            payment.otp_code = otp_code
-            payment.status = "pending"
-            payment.save()
-
-        # Отправляем email с кодом
-        subject = f"Код подтверждения оплаты заказа #{order.id}"
-        message = f"""
-Ваш код подтверждения: {otp_code}
+    subject = f"Код подтверждения оплаты заказа #{order.id}"
+    message = f"""
+Ваш код подтверждения: {otp}
 
 Детали заказа:
 - Номер заказа: #{order.id}
 - Сумма: {order.total_price} UZS
 - Способ оплаты: Карта
 
-Если это не вы - проигнорируйте это сообщение.
+Если это не вы — проигнорируйте сообщение.
 """
-        recipient = [request.user.email]
+    send_mail(subject, message.strip(), settings.DEFAULT_FROM_EMAIL, [user.email])
+
+
+@login_required
+def start_payment_card(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if request.method == "POST":
+        card = request.POST.get("card_number", "").replace(" ", "")
+        phone = re.sub(r"\D", "", request.POST.get("phone", ""))
+
+        if not (card.isdigit() and len(card) == 16):
+            return _render_error(request, "payments/pay_with_card.html", order, "Введите корректный 16-значный номер карты")
+
+        if not (phone.startswith("998") and len(phone) == 12):
+            return _render_error(request, "payments/pay_with_card.html", order, "Номер должен быть в формате +998 XX XXX XX XX")
+
+        otp = str(random.randint(100000, 999999))
+        payment, _ = Payment.objects.update_or_create(
+            order=order,
+            defaults=dict(
+                user=request.user,
+                method="card",
+                card_last4=card[-4:],
+                phone=f"+{phone}",
+                otp_code=otp,
+                status="pending",
+            ),
+        )
 
         try:
-            send_mail(subject, message.strip(), settings.DEFAULT_FROM_EMAIL, recipient, fail_silently=False)
+            _send_otp_email(request.user, order, otp)
         except Exception as e:
-            # В разработке показываем ошибку, в продакшене логируем
-            return render(request, "payments/pay_with_card.html", {
-                "order": order,
-                "error": f"Ошибка отправки email: {e}",
-            })
+            return _render_error(request, "payments/pay_with_card.html", order, f"Ошибка отправки email: {e}")
 
-        # Сохраняем payment_id в сессии для подтверждения
         request.session["payment_id"] = payment.id
-        request.session.modified = True
-
         return redirect("confirm_payment")
 
     return render(request, "payments/pay_with_card.html", {"order": order})
+
+
 @login_required
 def confirm_payment(request):
     payment_id = request.session.get("payment_id")
     if not payment_id:
-        return redirect("order_list")  # на список заказов
+        return redirect("order_list")
 
     payment = get_object_or_404(Payment, id=payment_id, user=request.user)
     order = payment.order
 
     if request.method == "POST":
-        entered_otp = request.POST.get("otp_code", "").strip()
-        
-        if entered_otp == payment.otp_code:
-            # Успешная оплата
-            payment.status = "paid"
+        if request.POST.get("otp_code", "").strip() == payment.otp_code:
+            payment.status = order.status = "paid"
             payment.save()
-            order.status = "paid"
             order.save()
-            
-            # Очищаем сессию
             request.session.pop("payment_id", None)
-            
-            # Редирект на список заказов вместо шаблона
             return redirect("order_list")
-        else:
-            # Неверный код
-            return render(request, "payments/enter_otp.html", {
-                "payment": payment, 
-                "error": "Неверный код. Попробуйте снова."
-            })
+
+        return render(request, "payments/enter_otp.html", {"payment": payment, "error": "Неверный код. Попробуйте снова."})
 
     return render(request, "payments/enter_otp.html", {"payment": payment})
+
+
 @login_required
 def cash_payment_success(request, order_id):
-    """Страница успеха для наличной оплаты"""
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    
-    # Создаем запись о наличном платеже
-    Payment.objects.create(
-        order=order,
-        user=request.user,
-        method="cash",
-        status="paid"
-    )
-    
-    # Обновляем статус заказа
+    Payment.objects.create(order=order, user=request.user, method="cash", status="paid")
     order.status = "paid"
     order.save()
-    
     return render(request, "payments/success.html", {"order": order})

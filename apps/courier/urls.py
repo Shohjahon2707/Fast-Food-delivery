@@ -1,14 +1,18 @@
 from django.urls import path
+from django.views.generic import RedirectView
 from .views import (
-    CourierListView,
-    CourierCreateView,
-    CourierUpdateView,
-    CourierDeleteView,
+    CourierOrderListView,
+    TakeOrderView,
+    CourierRegisterView,
+    CourierLoginView,
 )
 
 urlpatterns = [
-    path("", CourierListView.as_view(), name="courier_list"),
-    path("create/", CourierCreateView.as_view(), name="courier_create"),
-    path("<int:pk>/update/", CourierUpdateView.as_view(), name="courier_update"),
-    path("<int:pk>/delete/", CourierDeleteView.as_view(), name="courier_delete"),
+
+    path("", RedirectView.as_view(pattern_name='courier_login'), name='courier_home'),
+
+    path("orders/", CourierOrderListView.as_view(), name="courier_orders"),
+    path("orders/take/<int:pk>/", TakeOrderView.as_view(), name="take_order"),
+    path("register/", CourierRegisterView.as_view(), name="courier_register"),
+    path("login/", CourierLoginView.as_view(), name="courier_login"),
 ]

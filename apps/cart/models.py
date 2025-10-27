@@ -12,7 +12,6 @@ class Cart(models.Model):
 
     @property
     def total_price(self):
-        """Вычисляем общую сумму корзины"""
         return sum(item.total for item in self.items.all())
 
 class CartItem(models.Model):
@@ -25,5 +24,4 @@ class CartItem(models.Model):
 
     @property
     def total(self):
-        """Вычисляем общую стоимость для этого товара"""
         return self.menu_item.price * self.quantity

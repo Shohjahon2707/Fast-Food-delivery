@@ -22,7 +22,6 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ("username", "email", "phone")
     ordering = ("username",)
 
-    # Ограничиваем доступ к админке
     def has_module_permission(self, request):
         return request.user.is_superuser
 

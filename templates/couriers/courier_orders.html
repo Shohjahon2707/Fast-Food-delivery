@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📦 Заказы для курьеров</h2>
+
+<h3>Свободные заказы:</h3>
+<ul>
+  {% for order in orders %}
+    <li>
+      Заказ #{{ order.id }} — {{ order.address }}
+      <form method="post" action="{% url 'take_order' order.id %}">
+        {% csrf_token %}
+        <button type="submit">Взять заказ</button>
+      </form>
+    </li>
+  {% empty %}
+    <li>Нет доступных заказов.</li>
+  {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Мои активные заказы:</h3>
+<ul>
+  {% for order in my_orders %}
+    <li>
+      🚚 Заказ #{{ order.id }} — {{ order.status }}
+    </li>
+  {% empty %}
+    <li>Пока нет заказов в доставке.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

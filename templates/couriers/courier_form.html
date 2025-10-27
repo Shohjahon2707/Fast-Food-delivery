@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}Редактировать{% else %}Добавить{% endif %} курьера{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>{% if form.instance.pk %}✏️ Редактировать{% else %}➕ Добавить{% endif %} курьера</h2>
+    
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Имя</label>
+                    {{ form.name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Телефон</label>
+                    {{ form.phone }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Транспорт</label>
+                    {{ form.vehicle }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Статус смены</label>
+                    {{ form.shift_status }}
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Сохранить</button>
+        <a href="{% url 'courier_list' %}" class="btn btn-secondary">❌ Отмена</a>
+    </form>
+</div>
+
+<style>
+    input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}

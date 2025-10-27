@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from apps.menu.models import MenuItem
 from .models import Cart, CartItem
 
-@login_required(login_url='login')  # 🔹 если не авторизован, редирект на логин
+@login_required(login_url='login')  
 def cart_detail(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     return render(request, "cart/cart_detail.html", {"cart": cart})
@@ -13,17 +13,16 @@ def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
 
-    # проверяем, есть ли уже этот товар в корзине
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
         menu_item=item
     )
 
-    if not created:  # если уже был, то увеличиваем количество
+    if not created:
         cart_item.quantity += 1
         cart_item.save()
 
-    return redirect("cart_detail")  # редирект на корзину
+    return redirect("cart_detail")  
 
 @login_required(login_url='login')
 def remove_from_cart(request, cart_item_id):
@@ -31,7 +30,7 @@ def remove_from_cart(request, cart_item_id):
     cart_item.delete()
     return redirect("cart_detail")
 @login_required
-def update_quantity(request, item_id):  # ← переименуйте параметр
+def update_quantity(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     
     if request.method == 'POST':
@@ -44,4 +43,4 @@ def update_quantity(request, item_id):  # ← переименуйте пара�
             else:
                 cart_item.delete()
     
-    return redirect('cart_detail')  # ← исправьте редирект
+    return redirect('cart_detail') 

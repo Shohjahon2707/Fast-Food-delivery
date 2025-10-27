@@ -8,6 +8,17 @@
   <h1 class="mb-4">Добро пожаловать в FastFood Delivery 🍔</h1>
   <p class="lead">Выбирай вкусные блюда и заказывай онлайн!</p>
 
+  {% if user.is_authenticated %}
+    <div class="alert alert-light border rounded-4 mt-4 shadow-sm" role="alert">
+      <h2 class="h4 mb-3">Добро пожаловать, {{ user.username }}!</h2>
+      {% if user.is_customer %}
+        <p>🛍 Вы клиент. Здесь будет ваше меню заказов.</p>
+      {% elif user.is_courier %}
+        <p>🚴 Вы курьер. <a href="{% url 'courier_orders' %}">Перейти к заказам</a></p>
+      {% endif %}
+    </div>
+  {% endif %}
+
   <h2 class="mt-5">Популярные блюда</h2>
   <div class="row mt-3">
     {% for item in featured_items %}
@@ -51,7 +62,7 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 .description {
-  min-height: 60px; /* одинаковая высота описания для всех карточек */
+  min-height: 60px;
 }
 .price {
   font-size: 1.2rem;

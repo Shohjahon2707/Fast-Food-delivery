@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from apps.common.models import BaseModel
 
-
 class User(AbstractUser, BaseModel):
     ROLE_CHOICES = [
         ("customer", "Клиент"),
@@ -16,3 +15,15 @@ class User(AbstractUser, BaseModel):
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
+
+    @property
+    def is_customer(self):
+        return self.role == "customer"
+
+    @property
+    def is_courier(self):
+        return self.role == "courier"
+
+    @property
+    def is_admin(self):
+        return self.role == "admin"

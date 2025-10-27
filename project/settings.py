@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'apps.menu',
     'apps.orders',
     'apps.users',
-    'apps.delivery',
     'apps.courier',
     'apps.payments',
 ]
