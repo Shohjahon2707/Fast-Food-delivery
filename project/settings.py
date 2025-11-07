@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Безопасность
 SECRET_KEY = 'django-insecure-p*ly9wp27nlacavh7gmrtalc00)$yyb=z%5+7qnh*!hv5%fp)%'
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['*']  # Можно заменить на 'fast-food-delivery.onrender.com'
 
 # Приложения
