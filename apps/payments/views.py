@@ -92,7 +92,15 @@ def confirm_payment(request):
 @login_required
 def cash_payment_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    Payment.objects.create(order=order, user=request.user, method="cash", status="paid")
-    order.status = "paid"
+
+    Payment.objects.create(
+        order=order,
+        user=request.user,
+        method="cash",
+        status="pending"   
+    )
+
+    order.status = "pending"   
     order.save()
+
     return render(request, "payments/success.html", {"order": order})

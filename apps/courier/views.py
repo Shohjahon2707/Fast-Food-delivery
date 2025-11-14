@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
@@ -69,3 +69,26 @@ class CourierLoginView(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('courier_orders')
+
+
+class ConfirmCashPaymentView(LoginRequiredMixin, View):
+    """Курьер подтверждает оплату наличными"""
+    def post(self, request, pk):
+        courier = getattr(request.user, 'courier_profile', None)
+        if not courier:
+            messages.error(request, 'У вас нет профиля курьера.')
+            return redirect('courier_orders')
+
+        order = get_object_or_404(Order, pk=pk, courier=courier)
+        payment = order.payments.filter(method='cash', status='pending').first()
+        if not payment:
+            messages.error(request, 'Нет ожидающей оплаты наличными для этого заказа.')
+            return redirect('courier_orders')
+
+        payment.status = 'paid'
+        payment.save()
+        order.status = 'paid'
+        order.save()
+
+        messages.success(request, f'💵 Оплата наличными за заказ #{order.id} подтверждена!')
+        return redirect('courier_orders')

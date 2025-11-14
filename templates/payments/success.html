@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Оплата успешно завершена</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 100px auto; padding: 20px; text-align: center; }
-        .success { color: green; font-size: 24px; margin: 20px 0; }
-        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 10px; }
-    </style>
-</head>
-<body>
-    <div class="success">✅ Оплата прошла успешно!</div>
-    <p>Ваш заказ #{{ order.id }} оплачен и передан на приготовление.</p>
-    <div>
-        <a href="{% url 'order_list' %}" class="btn">📦 Перейти к моим заказам</a>
-        <a href="{% url 'home' %}" class="btn">🏠 На главную</a>
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 500px; margin: 100px auto; padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+    {% if order.status == "pending" %}
+        <div style="color: #856404; font-size: 24px; margin: 20px 0;">⏳ Ожидание оплаты наличными</div>
+        <p>Ваш заказ <strong>#{{ order.id }}</strong> отмечен как <strong>ожидающий подтверждения</strong> от курьера.</p>
+        <p>После подтверждения курьером статус изменится на <strong>оплачен</strong>.</p>
+    {% elif order.status == "paid" %}
+        <div style="color: green; font-size: 24px; margin: 20px 0;">✅ Оплата прошла успешно!</div>
+        <p>Ваш заказ <strong>#{{ order.id }}</strong> оплачен и передан на приготовление.</p>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'order_list' %}" style="display:inline-block; padding:10px 20px; background:#007bff; color:white; text-decoration:none; border-radius:5px; margin:5px;">📦 Перейти к моим заказам</a>
+        <a href="{% url 'home' %}" style="display:inline-block; padding:10px 20px; background:#6c757d; color:white; text-decoration:none; border-radius:5px; margin:5px;">🏠 На главную</a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

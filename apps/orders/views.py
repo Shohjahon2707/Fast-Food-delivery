@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from .models import Order, OrderItem
 from apps.cart.models import Cart
+from apps.payments.models import Payment
 
 @login_required
 def create_order(request):
@@ -17,10 +17,12 @@ def create_order(request):
 
     total_price = sum(item.total for item in cart.items.all())
 
+    # Сразу ставим статус pending для налички
+    order_status = 'pending' if payment_method == 'cash' else 'new'
     order = Order.objects.create(
         user=request.user,
         total_price=total_price,
-        status='new',
+        status=order_status,
         address=address,
         latitude=latitude or None,
         longitude=longitude or None,
@@ -37,18 +39,43 @@ def create_order(request):
     cart.items.all().delete()
 
     if payment_method == 'cash':
-        order.status = 'paid'
-        order.save()
-        from apps.payments.models import Payment
+        # Создаём Payment только один раз с pending
         Payment.objects.create(
             order=order,
             user=request.user,
             method="cash",
-            status="paid"
+            status="pending"
         )
         return redirect('order_success', order_id=order.id)
     else:
         return redirect('pay_with_card', order_id=order.id)
+
+
+@login_required
+def mark_as_paid(request, order_id):
+    """Отметить заказ как оплаченный наличными"""
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status == 'pending':
+        order.status = 'paid'
+        order.save()
+
+        # Берём первый платеж наличными, если он есть
+        payment = Payment.objects.filter(order=order, method='cash').first()
+        if payment:
+            payment.status = 'paid'
+            payment.save()
+        else:
+            # На случай, если Payment почему-то не был создан
+            Payment.objects.create(
+                order=order,
+                user=request.user,
+                method="cash",
+                status="paid"
+            )
+
+    return redirect('order_detail', order_id=order.id)
+
 
 @login_required
 def order_list(request):
@@ -59,32 +86,9 @@ def order_list(request):
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    return render(request, "orders/order_detail.html", {
-        "order": order,
-        "courier_info": f"{order.courier.name} ({order.courier.get_vehicle_display()})"
-                        if order.courier else "Информация будет назначена позже"
-    })
+    return render(request, "orders/order_detail.html", {"order": order})
 
 @login_required
 def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, "orders/order_success.html", {"order": order})
-
-
-@login_required
-def mark_as_paid(request, order_id):
-    """Отметить заказ как оплаченный наличными"""
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-    
-    if order.status == 'pending':
-        order.status = 'paid'
-        order.save()
-        
-        from apps.payments.models import Payment
-        Payment.objects.create(
-            order=order,
-            user=request.user,
-            method="cash",
-            status="paid"
-        )
-    return redirect('order_list')

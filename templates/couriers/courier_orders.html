@@ -1,32 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>📦 Заказы для курьеров</h2>
 
-<h3>Свободные заказы:</h3>
-<ul>
+<h2 style="margin-bottom: 20px;">📦 Заказы для курьеров</h2>
+
+<h3 style="margin-top: 30px;">🟢 Свободные заказы:</h3>
+<ul style="list-style: none; padding-left: 0;">
   {% for order in orders %}
-    <li>
-      Заказ #{{ order.id }} — {{ order.address }}
+    <li style="background: #f7f7f7; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+      <span>Заказ #{{ order.id }} — {{ order.address }}</span>
+
       <form method="post" action="{% url 'take_order' order.id %}">
         {% csrf_token %}
-        <button type="submit">Взять заказ</button>
+        <button type="submit" style="
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: .2s;">
+            Взять
+        </button>
       </form>
     </li>
   {% empty %}
-    <li>Нет доступных заказов.</li>
+    <li style="color: #777;">Нет доступных заказов.</li>
   {% endfor %}
 </ul>
 
-<hr>
+<hr style="margin: 30px 0;">
 
-<h3>Мои активные заказы:</h3>
-<ul>
+<h3>🚚 Мои активные заказы:</h3>
+<ul style="list-style: none; padding-left: 0;">
   {% for order in my_orders %}
-    <li>
+    <li style="background: #eef6ff; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px;">
       🚚 Заказ #{{ order.id }} — {{ order.status }}
+
+      {% for payment in order.payments.all %}
+        {% if payment.method == "cash" and payment.status == "pending" %}
+          <form method="post" action="{% url 'confirm_cash_payment' order.id %}" style="display:inline-block; margin-left:10px;">
+            {% csrf_token %}
+            <button type="submit" style="
+              background:#ffc107; color:#212529; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+              Подтвердить оплату наличными
+            </button>
+          </form>
+        {% endif %}
+      {% endfor %}
     </li>
   {% empty %}
-    <li>Пока нет заказов в доставке.</li>
+    <li style="color: #777;">Пока нет заказов в доставке.</li>
   {% endfor %}
 </ul>
+
+
 {% endblock %}

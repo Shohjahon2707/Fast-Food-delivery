@@ -5,30 +5,29 @@
 <h2 class="mb-4">📦 My Orders</h2>
 
 {% if orders %}
-    <ul class="list-group">
-        {% for order in orders %}
-            <li class="list-group-item">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>Order #{{ order.id }}</strong> — {{ order.get_status_display }}
-                        <br><small class="text-muted">Total: {{ order.total_price }} UZS</small>
-                    </div>
-                    <div>
-                        {% if order.status == 'pending' %}
-                            <!-- Кнопки оплаты для неоплаченных заказов -->
-                            <a href="{% url 'pay_with_card' order.id %}" class="btn btn-sm btn-success me-1">💳 Картой</a>
-                            <form method="post" action="{% url 'mark_as_paid' order.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-warning">💵 Наличные</button>
-                            </form>
-                        {% endif %}
-                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-dark ms-1">View</a>
-                    </div>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+<ul class="list-group">
+    {% for order in orders %}
+    <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Order #{{ order.id }}</strong> — {{ order.get_status_display }}
+                <br><small class="text-muted">Total: {{ order.total_price }} UZS</small>
+            </div>
+            <div>
+                {% if order.status == 'pending' %}
+                <a href="{% url 'pay_with_card' order.id %}" class="btn btn-sm btn-success me-1">💳 Картой</a>
+                <form method="post" action="{% url 'mark_as_paid' order.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-warning">💵 Наличные</button>
+                </form>
+                {% endif %}
+                <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-dark ms-1">View</a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
 {% else %}
-    <div class="alert alert-info">You have no orders yet 💤</div>
+<div class="alert alert-info">You have no orders yet 💤</div>
 {% endif %}
 {% endblock %}
