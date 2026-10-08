@@ -1,114 +1,44 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Menu{% endblock %}
-
-{% block content %}
-<div class="container my-5">
-    <h2 class="text-center mb-4">🍽 Наше меню</h2>
-
-    <!-- Навигация по категориям -->
-    <ul class="nav nav-tabs justify-content-center mb-4" id="menuTabs">
-        {% for category in categories %}
-            <li class="nav-item">
-                <button class="nav-link {% if forloop.first %}active{% endif %}" 
-                        data-bs-toggle="tab" 
-                        data-bs-target="#cat{{ category.id }}">
-                    {{ category.name }}
-                </button>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <!-- Контент категорий -->
-    <div class="tab-content">
-        {% for category in categories %}
-            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="cat{{ category.id }}">
-                <div class="row">
-                    {% for item in category.items.all %}
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card shadow-sm h-100 rounded-4 border-0 d-flex flex-column animate-card">
-                                
-                                <!-- картинка -->
-                                {% if item.image %}
-                                    <img src="{{ item.image.url }}" 
-                                         class="card-img-top rounded-top-4" 
-                                         alt="{{ item.name }}" 
-                                         style="height: 180px; object-fit: cover;">
-                                {% else %}
-                                    <img src="{% static 'img/no_image.png' %}" 
-                                         class="card-img-top rounded-top-4" 
-                                         alt="No image" 
-                                         style="height: 180px; object-fit: cover;">
-                                {% endif %}
-
-                                <div class="card-body text-center d-flex flex-column">
-                                    <h5 class="fw-bold">{{ item.name }}</h5>
-
-                                    <!-- описание скрыто, показывается при наведении -->
-                                    <p class="text-muted small description d-none d-hover-block">
-                                        {{ item.description }}
-                                    </p>
-
-                                    <!-- цена -->
-                                    <p class="fw-bold price">{{ item.price }} UZS</p>
-
-                                    <!-- кнопка -->
-                                    {% if item.is_available %}
-                                        {% if user.is_authenticated %}
-                                            <a href="{% url 'add_to_cart' item.id %}" 
-                                               class="btn btn-success rounded-pill mt-auto">
-                                               🛒 В корзину
-                                            </a>
-                                        {% else %}
-                                            <a href="{% url 'login' %}" 
-                                               class="btn btn-warning rounded-pill mt-auto">
-                                               🛒 В корзину
-                                            </a>
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="badge bg-secondary mt-auto">Нет в наличии</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="text-center">Нет товаров в этой категории.</p>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
+{% extends "base.html" %}{% load food %}{% block title %}{{ item.name }} — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top">
+  <a class="back-link" href="{% url 'menu_list' %}">← Всё меню</a>
+  <div class="detail-grid">
+    <div class="detail-photo">
+      <img src="{{ item.image_url }}"
+           alt="{{ item.name }}"
+           width="600"
+           height="480">
     </div>
-</div>
-
-<style>
-  /* эффект для карточек */
-  .animate-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .animate-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  }
-
-  /* цена */
-  .price {
-    font-size: 1.1rem;
-    color: #28a745; /* зелёный */
-    margin-bottom: 10px;
-  }
-
-  /* скрытие/появление описания */
-  .description {
-    transition: opacity 0.3s ease;
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-  }
-  .card:hover .description {
-    opacity: 1;
-    height: auto;
-    margin-bottom: 10px;
-  }
-</style>
+    <div class="detail-copy">
+      <span class="eyebrow">{{ item.category.name }} · {{ item.weight }}</span>
+      <h1 class="page-title">{{ item.name }}</h1>
+      <p class="lead">{{ item.description }}</p>
+      {% if item.is_vegetarian %}
+        <span class="chip">Без мяса</span>
+      {% endif %}
+      <div class="detail-price">
+        {{ item.price|money }} <small>сум</small>
+      </div>
+      {% if user.is_customer %}
+        <form method="post" action="{% url 'add_to_cart' item.id %}" data-add-cart>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button class="button" type="submit">
+            Добавить в корзину <span>+</span>
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="button">Войти и заказать</a>
+      {% endif %}
+      <p class="help-text">Есть пищевая аллергия? Укажите её в комментарии к заказу. Состав можно уточнить до приготовления через обращение в заказе.</p>
+    </div>
+  </div>
+  {% if related %}
+    <h2 class="section-subtitle">Ещё немного вкусного</h2>
+    <div class="products three">
+      {% for item in related %}
+        {% include "includes/product_card.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
 {% endblock %}

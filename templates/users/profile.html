@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Мой профиль — Тёпло{% endblock %}{% block content %}
+<section class="container section narrow page-top">
+  <span class="eyebrow">Всегда под рукой</span>
+  <h1 class="page-title">
+    Мой <em>профиль</em>
+  </h1>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {% include "includes/form.html" %}
+    <button class="button">Сохранить изменения</button>
+  </form>
+  <div class="panel row-between">
+    <div>
+      <h3>Сделайте здесь уютнее</h3>
+      <p>Предпочтения в еде и анимации</p>
+    </div>
+    <a href="{% url 'preferences' %}" class="text-link">Настроить →</a>
+  </div>
+</section>
+{% endblock %}

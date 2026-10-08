@@ -1,9 +1,30 @@
-{% extends "base.html" %}
-{% block content %}
-<h2>Регистрация клиента</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Создать аккаунт</button>
-</form>
+{% extends "base.html" %}{% block title %}Регистрация — Тёпло{% endblock %}{% block content %}
+<section class="container auth-layout">
+  <div class="auth-story">
+    <span class="eyebrow">Давайте знакомиться</span>
+    <h1>
+      Больше вкуса.
+      <br>
+      Меньше <em>хлопот.</em>
+    </h1>
+    <span class="auth-doodle" aria-hidden="true">✳</span>
+    <p>
+      Ваш адрес, любимая еда и история заказов —
+      <br>
+      в одном уютном месте.
+    </p>
+  </div>
+  <div class="panel auth-form">
+    <h2>Создать аккаунт</h2>
+    <p>Для ваших вкусных планов</p>
+    <form method="post">
+      {% csrf_token %}
+      {% include "includes/form.html" %}
+      <button class="button full">Зарегистрироваться →</button>
+    </form>
+    <p class="help-text">Телефон нужен для связи по доставке. Адрес можно будет добавить при заказе.</p>
+    <p>Уже знакомы? <a class="text-link" href="{% url 'login' %}">Войти</a>
+    </p>
+  </div>
+</section>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="container section">
+    <div class="empty-state">
+      <span class="eyebrow">404</span>
+      <h1>Кажется, здесь ничего нет</h1>
+      <p>Блюдо могло закончиться, а страница — переехать.</p>
+      <a class="button" href="{% url 'home' %}">На главную →</a>
+    </div>
+  </section>
+{% endblock %}

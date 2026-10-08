@@ -1,97 +1,108 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from .models import Order, OrderItem
+import uuid
+
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
 from apps.cart.models import Cart
-from apps.payments.models import Payment
+from apps.common.access import customer_required
 
-@login_required
-@transaction.atomic
+from . import services
+from .forms import CheckoutForm, ReasonForm
+from .models import Order
+
+
+@customer_required
 def create_order(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    cart_items = list(cart.items.select_related("menu_item"))
-    if not cart_items:
-        return redirect('cart_detail')
-
-    payment_method = request.POST.get('payment_method', 'card')
-    address = request.POST.get('address')
-    latitude = request.POST.get('latitude')
-    longitude = request.POST.get('longitude')
-
-    total_price = sum(item.total for item in cart_items)
-
-    # Сразу ставим статус pending для налички
-    order_status = 'pending' if payment_method == 'cash' else 'new'
-    order = Order.objects.create(
-        user=request.user,
-        total_price=total_price,
-        status=order_status,
-        address=address,
-        latitude=latitude or None,
-        longitude=longitude or None,
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    items = list(cart.items.select_related("menu_item"))
+    initial = {
+        "customer_name": request.user.first_name or request.user.username,
+        "phone": request.user.phone,
+        "address": request.user.address,
+        "checkout_token": uuid.uuid4(),
+    }
+    form = CheckoutForm(request.POST if request.method == "POST" else None, initial=initial)
+    if request.method == "POST" and form.is_valid():
+        try:
+            order = services.checkout(request.user, form.cleaned_data)
+        except ValidationError as exc:
+            form.add_error(None, exc)
+        else:
+            return redirect("order_success", order_id=order.pk)
+    if not items and request.method == "GET":
+        return redirect("cart_detail")
+    subtotal = sum(item.total for item in items)
+    fee = services.shipping(subtotal) if items else 0
+    return render(
+        request,
+        "orders/checkout.html",
+        {"form": form, "items": items, "subtotal": subtotal, "fee": fee, "total": subtotal + fee},
     )
 
-    for cart_item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            menu_item=cart_item.menu_item,
-            quantity=cart_item.quantity,
-            price=cart_item.menu_item.price
-        )
 
-    cart.items.all().delete()
-
-    if payment_method == 'cash':
-        # Создаём Payment только один раз с pending
-        Payment.objects.create(
-            order=order,
-            user=request.user,
-            method="cash",
-            status="pending"
-        )
-        return redirect('order_success', order_id=order.id)
-    else:
-        return redirect('pay_with_card', order_id=order.id)
-
-
-@login_required
-def mark_as_paid(request, order_id):
-    """Отметить заказ как оплаченный наличными"""
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-
-    if order.status == 'pending':
-        order.status = 'paid'
-        order.save()
-
-        # Берём первый платеж наличными, если он есть
-        payment = Payment.objects.filter(order=order, method='cash').first()
-        if payment:
-            payment.status = 'paid'
-            payment.save()
-        else:
-            # На случай, если Payment почему-то не был создан
-            Payment.objects.create(
-                order=order,
-                user=request.user,
-                method="cash",
-                status="paid"
-            )
-
-    return redirect('order_detail', order_id=order.id)
-
-
-@login_required
+@customer_required
 def order_list(request):
-    orders = Order.objects.filter(user=request.user).order_by("-created_at")
-    return render(request, "orders/order_list.html", {"orders": orders})
+    orders = (
+        Order.objects.filter(user=request.user)
+        .select_related("payment")
+        .prefetch_related("items__menu_item")
+    )
+    return render(
+        request,
+        "orders/order_list.html",
+        {"page_obj": Paginator(orders, 10).get_page(request.GET.get("page"))},
+    )
 
 
-@login_required
+@customer_required
 def order_detail(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-    return render(request, "orders/order_detail.html", {"order": order})
+    order = get_object_or_404(
+        Order.objects.select_related("payment", "courier").prefetch_related(
+            "items__menu_item", "events"
+        ),
+        pk=order_id,
+        user=request.user,
+    )
+    return render(
+        request,
+        "orders/order_detail.html",
+        {"order": order, "open_issue": order.issues.filter(resolved_at__isnull=True).first()},
+    )
 
-@login_required
+
+@customer_required
 def order_success(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
     return render(request, "orders/order_success.html", {"order": order})
+
+
+@customer_required
+@require_POST
+def cancel(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
+    form = ReasonForm(request.POST)
+    if form.is_valid():
+        try:
+            if order.can_cancel:
+                services.cancel_order(order.pk, request.user, form.cleaned_data["reason"])
+                messages.success(request, "Заказ отменён. Оплачивать его не нужно.")
+            else:
+                services.report_issue(order.pk, request.user, form.cleaned_data["reason"])
+                messages.success(
+                    request, "Запрос отправлен администратору. Ответ появится в истории заказа."
+                )
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
+    else:
+        messages.error(request, "Укажите причину: от 5 до 500 символов.")
+    return redirect("order_detail", order_id=order.pk)
+
+
+@customer_required
+def live_status(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user)
+    return JsonResponse({"version": order.events.count(), "status": order.status})

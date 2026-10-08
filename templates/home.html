@@ -1,73 +1,137 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}Главная{% endblock %}
-
+{% load static food %}
 {% block content %}
-<div class="container text-center my-5">
-  <h1 class="mb-4">Добро пожаловать в FastFood Delivery 🍔</h1>
-  <p class="lead">Выбирай вкусные блюда и заказывай онлайн!</p>
-
-  {% if user.is_authenticated %}
-    <div class="alert alert-light border rounded-4 mt-4 shadow-sm" role="alert">
-      <h2 class="h4 mb-3">Добро пожаловать, {{ user.username }}!</h2>
-      {% if user.is_customer %}
-        <p>🛍 Вы клиент. Здесь будет ваше меню заказов.</p>
-      {% elif user.is_courier %}
-        <p>🚴 Вы курьер. <a href="{% url 'courier_orders' %}">Перейти к заказам</a></p>
-      {% endif %}
-    </div>
-  {% endif %}
-
-  <h2 class="mt-5">Популярные блюда</h2>
-  <div class="row mt-3">
-    {% for item in featured_items %}
-      <div class="col-lg-4 col-md-6 mb-4 d-flex">
-        <div class="card shadow-sm flex-fill d-flex flex-column rounded-4 border-0 hover-card">
-          {% if item.image %}
-            <img src="{{ item.image.url }}" class="card-img-top rounded-top-4" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
-          {% else %}
-            <img src="{% static 'img/no_image.png' %}" class="card-img-top rounded-top-4" alt="No image" style="height: 200px; object-fit: cover;">
-          {% endif %}
-
-          <div class="card-body d-flex flex-column text-center">
-            <h5 class="fw-bold">{{ item.name }}</h5>
-            <p class="text-muted small description">{{ item.description|truncatewords:15 }}</p>
-            <p class="fw-bold text-success price">{{ item.price }} UZS</p>
-
-            {% if item.is_available %}
-              {% if user.is_authenticated %}
-                <a href="{% url 'add_to_cart' item.id %}" class="btn btn-success w-100 mt-auto rounded-pill">🛒 В корзину</a>
-              {% else %}
-                <a href="{% url 'login' %}" class="btn btn-warning w-100 mt-auto rounded-pill">🛒 В корзину</a>
-              {% endif %}
-            {% else %}
-              <span class="badge bg-secondary mt-auto">Нет в наличии</span>
-            {% endif %}
-          </div>
+  <section class="hero container">
+    <div class="hero-copy">
+      <span class="eyebrow">
+        <span class="live-dot"></span> Согреваем вкусом</span>
+        <h1>
+          Хороший день
+          <br>
+          начинается
+          <br>
+          с <em>вкусной еды.</em>
+        </h1>
+        <p>Сочный бургер, хрустящая картошка и любимый соус. Приготовим с заботой и привезём к вашей двери.</p>
+        <div class="hero-actions">
+          <a class="button" href="{% url 'menu_list' %}">Хочу что-нибудь вкусное <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="hero-notes">
+          <span>
+            <b>Свежие</b> ингредиенты</span>
+          <span>
+            <b>Готовим</b> после заказа</span>
+          <span>
+            <b>Наличными</b> при получении</span>
         </div>
       </div>
-    {% empty %}
-      <p class="text-center">Нет доступных блюд.</p>
-    {% endfor %}
-  </div>
-</div>
-
-<style>
-.hover-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.hover-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-}
-.description {
-  min-height: 60px;
-}
-.price {
-  font-size: 1.2rem;
-  color: #28a745;
-  margin-bottom: 10px;
-}
-</style>
+      <div class="hero-art">
+        <div class="hero-circle"></div>
+        <span class="handwritten">ну очень
+          <br>
+          вкусно! <span aria-hidden="true">↓</span>
+        </span>
+        <div class="hero-photo">
+          <img src="{% static 'food/hero.webp' %}"
+               alt="Сочный бургер с румяной булочкой и свежими овощами"
+               width="600"
+               height="520"
+               fetchpriority="high">
+        </div>
+        <span class="floating-label label-top">
+          <span class="mini-icon">✦</span> Время порадовать себя</span>
+        <span class="floating-label label-bottom">
+          <span class="mini-icon green">♡</span>
+          <span>С теплом, из нашей кухни
+            <br>
+            <small>Прямо к вашему столу</small>
+          </span>
+        </span>
+        <span class="art-spark spark-one">✳</span>
+        <span class="art-spark spark-two">✧</span>
+      </div>
+    </section>
+    <div class="ticker" aria-hidden="true">
+      <span>ГОРЯЧЕЕ И ЛЮБИМОЕ</span>
+      <i>✳</i>
+      <span>ЕЩЁ ОДИН ВКУСНЫЙ ПОВОД</span>
+      <i>✳</i>
+      <span>СОБЕРЁМСЯ ЗА СТОЛОМ</span>
+      <i>✳</i>
+      <span>ГОТОВИМ С ЗАБОТОЙ</span>
+    </div>
+    <section class="container section">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Трудно устоять</span>
+          <h2>Начнём с любимого</h2>
+        </div>
+        <a class="text-link" href="{% url 'menu_list' %}">Всё меню <span>→</span>
+        </a>
+      </div>
+      <div class="products">
+        {% for item in featured_items %}
+          {% include "includes/product_card.html" %}
+        {% empty %}
+          <div class="empty-state">
+            <h3>На кухне готовят меню</h3>
+            <p>Совсем скоро здесь появятся любимые блюда.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="container">
+      <div class="comfort-banner">
+        <div>
+          <span class="eyebrow">Вместе вкуснее</span>
+          <h2>
+            На всех —
+            <br>
+            и ещё чуть-чуть.
+          </h2>
+          <p>
+            Соберите заказ от {{ free_delivery_from|money }} сум,
+            <br>
+            и доставка будет за наш счёт.
+          </p>
+          <a class="button dark" href="{% url 'menu_list' %}">Собрать компанию <span>→</span>
+          </a>
+        </div>
+        <div class="banner-illustration" aria-hidden="true">
+          <span>♡</span>
+          <p>
+            еда + вы
+            <br>
+            = счастье
+          </p>
+          <i>✳</i>
+        </div>
+      </div>
+    </section>
+    <section class="container section" id="how">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Без лишних хлопот</span>
+          <h2>До вкусного — три шага</h2>
+        </div>
+      </div>
+      <div class="steps-grid">
+        <article>
+          <span class="step-number">01</span>
+          <h3>Выберите любимое</h3>
+          <p>Найдите своё блюдо или попробуйте что-нибудь новое.</p>
+        </article>
+        <article>
+          <span class="step-number">02</span>
+          <h3>Скажите, куда привезти</h3>
+          <p>Укажите адрес и пожелания. Мы запомним их, если захотите.</p>
+        </article>
+        <article>
+          <span class="step-number">03</span>
+          <h3>Устраивайтесь поудобнее</h3>
+          <p>Следите за этапами заказа и оплатите его при получении.</p>
+        </article>
+      </div>
+    </section>
 {% endblock %}

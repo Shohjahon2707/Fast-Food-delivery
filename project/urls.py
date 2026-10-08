@@ -1,20 +1,28 @@
-from django.contrib import admin
-from django.urls import path, include
-from apps.menu import views as menu_views
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth.views import LogoutView
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django.urls import include, path
+
+from apps.menu.views import home
+from apps.orders import operations
+
+admin.site.site_header = "Тёпло · управление"
+admin.site.site_title = "Тёпло"
+admin.site.index_title = "Данные ресторана"
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("couriers/", include("apps.courier.urls")),
-    path("", menu_views.home, name="home"),
+    path("", home, name="home"),
     path("menu/", include("apps.menu.urls")),
     path("cart/", include("apps.cart.urls")),
     path("orders/", include("apps.orders.urls")),
     path("users/", include("apps.users.urls")),
-    path("logout/", LogoutView.as_view(next_page="login"), name="legacy_logout"),
+    path("couriers/", include("apps.courier.urls")),
     path("payments/", include("apps.payments.urls")),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("operations/", operations.dashboard, name="operations"),
+    path("operations/order/<int:pk>/", operations.action, name="operation_action"),
+    path("operations/courier/<int:pk>/", operations.approve_courier, name="approve_courier"),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

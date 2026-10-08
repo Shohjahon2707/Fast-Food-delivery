@@ -1,0 +1,4 @@
+-r requirements.txt
+playwright==1.63.0
+ruff==0.16.10
+djlint==1.46.4
