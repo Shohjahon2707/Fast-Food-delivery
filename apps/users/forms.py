@@ -10,22 +10,3 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "phone", "password1", "password2")
-
-
-class CourierRegisterForm(UserCreationForm):
-    phone = forms.CharField(required=True, label="Телефон")
-    vehicle = forms.ChoiceField(
-        choices=[("foot", "Пеший"), ("bike", "Велосипед"), ("car", "Машина")],
-        label="Транспорт"
-    )
-
-    class Meta:
-        model = User
-        fields = ("username", "email", "phone", "vehicle", "password1", "password2")
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.role = "courier"
-        if commit:
-            user.save()
-        return user

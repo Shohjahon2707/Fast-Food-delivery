@@ -39,4 +39,4 @@ class OrderItem(BaseModel):
         return f"{self.quantity} x {self.menu_item.name}"
 
     def total(self):
-        return self.menu_item.price * self.quantity
+        return self.price * self.quantity

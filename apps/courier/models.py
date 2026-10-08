@@ -7,9 +7,6 @@ class Courier(BaseModel):
     on_delete=models.CASCADE,
     related_name='courier_profile'
     )
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name='courier_profile'
     VEHICLE_CHOICES = [
         ("foot", "Пеший"),
         ("bike", "Велосипед"), 

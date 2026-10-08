@@ -1,14 +1,9 @@
-# apps/users/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, CourierRegisterForm
-from apps.orders.models import Order
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from apps.courier.models import Courier 
-from .forms import UserRegisterForm, CourierRegisterForm
+from .forms import UserRegisterForm
+from apps.courier.views import CourierRegisterView
 
 def register_user(request):
     if request.method == "POST":
@@ -24,28 +19,9 @@ def register_user(request):
     return render(request, "users/register_user.html", {"form": form})
 
 
-def register_courier(request):
-    if request.method == "POST":
-        form = CourierRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.role = "courier"  
-            user.save()
 
-
-            Courier.objects.create(
-                user=user,
-                name=user.username,
-                phone=form.cleaned_data.get("phone"),
-                vehicle=form.cleaned_data.get("vehicle", "foot")
-            )
-
-            login(request, user)
-            return redirect("courier_orders")
-    else:
-        form = CourierRegisterForm()
-    return render(request, "couriers/register.html", {"form": form})
-
+# Preserve the existing customer-facing registration URL.
+register_courier = CourierRegisterView.as_view()
 
 class RoleBasedLoginView(LoginView):
     template_name = "users/login.html"
@@ -67,4 +43,4 @@ def home_view(request):
         return redirect("courier_orders")
     elif user.is_superuser or user.role == "admin":
         return redirect("/admin/")
-    return render(request, "users/home.html")
+    return redirect("home")

@@ -12,7 +12,7 @@ urlpatterns = [
     path("cart/", include("apps.cart.urls")),
     path("orders/", include("apps.orders.urls")),
     path("users/", include("apps.users.urls")),
-    path("logout/", LogoutView.as_view(), name="logout"),
+    path("logout/", LogoutView.as_view(next_page="login"), name="legacy_logout"),
     path("payments/", include("apps.payments.urls")),
 ]
 

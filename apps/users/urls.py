@@ -8,7 +8,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", home_view, name="home"),
+    path("", home_view, name="user_home"),
     path("register/", register_user, name="register_user"),
     path("register-courier/", register_courier, name="register_courier"),
     path("login/", RoleBasedLoginView.as_view(), name="login"),

@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from .models import Order, OrderItem
 from apps.cart.models import Cart
 from apps.payments.models import Payment
 
 @login_required
+@transaction.atomic
 def create_order(request):
     cart = get_object_or_404(Cart, user=request.user)
-    if not cart.items.exists():
+    cart_items = list(cart.items.select_related("menu_item"))
+    if not cart_items:
         return redirect('cart_detail')
 
     payment_method = request.POST.get('payment_method', 'card')
@@ -15,7 +18,7 @@ def create_order(request):
     latitude = request.POST.get('latitude')
     longitude = request.POST.get('longitude')
 
-    total_price = sum(item.total for item in cart.items.all())
+    total_price = sum(item.total for item in cart_items)
 
     # Сразу ставим статус pending для налички
     order_status = 'pending' if payment_method == 'cash' else 'new'
@@ -28,7 +31,7 @@ def create_order(request):
         longitude=longitude or None,
     )
 
-    for cart_item in cart.items.all():
+    for cart_item in cart_items:
         OrderItem.objects.create(
             order=order,
             menu_item=cart_item.menu_item,

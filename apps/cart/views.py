@@ -5,13 +5,14 @@ from .models import Cart, CartItem
 
 @login_required(login_url='login')  
 def cart_detail(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart = Cart.objects.prefetch_related("items__menu_item").get(pk=cart.pk)
     return render(request, "cart/cart_detail.html", {"cart": cart})
 
 @login_required(login_url='login')
 def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
 
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,

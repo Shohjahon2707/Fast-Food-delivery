@@ -1,4 +1,5 @@
 from django import forms
+from django.db import transaction
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from .models import Courier
@@ -14,8 +15,11 @@ class CourierRegistrationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'name', 'phone', 'vehicle']
 
+    @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.role = "courier"
+        user.phone = self.cleaned_data["phone"]
         if commit:
             user.save()
             Courier.objects.create(

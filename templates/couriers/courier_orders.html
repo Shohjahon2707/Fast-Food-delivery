@@ -36,7 +36,7 @@
     <li style="background: #eef6ff; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px;">
       🚚 Заказ #{{ order.id }} — {{ order.status }}
 
-      {% for payment in order.payments.all %}
+      {% with payment=order.payment %}
         {% if payment.method == "cash" and payment.status == "pending" %}
           <form method="post" action="{% url 'confirm_cash_payment' order.id %}" style="display:inline-block; margin-left:10px;">
             {% csrf_token %}
@@ -46,7 +46,7 @@
             </button>
           </form>
         {% endif %}
-      {% endfor %}
+      {% endwith %}
     </li>
   {% empty %}
     <li style="color: #777;">Пока нет заказов в доставке.</li>

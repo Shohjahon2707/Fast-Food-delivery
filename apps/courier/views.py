@@ -7,9 +7,9 @@ from django.views import View
 from django.views.generic import ListView, CreateView
 from django.urls import reverse_lazy
 
-from .models import Courier
 from .forms import CourierRegistrationForm
 from apps.orders.models import Order
+from apps.payments.models import Payment
 
 
 class CourierOrderListView(LoginRequiredMixin, ListView):
@@ -26,7 +26,7 @@ class CourierOrderListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         courier = getattr(self.request.user, 'courier_profile', None)
-        context['my_orders'] = Order.objects.filter(courier=courier, status='delivery') if courier else Order.objects.none()
+        context['my_orders'] = Order.objects.select_related('payment').filter(courier=courier, status='delivery') if courier else Order.objects.none()
         context['current_courier'] = courier
         return context
 
@@ -80,7 +80,7 @@ class ConfirmCashPaymentView(LoginRequiredMixin, View):
             return redirect('courier_orders')
 
         order = get_object_or_404(Order, pk=pk, courier=courier)
-        payment = order.payments.filter(method='cash', status='pending').first()
+        payment = Payment.objects.filter(order=order, method='cash', status='pending').first()
         if not payment:
             messages.error(request, 'Нет ожидающей оплаты наличными для этого заказа.')
             return redirect('courier_orders')
