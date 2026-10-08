@@ -1,146 +1,80 @@
-    {% extends "base.html" %}
-    {% block title %}Корзина{% endblock %}
-
-    {% block content %}
-    <div class="container my-5">
-        <h2 class="text-center mb-4">🛒 Ваша корзина</h2>
-
-        {% if cart.items.all %}
-            <div class="table-responsive shadow-sm rounded">
-                <table class="table table-bordered text-center align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Товар</th>
-                            <th>Цена</th>
-                            <th>Кол-во</th>
-                            <th>Итого</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in cart.items.all %}
-                        <tr>
-                            <td class="fw-semibold">{{ item.menu_item.name }}</td>
-                            <td>{{ item.menu_item.price }} UZS</td>
-                            <td>
-                                <form method="post" action="{% url 'update_quantity' item.id %}" class="d-flex justify-content-center">
-                                    {% csrf_token %}
-                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" 
-                                        class="form-control form-control-sm w-50 me-2 text-center">
-                                    <button type="submit" class="btn btn-sm btn-primary">Обновить</button>
-                                </form>
-                            </td>
-                            <td class="fw-bold">{{ item.total }} UZS</td>
-                            <td>
-                                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">❌</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+{% extends "base.html" %}{% load food %}{% block title %}Корзина — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top">
+  <a href="{% url 'menu_list' %}" class="back-link">← Добавить ещё что-нибудь</a>
+  <h1 class="page-title">
+    Ваша <em>корзина</em>
+  </h1>
+  {% if items %}
+    <div class="checkout-grid">
+      <div class="panel cart-items">
+        {% for line in items %}
+          <article class="cart-row">
+            <img src="{{ line.menu_item.image_url }}"
+                 alt="{{ line.menu_item.name }}"
+                 width="100"
+                 height="90">
+            <div class="cart-row-name">
+              <h3>{{ line.menu_item.name }}</h3>
+              <p>{{ line.menu_item.weight }} · {{ line.menu_item.price|money }} сум</p>
+              {% if not line.menu_item.is_available %}
+                <span class="field-error">Закончилось — удалите из корзины</span>
+              {% endif %}
+              <form method="post" action="{% url 'remove_from_cart' line.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="text-button muted">Удалить</button>
+              </form>
             </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <a href="{% url 'menu_list' %}" class="btn btn-secondary">⬅ Вернуться в меню</a>
-
-                <div class="text-end">
-                    <h4>Общая сумма: <span class="text-success">{{ cart.total_price }} UZS</span></h4>
-
-                    <!-- === ФОРМА ОФОРМЛЕНИЯ ЗАКАЗА === -->
-                    <div class="mt-4 p-3 border rounded bg-light shadow-sm">
-                        <form method="post" action="{% url 'create_order' %}">
-                            {% csrf_token %}
-
-                            <div class="mb-3">
-                                <label for="address" class="form-label">🚚 Адрес доставки:</label>
-                                <input type="text" id="address" name="address" class="form-control" placeholder="Введите адрес вручную" required>
-                            </div>
-
-                            <!-- Карта -->
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">📍 Укажите местоположение доставки:</label>
-                                <div id="map" style="height: 400px; border-radius: 10px;"></div>
-                                <small class="text-muted">Перетащите метку на место вашего дома</small>
-                            </div>
-
-                            <input type="hidden" id="latitude" name="latitude">
-                            <input type="hidden" id="longitude" name="longitude">
-
-                            <div class="mb-3">
-                                <label for="payment_method" class="form-label">Метод оплаты:</label>
-                                <select id="payment_method" name="payment_method" class="form-select">
-                                    <option value="card">💳 Банковская карта</option>
-                                    <option value="cash">💵 Наличные</option>
-                                </select>
-                            </div>
-
-                            <button type="submit" class="btn btn-success btn-lg w-100">✅ Оформить заказ</button>
-                        </form>
-                    </div>
-                    <!-- === КОНЕЦ ФОРМЫ === -->
-                </div>
-            </div>
-
+            <form class="quantity"
+                  method="post"
+                  action="{% url 'update_quantity' line.pk %}">
+              {% csrf_token %}
+              <button name="quantity"
+                      value="{{ line.quantity|add:'-1' }}"
+                      aria-label="Уменьшить количество {{ line.menu_item.name }}">−</button>
+              <span aria-label="Количество">{{ line.quantity }}</span>
+              <button name="quantity"
+                      value="{{ line.quantity|add:'1' }}"
+                      aria-label="Увеличить количество {{ line.menu_item.name }}"
+                      {% if line.quantity >= 30 %}disabled{% endif %}>+</button>
+            </form>
+            <strong>{{ line.total|money }} <small>сум</small>
+            </strong>
+          </article>
+        {% endfor %}
+      </div>
+      <aside class="panel summary">
+        <h2>Всё вместе</h2>
+        <div class="sum-row">
+          <span>Блюда</span>
+          <span>{{ subtotal|money }} сум</span>
+        </div>
+        <div class="sum-row">
+          <span>Доставка</span>
+          <span>
+            {% if fee %}
+              {{ fee|money }} сум{% else %}Бесплатно{% endif %}
+          </span>
+        </div>
+        <div class="sum-row sum-total">
+          <strong>Итого</strong>
+          <strong>{{ total|money }} сум</strong>
+        </div>
+        {% if unavailable %}
+          <p class="form-error">Удалите недоступные блюда, чтобы продолжить.</p>
         {% else %}
-            <p class="text-center fs-5">Ваша корзина пуста 🛍</p>
-            <div class="text-center mt-4">
-                <a href="{% url 'menu_list' %}" class="btn btn-lg btn-success">🍔 Перейти в меню</a>
-            </div>
+          <a href="{% url 'create_order' %}" class="button full">К оформлению <span>→</span>
+          </a>
         {% endif %}
+        <p class="help-text">Бесплатная доставка от {{ free_delivery_from|money }} сум. Окончательная сумма видна до подтверждения.</p>
+      </aside>
     </div>
-
-    <!-- === СТИЛИ И СКРИПТЫ LEAFLET === -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
-    
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const defaultLat = 41.3111; // Ташкент
-      const defaultLng = 69.2797;
-    
-      // Инициализация карты
-      const map = L.map('map').setView([defaultLat, defaultLng], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
-    
-      // Добавляем маркер
-      const marker = L.marker([defaultLat, defaultLng], {draggable: true}).addTo(map);
-    
-      // Функция обновления координат
-      function updateCoords(lat, lng) {
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
-      }
-    
-      // Сразу записываем стартовые координаты
-      updateCoords(defaultLat, defaultLng);
-    
-      // Когда маркер двигается
-      marker.on('dragend', function(e) {
-        const pos = marker.getLatLng();
-        updateCoords(pos.lat.toFixed(6), pos.lng.toFixed(6));
-      });
-    
-      // При клике по карте — маркер туда
-      map.on('click', function(e) {
-        marker.setLatLng(e.latlng);
-        updateCoords(e.latlng.lat.toFixed(6), e.latlng.lng.toFixed(6));
-      });
-    
-      // 🔥 Если пользователь разрешает геолокацию — центрируем карту на нём
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          map.setView([lat, lng], 15);
-          marker.setLatLng([lat, lng]);
-          updateCoords(lat.toFixed(6), lng.toFixed(6));
-        }, function() {
-          console.warn("⚠️ Геолокация отклонена — остаёмся на дефолтной позиции");
-        });
-      }
-    });
-    </script>
-    {% endblock %}
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">♡</span>
+      <h2>Здесь ещё есть место для вкусного</h2>
+      <p>Начните с любимого блюда. Остальное — за нами.</p>
+      <a class="button" href="{% url 'menu_list' %}">Открыть меню →</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

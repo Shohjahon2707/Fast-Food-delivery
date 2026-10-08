@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="container section">
+    <div class="empty-state">
+      <span class="eyebrow">500</span>
+      <h1>На кухне небольшая заминка</h1>
+      <p>Не удалось обработать запрос. Попробуйте ещё раз через минуту.</p>
+      <a class="button" href="{% url 'home' %}">На главную →</a>
+    </div>
+  </section>
+{% endblock %}

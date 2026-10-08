@@ -1,57 +1,147 @@
-{% extends "base.html" %}
-{% block content %}
-
-<h2 style="margin-bottom: 20px;">📦 Заказы для курьеров</h2>
-
-<h3 style="margin-top: 30px;">🟢 Свободные заказы:</h3>
-<ul style="list-style: none; padding-left: 0;">
-  {% for order in orders %}
-    <li style="background: #f7f7f7; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-      <span>Заказ #{{ order.id }} — {{ order.address }}</span>
-
-      <form method="post" action="{% url 'take_order' order.id %}">
-        {% csrf_token %}
-        <button type="submit" style="
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: .2s;">
-            Взять
-        </button>
-      </form>
-    </li>
-  {% empty %}
-    <li style="color: #777;">Нет доступных заказов.</li>
-  {% endfor %}
-</ul>
-
-<hr style="margin: 30px 0;">
-
-<h3>🚚 Мои активные заказы:</h3>
-<ul style="list-style: none; padding-left: 0;">
-  {% for order in my_orders %}
-    <li style="background: #eef6ff; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px;">
-      🚚 Заказ #{{ order.id }} — {{ order.status }}
-
-      {% with payment=order.payment %}
-        {% if payment.method == "cash" and payment.status == "pending" %}
-          <form method="post" action="{% url 'confirm_cash_payment' order.id %}" style="display:inline-block; margin-left:10px;">
-            {% csrf_token %}
-            <button type="submit" style="
-              background:#ffc107; color:#212529; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
-              Подтвердить оплату наличными
-            </button>
-          </form>
-        {% endif %}
-      {% endwith %}
-    </li>
-  {% empty %}
-    <li style="color: #777;">Пока нет заказов в доставке.</li>
-  {% endfor %}
-</ul>
-
-
+{% extends "base.html" %}{% load food %}{% block title %}Кабинет курьера — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top courier-theme">
+  <span class="eyebrow">На связи, {{ courier.name }}</span>
+  <div class="section-heading">
+    <h1 class="page-title">
+      Мои <em>доставки</em>
+    </h1>
+    <span class="status {% if courier.shift_status == 'active' %}done{% endif %}">{{ courier.get_shift_status_display }}</span>
+  </div>
+  {% if not courier.is_approved %}
+    <div class="panel approval-panel">
+      <span class="success-icon">◷</span>
+      <h2>Заявка на проверке</h2>
+      <p>Администратор проверит ваши данные. После одобрения здесь появится кнопка выхода на смену.</p>
+      <p>{{ courier.phone }} · {{ courier.get_vehicle_display }}</p>
+      <a class="button secondary" href="{{ request.path }}">Проверить статус ↻</a>
+    </div>
+  {% else %}
+    <div class="courier-stats">
+      <div class="panel">
+        <span class="eyebrow">Завершено доставок</span>
+        <strong>{{ completed_count }}</strong>
+      </div>
+      <div class="panel">
+        <span class="eyebrow">Ваш транспорт</span>
+        <strong>{{ courier.get_vehicle_display }}</strong>
+      </div>
+      <div class="panel">
+        <span class="eyebrow">Управление сменой</span>
+        <form method="post" action="{% url 'courier_shift' %}">
+          {% csrf_token %}
+          <button class="button secondary small" {% if current %}disabled{% endif %}>
+            {% if courier.shift_status == "active" %}
+              Завершить смену{% else %}Выйти на смену{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+    {% if current %}
+      <div class="checkout-grid">
+        <article class="panel">
+          <span class="eyebrow">Текущая доставка</span>
+          <h2>Заказ №{{ current.pk }}</h2>
+          <h3 class="address">{{ current.address }}</h3>
+          <p>
+            {{ current.customer_name }} · <a class="text-link" href="tel:{{ current.phone }}">{{ current.phone }}</a>
+          </p>
+          {% if current.comment %}
+            <div class="notice soft">{{ current.comment }}</div>
+          {% endif %}
+          <a class="button secondary small"
+             href="https://www.google.com/maps/search/?api=1&amp;query={{ current.address|urlencode }}"
+             target="_blank"
+             rel="noopener noreferrer">Открыть адрес на карте →</a>
+          <div class="auth-divider"></div>
+          {% for line in current.items.all %}
+            <div class="sum-row">
+              <span>{{ line.name }} × {{ line.quantity }}</span>
+              <strong>{{ line.total|money }}</strong>
+            </div>
+          {% endfor %}
+          <div class="sum-row sum-total">
+            <strong>Получить наличными</strong>
+            <strong>{{ current.total_price|money }} сум</strong>
+          </div>
+          {% if open_issue %}
+            <div class="notice">
+              Обращение на рассмотрении: {{ open_issue.reason }}
+              <br>
+              Дождитесь решения администратора.
+            </div>
+          {% else %}
+            <form method="post"
+                  action="{% url 'confirm_cash_payment' current.pk %}"
+                  data-confirm="Заказ передан и полная сумма наличными получена?">
+              {% csrf_token %}
+              <label class="checkbox-field">
+                <input type="checkbox" name="cash_received" value="yes" required>
+                Заказ передан, {{ current.total_price|money }} сум получены
+              </label>
+              <button class="button full">Завершить доставку ✓</button>
+            </form>
+          {% endif %}
+        </article>
+        <aside class="panel">
+          <h2>Что-то случилось?</h2>
+          <p>Не получается связаться с клиентом, сломался транспорт или нужна отмена — сообщите администратору.</p>
+          {% if not open_issue %}
+            <form method="post" action="{% url 'courier_problem' current.pk %}">
+              {% csrf_token %}
+              <label for="problem">Опишите ситуацию</label>
+              <textarea id="problem" name="reason" minlength="5" maxlength="500" required rows="4">
+</textarea>
+              <button class="button secondary full">Сообщить о проблеме</button>
+            </form>
+          {% else %}
+            <a class="text-link" href="{{ request.path }}">Обновить статус ↻</a>
+          {% endif %}
+        </aside>
+      </div>
+    {% else %}
+      <div class="section-heading">
+        <h2>Готовы к доставке</h2>
+        <a class="text-link" href="{{ request.path }}">Обновить ↻</a>
+      </div>
+      <div class="delivery-grid">
+        {% for order in orders %}
+          <article class="panel">
+            <span class="status ready">Готов к выдаче</span>
+            <h2>Заказ №{{ order.pk }}</h2>
+            <p>Принят {{ order.created_at|date:'H:i' }}</p>
+            <p>Контакты и адрес откроются после принятия.</p>
+            <strong>{{ order.total_price|money }} сум · наличными</strong>
+            <form class="spaced" method="post" action="{% url 'take_order' order.pk %}">
+              {% csrf_token %}
+              <button class="button full">Забрал заказ · начать доставку →</button>
+            </form>
+          </article>
+        {% empty %}
+          <div class="empty-state panel full-width">
+            <h2>
+              {% if courier.shift_status == "inactive" %}
+                Готовы начать?{% else %}Пока можно передохнуть{% endif %}
+            </h2>
+            <p>
+              {% if courier.shift_status == "inactive" %}
+                Выйдите на смену, чтобы увидеть готовые заказы.{% else %}Новые доставки появятся, когда кухня приготовит заказы.{% endif %}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+  {% if history %}
+    <h2 class="section-subtitle">Последние доставки</h2>
+    <div class="panel">
+      {% for order in history %}
+        <div class="sum-row">
+          <span>№{{ order.pk }} · {{ order.created_at|date:'d.m H:i' }}</span>
+          <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+          <strong>{{ order.total_price|money }} сум</strong>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
 {% endblock %}

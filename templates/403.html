@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="container section">
+    <div class="empty-state">
+      <span class="eyebrow">403</span>
+      <h1>Этот раздел для другого аккаунта</h1>
+      <p>Вернитесь в свой кабинет, чтобы продолжить.</p>
+      <a class="button" href="{% url 'home' %}">На главную →</a>
+    </div>
+  </section>
+{% endblock %}

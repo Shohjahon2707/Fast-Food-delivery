@@ -1,13 +1,36 @@
-{% extends "base.html" %}
-{% block content %}
-<h2>Вход</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Войти</button>
-</form>
-<p>Нет аккаунта?
-  <a href="{% url 'register_user' %}">Я клиент</a> |
-  <a href="{% url 'register_courier' %}">Я курьер</a>
-</p>
+{% extends "base.html" %}{% block title %}Вход — Тёпло{% endblock %}{% block content %}
+<section class="container auth-layout">
+  <div class="auth-story">
+    <span class="eyebrow">Рады видеть вас снова</span>
+    <h1>
+      Ваше любимое.
+      <br>
+      На расстоянии
+      <br>
+      <em>одного заказа.</em>
+    </h1>
+    <span class="auth-doodle" aria-hidden="true">♡</span>
+    <p>
+      Войдите, чтобы сохранить адрес,
+      <br>
+      заказать ужин и следить за доставкой.
+    </p>
+  </div>
+  <div class="panel auth-form">
+    <h2>С возвращением</h2>
+    <p>Вход для покупателей</p>
+    <form method="post">
+      {% csrf_token %}
+      {% include "includes/form.html" %}
+      <button class="button full" type="submit">
+        Войти <span>→</span>
+      </button>
+    </form>
+    <a class="text-link" href="{% url 'password_reset' %}">Не помню пароль</a>
+    <div class="auth-divider"></div>
+    <p>Первый раз у нас? <a class="text-link" href="{% url 'register_user' %}">Создать аккаунт</a>
+    </p>
+    <a class="muted text-small" href="{% url 'courier_login' %}">Я курьер →</a>
+  </div>
+</section>
 {% endblock %}

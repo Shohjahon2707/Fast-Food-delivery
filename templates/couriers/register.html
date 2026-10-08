@@ -1,16 +1,30 @@
-{% extends "base.html" %}
-{% block content %}
-<div style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-  <h2 style="text-align: center;">🚴 Регистрация курьера</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" style="width: 100%; padding: 10px; margin-top: 10px; background: #28a745; color: white; border: none; border-radius: 5px;">
-      Зарегистрироваться
-    </button>
-  </form>
-  <p style="text-align: center; margin-top: 10px;">
-    Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
-  </p>
-</div>
+{% extends "base.html" %}{% block title %}Стать курьером — Тёпло{% endblock %}{% block content %}
+<section class="container auth-layout courier-theme">
+  <div class="auth-story">
+    <span class="eyebrow">Присоединяйтесь</span>
+    <h1>
+      Вы везёте еду.
+      <br>
+      И немного
+      <br>
+      <em>счастья.</em>
+    </h1>
+    <p>
+      Заполните заявку. Администратор проверит её,
+      <br>
+      после чего вы сможете выйти на смену.
+    </p>
+    <div class="notice soft">Это отдельный аккаунт курьера для работы с доставками.</div>
+  </div>
+  <div class="panel auth-form">
+    <h2>Заявка курьера</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% include "includes/form.html" %}
+      <button class="button full">Отправить заявку →</button>
+    </form>
+    <p>Уже в команде? <a class="text-link" href="{% url 'courier_login' %}">Войти</a>
+    </p>
+  </div>
+</section>
 {% endblock %}

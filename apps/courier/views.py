@@ -1,94 +1,118 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
-from django.views.generic import ListView, CreateView
-from django.urls import reverse_lazy
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
-from .forms import CourierRegistrationForm
+from apps.common.access import courier_required
+from apps.orders import services
 from apps.orders.models import Order
-from apps.payments.models import Payment
+from apps.users.views import RoleBasedLoginView, landing
+
+from .forms import CourierLoginForm, CourierRegistrationForm
+from .models import Courier
 
 
-class CourierOrderListView(LoginRequiredMixin, ListView):
-    template_name = "couriers/courier_orders.html"
-    context_object_name = "orders"
-    
-    def get_queryset(self):
-        return Order.objects.filter(
-            courier__isnull=True
-        ).exclude(
-            status__in=['cancel', 'done', 'delivery']
-        )
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        courier = getattr(self.request.user, 'courier_profile', None)
-        context['my_orders'] = Order.objects.select_related('payment').filter(courier=courier, status='delivery') if courier else Order.objects.none()
-        context['current_courier'] = courier
-        return context
-
-
-class TakeOrderView(LoginRequiredMixin, View):
-    """Взять заказ в доставку"""
-    def post(self, request, pk):
-        courier = getattr(request.user, 'courier_profile', None)
-        if not courier:
-            return render(request, "couriers/error.html", {'error': 'У вас нет профиля курьера.'})
-
-        try:
-            order = Order.objects.get(pk=pk, courier__isnull=True)
-        except Order.DoesNotExist:
-            messages.error(request, "❌ Заказ уже занят или не найден.")
-            return redirect('courier_orders')
-
-        order.courier = courier
-        order.status = 'delivery'
-        order.save()
-
-        messages.success(request, f'🚚 Заказ #{order.id} успешно взят в доставку!')
-        return redirect('courier_orders')
-
-
-class CourierRegisterView(CreateView):
-    """Регистрация курьера"""
-    form_class = CourierRegistrationForm
-    template_name = "couriers/register.html"
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        messages.success(self.request, '✅ Регистрация прошла успешно!')
-        return redirect('courier_orders')
-
-
-class CourierLoginView(LoginView):
+class CourierLoginView(RoleBasedLoginView):
     template_name = "couriers/login.html"
-
-    def get_success_url(self):
-        return reverse_lazy('courier_orders')
+    authentication_form = CourierLoginForm
 
 
-class ConfirmCashPaymentView(LoginRequiredMixin, View):
-    """Курьер подтверждает оплату наличными"""
-    def post(self, request, pk):
-        courier = getattr(request.user, 'courier_profile', None)
-        if not courier:
-            messages.error(request, 'У вас нет профиля курьера.')
-            return redirect('courier_orders')
+def register(request):
+    if request.user.is_authenticated:
+        return redirect(landing(request.user))
+    form = CourierRegistrationForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        user = form.save()
+        login(request, user)
+        messages.success(request, "Заявка отправлена! После одобрения можно будет выйти на смену.")
+        return redirect("courier_orders")
+    return render(request, "couriers/register.html", {"form": form})
 
-        order = get_object_or_404(Order, pk=pk, courier=courier)
-        payment = Payment.objects.filter(order=order, method='cash', status='pending').first()
-        if not payment:
-            messages.error(request, 'Нет ожидающей оплаты наличными для этого заказа.')
-            return redirect('courier_orders')
 
-        payment.status = 'paid'
-        payment.save()
-        order.status = 'paid'
-        order.save()
+@courier_required
+def orders(request):
+    courier = get_object_or_404(Courier, user=request.user)
+    current = (
+        Order.objects.filter(courier=courier, status="delivery")
+        .select_related("payment")
+        .prefetch_related("items", "issues")
+        .first()
+    )
+    available = Order.objects.none()
+    if courier.is_approved and courier.shift_status == "active" and not current:
+        available = (
+            Order.objects.filter(status="ready", courier__isnull=True)
+            .exclude(issues__resolved_at__isnull=True, issues__isnull=False)
+            .order_by("created_at")[:30]
+        )
+    history = Order.objects.filter(courier=courier, status__in=["done", "cancel"])[:10]
+    return render(
+        request,
+        "couriers/courier_orders.html",
+        {
+            "courier": courier,
+            "current": current,
+            "orders": available,
+            "history": history,
+            "open_issue": current.issues.filter(resolved_at__isnull=True).first()
+            if current
+            else None,
+            "completed_count": Order.objects.filter(courier=courier, status="done").count(),
+        },
+    )
 
-        messages.success(request, f'💵 Оплата наличными за заказ #{order.id} подтверждена!')
-        return redirect('courier_orders')
+
+@courier_required
+@require_POST
+@transaction.atomic
+def shift(request):
+    courier = get_object_or_404(Courier.objects.select_for_update(), user=request.user)
+    if not courier.is_approved:
+        messages.error(request, "Дождитесь одобрения администратора.")
+    elif Order.objects.filter(courier=courier, status="delivery").exists():
+        messages.error(request, "Сначала завершите доставку или сообщите о проблеме.")
+    else:
+        courier.shift_status = "inactive" if courier.shift_status == "active" else "active"
+        courier.save(update_fields=["shift_status"])
+    return redirect("courier_orders")
+
+
+@courier_required
+@require_POST
+def take(request, pk):
+    get_object_or_404(Order, pk=pk)
+    try:
+        services.take_order(pk, request.user)
+        messages.success(request, "Заказ ваш. Контакты получателя доступны ниже.")
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+    return redirect("courier_orders")
+
+
+@courier_required
+@require_POST
+def complete(request, pk):
+    get_object_or_404(Order, pk=pk, courier__user=request.user)
+    if request.POST.get("cash_received") != "yes":
+        messages.error(request, "Подтвердите передачу заказа и получение полной суммы наличными.")
+    else:
+        try:
+            services.deliver_order(pk, request.user)
+            messages.success(request, "Доставка завершена. Спасибо за работу!")
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
+    return redirect("courier_orders")
+
+
+@courier_required
+@require_POST
+def problem(request, pk):
+    get_object_or_404(Order, pk=pk, courier__user=request.user)
+    try:
+        services.report_issue(pk, request.user, request.POST.get("reason", ""))
+        messages.success(request, "Администратор получил обращение. Ожидайте решения.")
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+    return redirect("courier_orders")

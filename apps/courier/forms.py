@@ -1,31 +1,40 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.db import transaction
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
+
+from apps.users.forms import UserRegisterForm
+
 from .models import Courier
 
-User = get_user_model()
 
-class CourierRegistrationForm(UserCreationForm):
-    name = forms.CharField(max_length=100, label="ФИО")
-    phone = forms.CharField(max_length=20, label="Телефон")
-    vehicle = forms.ChoiceField(choices=Courier.VEHICLE_CHOICES, label="Транспорт")
+class CourierRegistrationForm(UserRegisterForm):
+    name = forms.CharField(max_length=100, label="Полное имя")
+    first_name = None
+    vehicle = forms.ChoiceField(choices=Courier.VEHICLE_CHOICES, label="Как будете доставлять")
 
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2', 'name', 'phone', 'vehicle']
+    class Meta(UserRegisterForm.Meta):
+        fields = ("name", "username", "email", "phone", "vehicle", "password1", "password2")
 
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = "courier"
-        user.phone = self.cleaned_data["phone"]
+        user.first_name = self.cleaned_data["name"]
         if commit:
             user.save()
             Courier.objects.create(
                 user=user,
-                name=self.cleaned_data['name'],
-                phone=self.cleaned_data['phone'],
-                vehicle=self.cleaned_data['vehicle'],
+                name=self.cleaned_data["name"],
+                phone=user.phone,
+                vehicle=self.cleaned_data["vehicle"],
             )
         return user
+
+
+class CourierLoginForm(AuthenticationForm):
+    remember_me = forms.BooleanField(required=False, label="Запомнить меня на 30 дней")
+
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_courier:
+            raise forms.ValidationError("Здесь вход только для курьеров.", code="invalid_role")

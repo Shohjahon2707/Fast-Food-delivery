@@ -1,0 +1,202 @@
+{% extends "base.html" %}{% load food %}{% block title %}Рабочая панель — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top">
+  <span class="eyebrow">Ресторан под контролем</span>
+  <div class="section-heading">
+    <h1 class="page-title">
+      Рабочая <em>панель</em>
+    </h1>
+    <a class="button secondary small" href="{% url 'admin:index' %}">Меню и данные →</a>
+  </div>
+  <nav class="category-tabs" aria-label="Фильтр заказов">
+    <a class="chip {% if selected_status == 'active' %}selected{% endif %}"
+       href="?status=active">Активные</a>
+    <a class="chip {% if selected_status == 'issues' %}selected{% endif %}"
+       href="?status=issues">Нужна помощь</a>
+    <a class="chip {% if selected_status == 'all' %}selected{% endif %}"
+       href="?status=all">Все</a>
+    {% for stat in stats %}
+      <a class="chip" href="?status={{ stat.status }}">
+        {% if stat.status == "new" %}
+        Приняты{% elif stat.status == "cooking" %}Готовятся{% elif stat.status == "ready" %}На выдаче{% elif stat.status == "delivery" %}В пути{% elif stat.status == "done" %}Доставлены{% else %}Отменены{% endif %} · {{ stat.count }}</a>
+    {% endfor %}
+  </nav>
+  <div class="operations-grid">
+    <div class="stack">
+      {% for order in page_obj %}
+        <article class="panel">
+          <div class="row-between">
+            <h2>Заказ №{{ order.pk }}</h2>
+            <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+          </div>
+          <p>
+            {{ order.created_at|date:'d.m H:i' }} · {{ order.customer_name }} · <a href="tel:{{ order.phone }}">{{ order.phone }}</a>
+          </p>
+          <p class="address">{{ order.address }}</p>
+          {% if order.comment %}
+            <div class="notice soft">{{ order.comment }}</div>
+          {% endif %}
+          <div class="order-lines">
+            {% for item in order.items.all %}
+              <span>{{ item.name }} <b>× {{ item.quantity }}</b>
+              </span>
+            {% endfor %}
+          </div>
+          <div class="sum-row">
+            <strong>{{ order.total_price|money }} сум</strong>
+            <span>{{ order.payment.get_status_display }}</span>
+          </div>
+          {% if order.courier %}
+            <p>Курьер: {{ order.courier.name }} · {{ order.courier.phone }}</p>
+          {% endif %}
+          {% for issue in order.issues.all %}
+            {% if not issue.resolved_at %}
+              <div class="notice">
+                <strong>Обращение от {{ issue.author.get_role_display }}</strong>
+                <p>{{ issue.reason }}</p>
+              </div>
+              <form method="post"
+                    action="{% url 'operation_action' order.pk %}"
+                    class="stack compact">
+                {% csrf_token %}
+                <label for="resolution-{{ issue.pk }}">Решение (будет видно покупателю)</label>
+                <textarea id="resolution-{{ issue.pk }}" name="reason" minlength="5" maxlength="500" required rows="2">
+</textarea>
+                <div class="action-row">
+                  <button name="action"
+                          value="resolve"
+                          class="button small secondary">Вопрос решён · продолжить</button>
+                  {% if order.status == "delivery" %}
+                    <button class="button small secondary"
+                            name="action"
+                            value="return"
+                            data-confirm-button="Подтверждаете, что заказ фактически возвращён в ресторан и может быть выдан заново?">Возвращён в ресторан</button>
+                  {% endif %}
+                  <button name="action" value="cancel" class="button small danger">Отменить заказ</button>
+                </div>
+              </form>
+            {% endif %}
+          {% endfor %}
+          {% if order.status == "new" or order.status == "cooking" %}
+            <form action="{% url 'operation_action' order.pk %}"
+                  method="post"
+                  class="spaced">
+              {% csrf_token %}
+              {% if order.status == "new" %}
+                <button name="action" value="cooking" class="button small">Начать готовить →</button>
+              {% else %}
+                <button name="action" value="ready" class="button small">Готов · на выдачу →</button>
+              {% endif %}
+            </form>
+          {% endif %}
+          {% if order.is_active %}
+            {% if order.payment.method == "card" or order.payment.status == "paid" %}
+              <details class="support">
+                <summary>Проверить архивную оплату</summary>
+                <p>Используйте только после проверки, что деньги не получены, и согласования с покупателем.</p>
+                <form method="post" action="{% url 'operation_action' order.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="reconcile">
+                  <label>
+                    Результат проверки<textarea name="reason" minlength="5" maxlength="500" required rows="2">
+</textarea>
+                  </label>
+                  <label class="checkbox-field">
+                    <input type="checkbox" name="agreed" value="yes" required>
+                    Деньги не получены, покупатель согласовал наличные
+                  </label>
+                  <button class="button secondary small">Согласовать наличные</button>
+                </form>
+              </details>
+            {% endif %}
+            {% if order.status == "delivery" %}
+              <details class="support">
+                <summary>Подтвердить доставку вручную</summary>
+                <form method="post" action="{% url 'operation_action' order.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="complete">
+                  <label>
+                    Основание подтверждения<textarea name="reason" minlength="5" maxlength="500" required rows="2">
+</textarea>
+                  </label>
+                  <label class="checkbox-field">
+                    <input type="checkbox" name="received" value="yes" required>
+                    Клиент получил заказ, полная сумма наличными получена
+                  </label>
+                  <button class="button secondary small">Доставка и оплата подтверждены</button>
+                </form>
+              </details>
+            {% endif %}
+          {% endif %}
+          {% if order.is_active %}
+            <details class="support">
+              <summary>Отменить заказ</summary>
+              <form method="post" action="{% url 'operation_action' order.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="cancel">
+                <label for="reason-{{ order.pk }}">Причина (будет видна покупателю)</label>
+                <textarea id="reason-{{ order.pk }}" name="reason" minlength="5" maxlength="500" required rows="2">
+</textarea>
+                <button class="button danger small">Подтвердить отмену</button>
+              </form>
+            </details>
+          {% endif %}
+        </article>
+      {% empty %}
+        <div class="empty-state panel">
+          <h2>Всё спокойно</h2>
+          <p>Заказов в этой категории пока нет.</p>
+        </div>
+      {% endfor %}
+      {% include "includes/pagination.html" %}
+    </div>
+    <aside class="stack">
+      <div class="panel">
+        <h2>Курьеры</h2>
+        {% for courier in couriers %}
+          <div class="courier-admin-row">
+            <strong>{{ courier.name }}</strong>
+            <p>{{ courier.phone }} · {{ courier.get_vehicle_display }}</p>
+            <p>
+              {% if courier.is_approved %}
+                {{ courier.get_shift_status_display }}{% else %}Ожидает одобрения{% endif %}
+            </p>
+            {% if perms.courier.change_courier %}
+              <form method="post" action="{% url 'approve_courier' courier.pk %}">
+                {% csrf_token %}
+                {% if courier.is_approved %}
+                  <input type="hidden" name="approved" value="no">
+                  <button class="text-button">Приостановить доступ</button>
+                {% else %}
+                  <input type="hidden" name="approved" value="yes">
+                  <button class="button secondary small">Одобрить заявку</button>
+                {% endif %}
+              </form>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p>Заявок пока нет.</p>
+        {% endfor %}
+      </div>
+      {% if refunds %}
+        <div class="panel">
+          <h2>Возвраты</h2>
+          {% for order in refunds %}
+            <form class="stack"
+                  method="post"
+                  action="{% url 'operation_action' order.pk %}">
+              {% csrf_token %}
+              <p>№{{ order.pk }} · {{ order.total_price|money }} сум</p>
+              <input type="hidden" name="action" value="refund">
+              <label class="checkbox-field">
+                <input type="checkbox" name="refunded" value="yes" required>
+                Деньги фактически возвращены клиенту
+              </label>
+              <button class="button secondary small">Подтвердить возврат</button>
+            </form>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

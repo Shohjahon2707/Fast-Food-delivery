@@ -1,64 +1,58 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Menu{% endblock %}
-
-{% block content %}
-<div class="container my-5">
-    <h2 class="text-center mb-4">🍽 Наше меню</h2>
-
-    <!-- Навигация по категориям -->
-    <ul class="nav nav-tabs justify-content-center mb-4" id="menuTabs">
-        {% for category in categories %}
-            <li class="nav-item">
-                <button class="nav-link {% if forloop.first %}active{% endif %}" 
-                        data-bs-toggle="tab" 
-                        data-bs-target="#cat{{ category.id }}">
-                    {{ category.name }}
-                </button>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <!-- Контент категорий -->
-    <div class="tab-content">
-        {% for category in categories %}
-            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="cat{{ category.id }}">
-                <div class="row">
-                    {% for item in category.items.all %}
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <div class="card shadow-sm h-100 rounded-4 border-0 d-flex flex-column">
-                                {% if item.image %}
-                                    <img src="{{ item.image.url }}" class="card-img-top rounded-top-4" style="height: 180px; object-fit: cover;" alt="{{ item.name }}">
-                                {% else %}
-                                    <img src="{% static 'img/no_image.png' %}" class="card-img-top rounded-top-4" style="height: 180px; object-fit: cover;" alt="No image">
-                                {% endif %}
-
-                                <div class="card-body text-center d-flex flex-column">
-                                    <h5 class="fw-bold">{{ item.name }}</h5>
-                                    <p class="text-muted small description">{{ item.description|truncatewords:12 }}</p>
-                                    <p class="fw-bold price">{{ item.price }} UZS</p>
-
-                                    {% if user.is_authenticated %}
-                                        <a href="{% url 'add_to_cart' item.id %}" class="btn btn-success rounded-pill mt-auto">🛒 В корзину</a>
-                                    {% else %}
-                                        <a href="{% url 'login' %}" class="btn btn-warning rounded-pill mt-auto">🛒 В корзину</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="text-center">Нет товаров в этой категории.</p>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
+{% extends "base.html" %}{% load food %}{% block title %}Меню — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top">
+  <span class="eyebrow">Выбирайте по настроению</span>
+  <div class="section-heading">
+    <h1 class="page-title">
+      Чего хочется <em>сегодня?</em>
+    </h1>
+    <span class="muted">{{ page_obj.paginator.count }} блюд</span>
+  </div>
+  <form method="get" class="menu-filters">
+    <div class="search-field">
+      <span aria-hidden="true">⌕</span>
+      <input type="search"
+             name="q"
+             value="{{ query }}"
+             placeholder="Бургер, картошка, что-то вкусное…"
+             aria-label="Найти блюдо">
+      <button type="submit" class="button small">Найти</button>
     </div>
-</div>
-
-<style>
-  .description { min-height: 40px; }
-  .price { color: #28a745; font-size: 1.1rem; margin-bottom: 10px; }
-  .card:hover { transform: translateY(-5px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); transition: all 0.3s ease; }
-</style>
+    <input type="hidden" name="category" value="{{ selected_category }}">
+    <label class="visually-hidden" for="diet">Предпочтения</label>
+    <select name="diet" id="diet" data-autosubmit>
+      <option value="all">Все блюда</option>
+      <option value="vegetarian" {% if diet == 'vegetarian' %}selected{% endif %}>Без мяса</option>
+    </select>
+    <label class="visually-hidden" for="sort">Сортировка</label>
+    <select id="sort" name="sort" data-autosubmit>
+      <option value="">По умолчанию</option>
+      <option value="price" {% if sort == 'price' %}selected{% endif %}>Сначала дешевле</option>
+      <option value="-price" {% if sort == '-price' %}selected{% endif %}>Сначала дороже</option>
+    </select>
+    <noscript>
+      <button class="button small">Применить</button>
+    </noscript>
+  </form>
+  <nav class="category-tabs" aria-label="Категории">
+    <a class="chip {% if not selected_category %}selected{% endif %}"
+       href="{% querystring category='' page=None %}">Всё меню</a>
+    {% for category in categories %}
+      <a class="chip {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}"
+         href="{% querystring category=category.pk page=None %}">{{ category.name }}</a>
+    {% endfor %}
+  </nav>
+  <div class="products">
+    {% for item in page_obj %}
+      {% include "includes/product_card.html" %}
+    {% empty %}
+      <div class="empty-state full-width">
+        <span class="empty-icon">⌕</span>
+        <h2>Пока ничего не нашлось</h2>
+        <p>Попробуйте другое название или сбросьте фильтры.</p>
+        <a href="{% url 'menu_list' %}?diet=all" class="button">Показать всё меню</a>
+      </div>
+    {% endfor %}
+  </div>
+  {% include "includes/pagination.html" %}
+</section>
 {% endblock %}

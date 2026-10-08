@@ -1,70 +1,104 @@
+{% load static food %}
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Food Delivery{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light d-flex flex-column min-vh-100">
-
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">🍔 FoodDelivery</a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light me-2" href="{% url 'menu_list' %}">📖 Menu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light me-2" href="{% url 'cart_detail' %}">🛒 Cart</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light me-2" href="{% url 'order_list' %}">📦 Orders</a>
-                    </li>
-
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="userMenu"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                👤 {{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                                <li>
-                                    <form method="post" action="{% url 'logout' %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="dropdown-item">🚪 Logout</button>
-                                    </form>
-                                </li>                                
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item"><a class="btn btn-outline-light me-2" href="{% url 'login' %}">🔑 Login</a></li>
-                        <li class="nav-item"><a class="btn btn-outline-light" href="{% url 'register_user' %}">📝 Sign up</a></li>
-                    {% endif %}
-                </ul>
-            </div>
+<html lang="ru" {% if reduce_motion %}class="reduce-motion"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8f5ef">
+    <meta name="description"
+          content="Тёпло — любимая еда с доставкой. Сочные бургеры, хрустящие закуски и забота в каждом заказе.">
+    <title>
+      {% block title %}
+        Тёпло — еда, которая радует{% endblock %}
+    </title>
+    <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <script src="{% static 'js/site.js' %}" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="{% url 'home' %}" aria-label="Тёпло — главная">
+          <span class="brand-mark">т.</span>
+          <span>тёпло<span class="brand-caption">еда с заботой</span>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Основная навигация">
+          {% if user.is_staff %}
+            {% if can_operate %}
+              <a href="{% url 'operations' %}">Рабочая панель</a>
+            {% endif %}
+            <a href="{% url 'admin:index' %}">Управление</a>
+          {% elif user.is_courier %}
+            <a class="nav-active" href="{% url 'courier_orders' %}">Мои доставки</a>
+            <span class="nav-tag">Кабинет курьера</span>
+          {% else %}
+            <a href="{% url 'menu_list' %}">Меню</a>
+            {% if user.is_authenticated %}
+              <a href="{% url 'order_list' %}">Мои заказы</a>
+            {% else %}
+              <a href="{% url 'home' %}#how">Как это работает</a>
+            {% endif %}
+          {% endif %}
+        </nav>
+        <div class="nav-actions">
+          {% if user.is_authenticated %}
+            {% if user.is_customer %}
+              <a class="account-link"
+                 href="{% url 'profile' %}">{{ user.first_name|default:user.username|truncatechars:14 }}</a>
+              <a class="button small cart-link"
+                 href="{% url 'cart_detail' %}">Корзина <span data-cart-count>{{ cart_count }}</span>
+              </a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button class="text-button logout" type="submit">Выйти</button>
+            </form>
+          {% else %}
+            <a class="account-link" href="{% url 'login' %}">Войти</a>
+            <a class="button small" href="{% url 'menu_list' %}">Выбрать еду <span aria-hidden="true">→</span>
+            </a>
+          {% endif %}
         </div>
-    </nav>
-</header>
-
-<main class="container my-4 flex-grow-1">
-    {% block content %}{% endblock %}
-</main>
-
-<footer class="bg-dark text-light text-center py-3 mt-auto shadow-sm">
-    <div class="container">
-        <p class="mb-1">© 2025 🍔 FoodDelivery — Все права защищены</p>
-        <small class="text-muted">Разработано с ❤️ на Django + Bootstrap</small>
+      </div>
+    </header>
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+      {% for message in messages %}
+        <div class="toast {{ message.tags }}">
+          {{ message }}<button type="button" data-dismiss aria-label="Закрыть уведомление">×</button>
+        </div>
+      {% endfor %}
     </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <main id="main">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="{% url 'home' %}">
+            <span class="brand-mark">т.</span>
+            <span>тёпло</span>
+          </a>
+          <p>Хорошая еда. Хороший день.</p>
+        </div>
+        <div>
+          <span class="eyebrow">Каждый день — со вкусом</span>
+          <p>
+            Доставка по вашему адресу.
+            <br>
+            Оплата наличными при получении.
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="{% url 'preferences' %}">Настройки и cookies</a>
+          {% if not user.is_authenticated or user.is_customer %}
+            <a href="{% url 'courier_login' %}">Для курьеров</a>
+          {% endif %}
+          <span>© {% now "Y" %} Тёпло</span>
+        </div>
+      </div>
+    </footer>
+    {% block extra_js %}{% endblock %}
+  </body>
 </html>

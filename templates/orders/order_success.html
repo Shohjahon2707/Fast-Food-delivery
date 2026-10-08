@@ -1,109 +1,23 @@
-{% extends "base.html" %}
-{% block title %}Order Success #{{ order.id }}{% endblock %}
-
-{% block content %}
-<div class="container my-5 text-center">
-    <div class="alert alert-success shadow-sm" role="alert">
-        🎉 Ваш заказ #{{ order.id }} оформлен!
+{% extends "base.html" %}{% load food %}{% block title %}Заказ принят — Тёпло{% endblock %}{% block content %}
+<section class="container section">
+  <div class="success-card panel">
+    <span class="success-icon">✓</span>
+    <span class="eyebrow">Спасибо за заказ</span>
+    <h1>
+      Скоро будет <em>вкусно.</em>
+    </h1>
+    <p>
+      Заказ №{{ order.id }} принят.
+      <br>
+      Следите за приготовлением и доставкой в его деталях.
+    </p>
+    <div class="success-info">
+      <span>{{ order.address }}</span>
+      <strong>{{ order.total_price|money }} сум · наличными</strong>
     </div>
-
-    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
-
-    <!-- Кнопки оплаты, если заказ в ожидании -->
-    {% if order.status == 'pending' %}
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-warning text-dark">
-            💰 Оплата заказа
-        </div>
-        <div class="card-body">
-            <p>Выберите способ оплаты:</p>
-            <a href="{% url 'pay_with_card' order.id %}" class="btn btn-success btn-lg me-3">💳 Оплатить картой</a>
-            <form method="post" action="{% url 'mark_as_paid' order.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-warning btn-lg">💵 Оплата наличными</button>
-            </form>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Таблица товаров -->
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Item</th>
-                    <th class="text-center">Qty</th>
-                    <th class="text-end">Price</th>
-                    <th class="text-end">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for item in order.items.all %}
-                <tr>
-                    <td>{{ item.menu_item.name }}</td>
-                    <td class="text-center">{{ item.quantity }}</td>
-                    <td class="text-end">{{ item.menu_item.price }} UZS</td>
-                    <td class="text-end">{{ item.total }} UZS</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <h4 class="mb-4">Общая сумма: <strong>{{ order.total_price }} UZS</strong></h4>
-
-    <!-- Информация о доставке -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-info text-white">
-            🚚 Информация о доставке
-        </div>
-        <div class="card-body text-start">
-            <p><strong>Адрес доставки:</strong> {{ order.address }}</p>
-            <p>
-                <strong>Курьер:</strong>
-                {% if order.courier %}
-                    {{ order.courier.name }} ({{ order.courier.get_vehicle_display }})
-                {% else %}
-                    Информация будет назначена позже
-                {% endif %}
-            </p>
-
-            <div id="map" style="width: 100%; height: 350px; border-radius: 10px; margin-top: 20px;"></div>
-        </div>
-    </div>
-
-    <a href="{% url 'home' %}" class="btn btn-primary me-2">🏠 На главную</a>
-    <a href="{% url 'order_list' %}" class="btn btn-secondary">📦 Мои заказы</a>
-</div>
-
-<!-- Подключаем карту (Leaflet) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const map = L.map('map').setView([lat, lon], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
-            L.marker([lat, lon]).addTo(map)
-              .bindPopup("📍 Ваше текущее местоположение")
-              .openPopup();
-        }, () => {
-            document.getElementById('map').innerHTML = "<p class='text-danger'>Не удалось получить геопозицию.</p>";
-        });
-    } else {
-        document.getElementById('map').innerHTML = "<p class='text-danger'>Ваш браузер не поддерживает геолокацию.</p>";
-    }
-});
-</script>
-<style>
-.table th, .table td { vertical-align: middle; }
-.card { border-radius: 10px; }
-</style>
-
+    <a class="button full" href="{% url 'order_detail' order.pk %}">Следить за заказом <span>→</span>
+    </a>
+    <a class="text-link" href="{% url 'menu_list' %}">Вернуться в меню</a>
+  </div>
+</section>
 {% endblock %}

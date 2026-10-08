@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block title %}Настройки — Тёпло{% endblock %}{% block content %}
+<section class="container section narrow page-top">
+  <span class="eyebrow">Уютно именно вам</span>
+  <h1 class="page-title">
+    Ваши <em>предпочтения</em>
+  </h1>
+  <div class="panel form-panel">
+    <form method="post" action="{% url 'save_preferences' %}">
+      {% csrf_token %}
+      <div class="field">
+        <label for="pref-diet">Что показывать в меню по умолчанию</label>
+        <select name="diet" id="pref-diet">
+          <option value="all">Все блюда</option>
+          <option value="vegetarian"
+                  {% if preferred_diet == 'vegetarian' %}selected{% endif %}>Блюда без мяса</option>
+        </select>
+      </div>
+      <div class="field checkbox-field">
+        <label>
+        <input type="checkbox"
+               name="motion"
+               value="reduce"
+               {% if reduce_motion %}checked{% endif %}> Уменьшить анимацию</label>
+      </div>
+      <p class="help-text">По кнопке ниже мы сохраним эти два предпочтения в cookie на 180 дней. Адрес и телефон в этой cookie не хранятся.</p>
+      <button class="button">Сохранить предпочтения</button>
+    </form>
+    {% if preferences_saved %}
+      <form method="post" action="{% url 'save_preferences' %}" class="spaced">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="forget">
+        <button class="text-button">Удалить сохранённые предпочтения</button>
+      </form>
+    {% endif %}
+  </div>
+  <div class="panel">
+    <h2>Как используются cookies</h2>
+    <p>Обязательные cookies поддерживают вход в аккаунт и защищают формы. Без галочки «Запомнить меня» сессия завершается при закрытии браузера. С галочкой вход сохраняется на 30 дней.</p>
+    <p>Изображения и стили браузер может хранить в кэше для быстрой загрузки. Страницы с контактами и заказами не кэшируются. Рекламных и аналитических cookies здесь нет.</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% load food %}
+<article class="product-card">
+  <a class="product-image" href="{% url 'menu_item_detail' item.id %}">
+    <img src="{{ item.image_url }}"
+         alt="{{ item.name }}"
+         width="400"
+         height="300"
+         loading="lazy"
+         decoding="async">
+    {% if item.badge %}
+      <span class="food-badge">{{ item.badge }}</span>
+    {% elif item.is_vegetarian %}
+      <span class="food-badge green">Без мяса</span>
+    {% endif %}
+  </a>
+  <div class="product-info">
+    <div class="product-title">
+      <a href="{% url 'menu_item_detail' item.id %}">
+        <h3>{{ item.name }}</h3>
+      </a>
+      <span>{{ item.weight }}</span>
+    </div>
+    <p>{{ item.description|truncatechars:85 }}</p>
+    <div class="product-bottom">
+      <strong>{{ item.price|money }} <small>сум</small>
+      </strong>
+      {% if user.is_customer %}
+        <form action="{% url 'add_to_cart' item.id %}" method="post" data-add-cart>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="add-button"
+                  aria-label="Добавить {{ item.name }} в корзину"
+                  type="submit">
+            + <span>Добавить</span>
+          </button>
+        </form>
+      {% else %}
+        <a class="add-button"
+           href="{% url 'login' %}"
+           aria-label="Войти и заказать {{ item.name }}">+ <span>Добавить</span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</article>

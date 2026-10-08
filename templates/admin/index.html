@@ -1,0 +1,5 @@
+{% extends "admin/index.html" %}
+{% block content %}
+  <p>
+    <a href="{% url 'operations' %}" style="font-size:18px">Открыть рабочую панель заказов и курьеров →</a>
+  </p>{{ block.super }}{% endblock %}

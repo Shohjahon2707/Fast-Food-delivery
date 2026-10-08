@@ -1,0 +1,44 @@
+name: Delivery checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: delivery
+          POSTGRES_USER: delivery
+          POSTGRES_PASSWORD: delivery-test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check apps project
+      - run: python manage.py check && python manage.py makemigrations --check --dry-run
+      - name: SQLite tests
+        run: python manage.py test
+      - name: PostgreSQL tests including simultaneous requests
+        env:
+          DATABASE_URL: postgresql://delivery:delivery-test-only@localhost:5432/delivery
+        run: python manage.py test
+      - name: Production static build and settings
+        env:
+          DJANGO_DEBUG: 'false'
+          DJANGO_SECRET_KEY: ci-only-not-a-production-secret-00000000000000000000000000000000
+          DJANGO_ALLOWED_HOSTS: localhost
+        run: python manage.py collectstatic --noinput && python manage.py check --deploy --fail-level WARNING

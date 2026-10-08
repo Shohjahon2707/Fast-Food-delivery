@@ -1,109 +1,131 @@
-{% extends "base.html" %}
-{% block title %}Order #{{ order.id }}{% endblock %}
-
-{% block content %}
-<div class="container my-5">
-    <h2 class="mb-4">📦 Заказ #{{ order.id }}</h2>
-    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
-
-    <!-- Кнопки оплаты -->
-    {% if order.status == 'pending' %}
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-warning text-dark">
-            💰 Оплата заказа
-        </div>
-        <div class="card-body">
-            <p>Выберите способ оплаты:</p>
-            <a href="{% url 'pay_with_card' order.id %}" class="btn btn-success me-2">💳 Оплатить картой</a>
-            <form method="post" action="{% url 'mark_as_paid' order.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-warning">💵 Оплата наличными</button>
-            </form>
-        </div>
+{% extends "base.html" %}{% load food %}{% block title %}Заказ №{{ order.pk }} — Тёпло{% endblock %}{% block content %}
+<section class="container section page-top">
+  <a href="{% url 'order_list' %}" class="back-link">← Мои заказы</a>
+  <div class="section-heading">
+    <div>
+      <h1 class="page-title">
+        Заказ <em>№{{ order.pk }}</em>
+      </h1>
+      <p>{{ order.created_at|date:'d E Y, H:i' }}</p>
     </div>
-    {% endif %}
-
-    <!-- Таблица товаров -->
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Item</th>
-                    <th class="text-center">Qty</th>
-                    <th class="text-end">Price</th>
-                    <th class="text-end">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in order.items.all %}
-                <tr>
-                    <td>{{ item.menu_item.name }}</td>
-                    <td class="text-center">{{ item.quantity }}</td>
-                    <td class="text-end">{{ item.menu_item.price }} UZS</td>
-                    <td class="text-end">{{ item.total }} UZS</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+  </div>
+  {% if order.is_active %}
+    <div data-live-order="{% url 'order_status' order.pk %}"
+         data-version="{{ order.events.count }}"
+         class="live-order-note">
+      <span class="live-dot"></span> Статус проверяется автоматически
     </div>
-
-    <h4 class="mb-4 text-end">Общая сумма: <strong>{{ order.total_price }} UZS</strong></h4>
-
-    <!-- Информация о доставке -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-info text-white">
-            🚚 Информация о доставке
-        </div>
-        <div class="card-body">
-            <p><strong>Адрес доставки:</strong> {{ order.address }}</p>
+  {% endif %}
+  {% if order.status != "cancel" %}
+    <ol class="order-progress" aria-label="Этапы заказа">
+      {% for step in order.steps %}
+        <li class="{% if step.complete %}complete{% endif %} {% if step.current %}current{% endif %}"
+            {% if step.current %}aria-current="step"{% endif %}>
+          <span>
+            {% if step.complete %}
+              ✓{% else %}{{ forloop.counter }}{% endif %}
+          </span>
+          <b>{{ step.label }}</b>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <div class="notice">Заказ отменён. {{ order.cancel_reason }}{% if order.payment.status == "refund_due" %}
+      <br>Администратор организует возврат средств и отметит его здесь.{% endif %}
+  </div>
+{% endif %}
+{% if open_issue %}
+  <div class="notice">
+    Ваше обращение рассматривается: {{ open_issue.reason }}
+    <br>
+    <small>Решение появится в истории. До этого завершение доставки приостановлено.</small>
+  </div>
+{% endif %}
+<div class="checkout-grid">
+  <div class="stack">
+    <div class="panel">
+      <h2>Куда и кому</h2>
+      <p class="address">{{ order.address }}</p>
+      <p>{{ order.customer_name }} · {{ order.phone }}</p>
+      {% if order.comment %}
+        <div class="notice soft">{{ order.comment }}</div>
+      {% endif %}
+      {% if order.courier and order.status == "delivery" %}
+        <div class="courier-contact">
+          <span class="avatar">{{ order.courier.name|first }}</span>
+          <div>
+            <strong>{{ order.courier.name }}</strong>
             <p>
-                <strong>Курьер:</strong>
-                {% if order.courier %}
-                    {{ order.courier.name }} ({{ order.courier.get_vehicle_display }})
-                {% else %}
-                    Курьер ещё не назначен
-                {% endif %}
+              Ваш курьер · <a class="text-link" href="tel:{{ order.courier.phone }}">{{ order.courier.phone }}</a>
             </p>
-
-            <!-- Геопозиция -->
-            <div id="map" style="width: 100%; height: 350px; border-radius: 10px; margin-top: 20px;"></div>
+          </div>
         </div>
+      {% endif %}
     </div>
-
-    <a href="{% url 'order_list' %}" class="btn btn-secondary">🔙 Вернуться к заказам</a>
+    <div class="panel">
+      <div class="row-between">
+        <h2>История заказа</h2>
+        {% if order.is_active %}
+          <a class="text-link" href="{{ request.path }}">Обновить ↻</a>
+        {% endif %}
+      </div>
+      <ol class="timeline">
+        {% for event in order.events.all %}
+          <li>
+            <span>{{ event.created_at|date:'d.m H:i' }}</span>
+            <p>{{ event.note }}</p>
+          </li>
+        {% empty %}
+          <li>
+            <p>Заказ из предыдущей версии сервиса.</p>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% if order.is_active and not open_issue %}
+      <details class="panel support">
+        <summary>
+          {% if order.can_cancel %}
+            Отменить заказ или сообщить о проблеме{% else %}Нужна помощь или отмена?{% endif %}
+        </summary>
+        <p>
+          {% if order.can_cancel %}
+            Приготовление ещё не началось: отмена произойдёт сразу.{% else %}Заказ уже обрабатывается. Администратор рассмотрит запрос и свяжется с вами по телефону.{% endif %}
+        </p>
+        <form action="{% url 'cancel_order' order.pk %}" method="post">
+          {% csrf_token %}
+          <label for="cancel-reason">Причина</label>
+          <textarea id="cancel-reason" name="reason" required minlength="5" maxlength="500" rows="3" placeholder="Расскажите, что случилось">
+</textarea>
+          <button class="button secondary" type="submit">
+            {% if order.can_cancel %}
+              Отменить заказ{% else %}Отправить запрос{% endif %}
+          </button>
+        </form>
+      </details>
+    {% endif %}
+  </div>
+  <aside class="panel summary">
+    <h2>Состав заказа</h2>
+    {% for line in order.items.all %}
+      <div class="sum-row">
+        <span>{{ line.name|default:line.menu_item.name }} <small>× {{ line.quantity }}</small>
+        </span>
+        <span>{{ line.total|money }}</span>
+      </div>
+    {% endfor %}
+    <div class="sum-row">
+      <span>Доставка</span>
+      <span>{{ order.delivery_fee|money }}</span>
+    </div>
+    <div class="sum-row sum-total">
+      <strong>Итого</strong>
+      <strong>{{ order.total_price|money }} сум</strong>
+    </div>
+    <span class="status">{{ order.payment.get_status_display }}</span>
+    <p class="help-text">{{ order.payment.get_method_display }}</p>
+  </aside>
 </div>
-
-<!-- Скрипт для карты -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const map = L.map('map').setView([lat, lon], 15);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
-
-            L.marker([lat, lon]).addTo(map)
-                .bindPopup("📍 Ваше текущее местоположение")
-                .openPopup();
-        }, () => {
-            document.getElementById('map').innerHTML = "<p class='text-danger'>Не удалось получить геопозицию.</p>";
-        });
-    } else {
-        document.getElementById('map').innerHTML = "<p class='text-danger'>Ваш браузер не поддерживает геолокацию.</p>";
-    }
-});
-</script>
-
-<style>
-.table th, .table td { vertical-align: middle; }
-.card { border-radius: 10px; }
-</style>
-
+</section>
 {% endblock %}
