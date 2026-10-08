@@ -23,6 +23,11 @@ def backfill_orders(apps, schema_editor):
         line.name = line.menu_item.name
         line.save(update_fields=['name'])
 
+    # Flush deferred FK checks before the following schema operations on PostgreSQL.
+    # Keep data cleanup and schema changes in the same atomic migration.
+    if schema_editor.connection.vendor == 'postgresql':
+        schema_editor.execute('SET CONSTRAINTS ALL IMMEDIATE')
+
 
 class Migration(migrations.Migration):
 

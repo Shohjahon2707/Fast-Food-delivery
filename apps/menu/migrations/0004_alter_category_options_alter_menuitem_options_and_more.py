@@ -9,6 +9,11 @@ def clean_prices(apps, schema_editor):
     # Existing non-positive prices must be reviewed before the item is sold again.
     apps.get_model('menu', 'MenuItem').objects.filter(price__lte=0).update(price=1, is_available=False)
 
+    # Flush deferred FK checks before the following schema operations on PostgreSQL.
+    # Keep data cleanup and schema changes in the same atomic migration.
+    if schema_editor.connection.vendor == 'postgresql':
+        schema_editor.execute('SET CONSTRAINTS ALL IMMEDIATE')
+
 
 class Migration(migrations.Migration):
 
