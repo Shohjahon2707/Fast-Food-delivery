@@ -3,7 +3,8 @@
   <a class="back-link" href="{% url 'menu_list' %}">← Всё меню</a>
   <div class="detail-grid">
     <div class="detail-photo">
-      <img src="{{ item.image_url }}"
+      <img {% if item.photo_sheet %}class="food-sheet slot-{{ item.photo_slot }}"{% endif %}
+           src="{{ item.image_url }}"
            alt="{{ item.name }}"
            width="600"
            height="480">

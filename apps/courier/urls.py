@@ -4,6 +4,11 @@ from django.views.generic import RedirectView
 from . import views
 
 urlpatterns = [
+    path("location/stop/", views.stop_location, name="courier_stop_location"),
+    path("offers/<int:pk>/", views.offer_response, name="offer_response"),
+    path("location/", views.location, name="courier_location"),
+    path("live/", views.live, name="courier_live"),
+    path("orders/<int:pk>/eta/", views.eta, name="courier_eta"),
     path("", RedirectView.as_view(pattern_name="courier_orders"), name="courier_home"),
     path("orders/", views.orders, name="courier_orders"),
     path("orders/take/<int:pk>/", views.take, name="take_order"),

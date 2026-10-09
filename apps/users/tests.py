@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 from decimal import Decimal
 from unittest.mock import patch
 
@@ -10,12 +11,13 @@ from django.core.management import call_command
 from django.db import IntegrityError, transaction
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.cart.models import Cart, CartItem
 from apps.courier.models import Courier
 from apps.menu.models import Category, MenuItem
 from apps.orders import services
-from apps.orders.models import Order
+from apps.orders.models import DeliveryOffer, Order
 from apps.payments.models import Payment
 
 User = get_user_model()
@@ -78,7 +80,17 @@ class DeliveryTests(TestCase):
             setattr(order, key, value)
         if kwargs:
             order.save()
+        if status == "ready":
+            self.reserve(order)
         return order
+
+    def reserve(self, order):
+        DeliveryOffer.objects.create(
+            order=order,
+            courier=self.courier,
+            state="accepted",
+            expires_at=timezone.now() + timedelta(minutes=15),
+        )
 
     def test_cash_checkout_snapshot_and_duplicate_submit(self):
         cart = self.cart()
@@ -222,6 +234,7 @@ class DeliveryTests(TestCase):
         order = self.order()
         services.advance_order(order.pk, self.admin, "cooking")
         services.advance_order(order.pk, self.admin, "ready")
+        self.reserve(order)
         services.take_order(order.pk, self.courier_user)
         self.client.force_login(self.courier_user)
         self.assertContains(self.client.get(reverse("courier_orders")), self.customer.phone)

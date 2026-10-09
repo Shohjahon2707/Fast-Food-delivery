@@ -5,7 +5,12 @@ from apps.common.models import BaseModel
 
 
 class User(AbstractUser, BaseModel):
-    ROLE_CHOICES = [("customer", "Покупатель"), ("courier", "Курьер"), ("admin", "Администратор")]
+    ROLE_CHOICES = [
+        ("customer", "Покупатель"),
+        ("courier", "Курьер"),
+        ("admin", "Администратор"),
+        ("kitchen", "Кухня"),
+    ]
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="customer")

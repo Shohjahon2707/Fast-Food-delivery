@@ -1,12 +1,14 @@
-{% extends "base.html" %}{% load food %}{% block title %}Рабочая панель — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food static %}{% block title %}Рабочая панель — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top">
-  <span class="eyebrow">Ресторан под контролем</span>
+  <span class="eyebrow">Только то, что требует внимания</span>
   <div class="section-heading">
     <h1 class="page-title">
-      Рабочая <em>панель</em>
+      КОНТРОЛЬ <em>СЕРВИСА</em>
     </h1>
-    <a class="button secondary small" href="{% url 'admin:index' %}">Меню и данные →</a>
+    <div class="action-row"><a class="button secondary small" href="{% url 'kitchen' %}">Кухня →</a><a class="button secondary small" href="{% url 'admin:index' %}">Меню и данные →</a></div>
   </div>
+  <div class="notice spaced"
+       data-operations-alerts="{% url 'operations_alerts' %}">Требует внимания: <strong data-alert-count>{{ health.count }}</strong>. <span data-worker-health>{% if not health.configured %}Укажите адрес и координаты кухни в настройках.{% elif not health.healthy %}Диспетчер давно не отвечал. Проверьте процесс worker.{% else %}Автоматический диспетчер работает.{% endif %}</span><a class="text-link" href="?status=issues" data-alert-link> Открыть обращения ↗</a></div>
   <nav class="category-tabs" aria-label="Фильтр заказов">
     <a class="chip {% if selected_status == 'active' %}selected{% endif %}"
        href="?status=active">Активные</a>
@@ -35,7 +37,7 @@
           {% if order.comment %}
             <div class="notice soft">{{ order.comment }}</div>
           {% endif %}
-          <div class="order-lines">
+          {% if order.dispatch_alert %}<div class="notice">{{ order.dispatch_alert }}</div>{% endif %}<div class="order-lines">
             {% for item in order.items.all %}
               <span>{{ item.name }} <b>× {{ item.quantity }}</b>
               </span>
@@ -76,18 +78,6 @@
               </form>
             {% endif %}
           {% endfor %}
-          {% if order.status == "new" or order.status == "cooking" %}
-            <form action="{% url 'operation_action' order.pk %}"
-                  method="post"
-                  class="spaced">
-              {% csrf_token %}
-              {% if order.status == "new" %}
-                <button name="action" value="cooking" class="button small">Начать готовить →</button>
-              {% else %}
-                <button name="action" value="ready" class="button small">Готов · на выдачу →</button>
-              {% endif %}
-            </form>
-          {% endif %}
           {% if order.is_active %}
             {% if order.payment.method == "card" or order.payment.status == "paid" %}
               <details class="support">
@@ -199,4 +189,7 @@
     </aside>
   </div>
 </section>
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/operations.js' %}" defer></script>
 {% endblock %}

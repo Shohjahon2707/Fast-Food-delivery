@@ -38,6 +38,19 @@ class CheckoutForm(forms.Form):
     )
     checkout_token = forms.UUIDField(widget=forms.HiddenInput)
 
+    latitude = forms.DecimalField(
+        required=False, min_value=-90, max_value=90, decimal_places=6, widget=forms.HiddenInput
+    )
+    longitude = forms.DecimalField(
+        required=False, min_value=-180, max_value=180, decimal_places=6, widget=forms.HiddenInput
+    )
+
+    def clean(self):
+        data = super().clean()
+        if (data.get("latitude") is None) != (data.get("longitude") is None):
+            raise forms.ValidationError("Укажите точку доставки заново.")
+        return data
+
     def clean_phone(self):
         return clean_phone(self.cleaned_data["phone"])
 

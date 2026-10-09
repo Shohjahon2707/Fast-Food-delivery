@@ -31,3 +31,16 @@ def operator_required(view):
         return view(request, *args, **kwargs)
 
     return wrapped
+
+
+def kitchen_required(view):
+    @login_required(login_url="kitchen_login")
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        if not request.user.has_perm("orders.work_kitchen") or not (
+            request.user.role == "kitchen" or request.user.is_staff
+        ):
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+
+    return wrapped

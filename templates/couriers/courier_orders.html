@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load food %}{% block title %}Кабинет курьера — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food static %}{% block title %}Кабинет курьера — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top courier-theme">
   <span class="eyebrow">На связи, {{ courier.name }}</span>
   <div class="section-heading">
@@ -31,11 +31,21 @@
           {% csrf_token %}
           <button class="button secondary small" {% if current %}disabled{% endif %}>
             {% if courier.shift_status == "active" %}
-              Завершить смену{% else %}Выйти на смену{% endif %}
+              Завершить смену{% elif courier.shift_status == "busy" %}На доставке{% else %}Выйти на смену{% endif %}
           </button>
         </form>
       </div>
     </div>
+    {% if courier.shift_status != "inactive" %}<div class="panel location-panel"
+     data-courier-tracking="{% url 'courier_location' %}"
+     data-stop="{% url 'courier_stop_location' %}"
+     data-live="{% url 'courier_live' %}"
+     data-offer="{{ offer.pk|default:'' }}"
+     data-state="{{ offer.state|default:'' }}"
+     data-current="{{ current.pk|default:'' }}"><div><h3>Геопозиция на смене</h3><p data-gps-status role="status">{% if location_fresh %}Последняя точка актуальна. Включите обновление для новых предложений.{% else %}Включите геопозицию, чтобы система подбирала заказы рядом.{% endif %}</p></div><button type="button" class="button secondary small" data-start-gps>Включить геопозицию</button><button type="button" class="text-button" data-stop-gps hidden>Остановить</button><p class="help-text">Точка передаётся только пока открыта эта страница на смене. После завершения смены координаты удаляются.</p><div data-offer-update role="status"></div></div>{% endif %}
+    {% if offer %}<article class="panel offer-panel"><span class="eyebrow">{% if current %}Следующий заказ{% else %}Персональное предложение{% endif %}</span><div class="row-between"><h2>№{{ offer.order_id }} · {{ offer.order.get_status_display }}</h2><span class="status">{% if offer.state == "pending" %}<span data-countdown="{{ offer.expires_at|date:'c' }}"></span>{% else %}За вами{% endif %}</span></div><p>Примерно {{ offer.pickup_minutes }} мин до кухни · {{ restaurant.address|default:'Адрес кухни уточните у команды' }}</p><p>{{ offer.order.total_price|money }} сум · наличными</p>{% if offer.state == "pending" %}<form method="post"
+      action="{% url 'offer_response' offer.pk %}"
+      class="action-row">{% csrf_token %}<button class="button" name="action" value="accept">Принять предложение</button><button class="button secondary" name="action" value="decline">Пропустить</button></form>{% else %}{% if current %}<p>Завершите текущую доставку. Этот заказ зарезервирован, но ещё не забран.</p>{% elif offer.order.status == "ready" %}<form method="post" action="{% url 'take_order' offer.order_id %}">{% csrf_token %}<button class="button full">Забрал заказ · начать доставку →</button></form>{% else %}<p>Кухня готовит. Ориентир: {{ offer.order.ready_at|date:'H:i' }}.</p>{% endif %}{% endif %}</article>{% endif %}
     {% if current %}
       <div class="checkout-grid">
         <article class="panel">
@@ -52,6 +62,9 @@
              href="https://www.google.com/maps/search/?api=1&amp;query={{ current.address|urlencode }}"
              target="_blank"
              rel="noopener noreferrer">Открыть адрес на карте →</a>
+          <form method="post"
+                action="{% url 'courier_eta' current.pk %}"
+                class="spaced"><label>Примерно сколько до вручения?<select name="minutes"><option value="5">5 минут</option><option value="1">У клиента</option><option value="10">10 минут</option><option value="15">15 минут</option></select></label>{% csrf_token %}<button class="button secondary small">Обновить прогноз</button></form>
           <div class="auth-divider"></div>
           {% for line in current.items.all %}
             <div class="sum-row">
@@ -98,37 +111,7 @@
           {% endif %}
         </aside>
       </div>
-    {% else %}
-      <div class="section-heading">
-        <h2>Готовы к доставке</h2>
-        <a class="text-link" href="{{ request.path }}">Обновить ↻</a>
-      </div>
-      <div class="delivery-grid">
-        {% for order in orders %}
-          <article class="panel">
-            <span class="status ready">Готов к выдаче</span>
-            <h2>Заказ №{{ order.pk }}</h2>
-            <p>Принят {{ order.created_at|date:'H:i' }}</p>
-            <p>Контакты и адрес откроются после принятия.</p>
-            <strong>{{ order.total_price|money }} сум · наличными</strong>
-            <form class="spaced" method="post" action="{% url 'take_order' order.pk %}">
-              {% csrf_token %}
-              <button class="button full">Забрал заказ · начать доставку →</button>
-            </form>
-          </article>
-        {% empty %}
-          <div class="empty-state panel full-width">
-            <h2>
-              {% if courier.shift_status == "inactive" %}
-                Готовы начать?{% else %}Пока можно передохнуть{% endif %}
-            </h2>
-            <p>
-              {% if courier.shift_status == "inactive" %}
-                Выйдите на смену, чтобы увидеть готовые заказы.{% else %}Новые доставки появятся, когда кухня приготовит заказы.{% endif %}
-            </p>
-          </div>
-        {% endfor %}
-      </div>
+    {% else %}<div class="empty-state panel"><h2>{% if courier.shift_status == "inactive" %}ГОТОВ НА СМЕНУ?{% else %}ИЩЕМ ТВОЙ СЛЕДУЮЩИЙ ЗАКАЗ.{% endif %}</h2><p>{% if courier.shift_status == "inactive" %}Выйдите на смену и включите геопозицию.{% else %}Доставки предлагаются автоматически. Оставьте кабинет открытым.{% endif %}</p></div>
     {% endif %}
   {% endif %}
   {% if history %}
@@ -144,4 +127,7 @@
     </div>
   {% endif %}
 </section>
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/courier.js' %}" defer></script>
 {% endblock %}

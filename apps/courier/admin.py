@@ -8,7 +8,16 @@ class CourierAdmin(admin.ModelAdmin):
     list_display = ("name", "phone", "vehicle", "is_approved", "shift_status")
     list_filter = ("is_approved", "shift_status", "vehicle")
     search_fields = ("name", "phone")
-    readonly_fields = ("user", "is_approved", "shift_status")
+    readonly_fields = (
+        "user",
+        "is_approved",
+        "shift_status",
+        "latitude",
+        "longitude",
+        "location_updated_at",
+        "location_accuracy",
+        "last_delivery_at",
+    )
 
     def has_add_permission(self, request):
         return False
