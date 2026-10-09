@@ -238,7 +238,10 @@ def eta(request, pk):
     from django.utils import timezone
 
     order = get_object_or_404(
-        Order.objects.select_for_update(), pk=pk, courier__user=request.user, status="delivery"
+        Order.objects.select_for_update(of=("self",)),
+        pk=pk,
+        courier__user=request.user,
+        status="delivery",
     )
     minutes = request.POST.get("minutes")
     if minutes not in ("1", "5", "10", "15"):

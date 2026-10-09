@@ -44,7 +44,7 @@
       body: new URLSearchParams(data),
     });
   const sendPosition = async (position) => {
-    if (sending || Date.now() - lastSent < 20000) return;
+    if (watcher === null || sending || Date.now() - lastSent < 20000) return;
     sending = true;
     try {
       const response = await post(panel.dataset.courierTracking, {
@@ -95,7 +95,7 @@
     sessionStorage.removeItem("courierGpsEnabled");
     if (watcher !== null) navigator.geolocation.clearWatch(watcher);
     watcher = null;
-    start.disabled = false;
+    start.disabled = true;
     stop.disabled = true;
     try {
       // Wait for an outstanding update before clearing the server position.
@@ -110,6 +110,7 @@
       status.textContent =
         "GPS остановлен, но сервер не ответил. Повторите остановку или завершите смену.";
     } finally {
+      start.disabled = false;
       stop.disabled = false;
     }
   });
