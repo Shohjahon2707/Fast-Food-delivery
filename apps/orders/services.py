@@ -29,6 +29,11 @@ def require_operator(actor):
 def checkout(user, data):
     if not user.is_customer:
         raise PermissionDenied
+    from .models import Restaurant
+
+    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    if not restaurant.accepting_orders:
+        raise ValidationError("Кухня сейчас не принимает заказы. Возвращайтесь чуть позже.")
     # Lock the cart for both quantity changes and checkout. The unique token is an
     # additional guard against a repeated browser submit after the cart is refilled.
     cart, _ = Cart.objects.get_or_create(user=user)
@@ -55,6 +60,8 @@ def checkout(user, data):
         phone=data["phone"],
         address=data["address"],
         comment=data.get("comment", ""),
+        latitude=data.get("latitude"),
+        longitude=data.get("longitude"),
         checkout_token=data["checkout_token"],
     )
     for line in lines:
@@ -77,15 +84,29 @@ def checkout(user, data):
 
 @transaction.atomic
 def advance_order(order_id, actor, target):
-    require_operator(actor)
+    if not actor.has_perm("orders.work_kitchen") or not (actor.role == "kitchen" or actor.is_staff):
+        require_operator(actor)
     order = Order.objects.select_for_update().get(pk=order_id)
     if {"new": "cooking", "cooking": "ready"}.get(order.status) != target:
         raise ValidationError("Этот переход уже выполнен или недоступен.")
     if order.issues.filter(resolved_at__isnull=True).exists():
         raise ValidationError("Сначала обработайте открытое обращение.")
+    from datetime import timedelta
+
+    from .models import Restaurant
+
+    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    order.ready_at = (
+        timezone.now() + timedelta(minutes=restaurant.preparation_minutes)
+        if target == "cooking"
+        else timezone.now()
+    )
     order.status = target
-    order.save(update_fields=["status", "updated_at"])
+    order.save(update_fields=["status", "ready_at", "updated_at"])
     event(order, actor, dict(Order.STATUS_CHOICES)[target])
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     return order
 
 
@@ -106,9 +127,32 @@ def take_order(order_id, actor):
         or order.issues.filter(resolved_at__isnull=True).exists()
     ):
         raise ValidationError("Заказ уже забрали или он ещё не готов.")
+    from .models import DeliveryOffer, Restaurant
+
+    offer = (
+        DeliveryOffer.objects.select_for_update()
+        .filter(order=order, courier=courier, state="accepted", expires_at__gt=timezone.now())
+        .first()
+    )
+    if not offer:
+        raise ValidationError("Сначала примите персональное предложение доставки.")
+    offer.state = "picked_up"
+    offer.save(update_fields=["state"])
+    from datetime import timedelta
+
+    from .dispatch import distance_minutes
+
+    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    order.delivery_eta = timezone.now() + timedelta(
+        minutes=distance_minutes(
+            (restaurant.latitude, restaurant.longitude),
+            (order.latitude, order.longitude),
+            courier.vehicle,
+        )
+    )
     order.courier = courier
     order.status = "delivery"
-    order.save(update_fields=["courier", "status", "updated_at"])
+    order.save(update_fields=["courier", "status", "delivery_eta", "updated_at"])
     courier.shift_status = "busy"
     courier.save(update_fields=["shift_status"])
     event(order, actor, "Курьер забрал заказ и направляется к вам.")
@@ -137,7 +181,11 @@ def deliver_order(order_id, actor):
     order.status = "done"
     order.save(update_fields=["status", "updated_at"])
     courier.shift_status = "active"
-    courier.save(update_fields=["shift_status"])
+    courier.last_delivery_at = timezone.now()
+    courier.save(update_fields=["shift_status", "last_delivery_at"])
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     event(order, actor, "Заказ доставлен. Курьер подтвердил получение наличных.")
     return order
 
@@ -145,6 +193,9 @@ def deliver_order(order_id, actor):
 @transaction.atomic
 def cancel_order(order_id, actor, reason):
     order = Order.objects.select_for_update().get(pk=order_id)
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     is_owner = actor.is_customer and order.user_id == actor.pk
     if not is_owner:
         require_operator(actor)
@@ -172,6 +223,9 @@ def cancel_order(order_id, actor, reason):
 @transaction.atomic
 def report_issue(order_id, actor, reason):
     order = Order.objects.select_for_update().get(pk=order_id)
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     is_owner = actor.is_customer and order.user_id == actor.pk
     is_courier = actor.is_courier and order.courier_id and order.courier.user_id == actor.pk
     if not (is_owner or is_courier):
@@ -192,6 +246,9 @@ def report_issue(order_id, actor, reason):
 def resolve_issue(order_id, actor, resolution, return_to_kitchen=False):
     require_operator(actor)
     order = Order.objects.select_for_update().get(pk=order_id)
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     if not order.is_active:
         raise ValidationError("Заказ уже завершён.")
     issues = order.issues.filter(resolved_at__isnull=True)
@@ -247,6 +304,9 @@ def reconcile_cash(order_id, actor, reason):
 def complete_by_admin(order_id, actor, reason):
     require_operator(actor)
     order = Order.objects.select_for_update().get(pk=order_id)
+    from .dispatch import dispatch_once
+
+    transaction.on_commit(dispatch_once)
     payment = Payment.objects.select_for_update().get(order=order)
     if (
         order.status != "delivery"

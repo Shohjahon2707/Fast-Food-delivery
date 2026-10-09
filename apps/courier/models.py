@@ -29,5 +29,11 @@ class Courier(BaseModel):
     )
     is_approved = models.BooleanField(default=False, verbose_name="Одобрен администратором")
 
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    location_updated_at = models.DateTimeField(null=True, blank=True)
+    location_accuracy = models.FloatField(null=True, blank=True)
+    last_delivery_at = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return self.name

@@ -1,137 +1,49 @@
 {% extends "base.html" %}
 {% load static food %}
 {% block content %}
-  <section class="hero container">
-    <div class="hero-copy">
-      <span class="eyebrow">
-        <span class="live-dot"></span> Согреваем вкусом</span>
-        <h1>
-          Хороший день
-          <br>
-          начинается
-          <br>
-          с <em>вкусной еды.</em>
-        </h1>
-        <p>Сочный бургер, хрустящая картошка и любимый соус. Приготовим с заботой и привезём к вашей двери.</p>
-        <div class="hero-actions">
-          <a class="button" href="{% url 'menu_list' %}">Хочу что-нибудь вкусное <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        <div class="hero-notes">
-          <span>
-            <b>Свежие</b> ингредиенты</span>
-          <span>
-            <b>Готовим</b> после заказа</span>
-          <span>
-            <b>Наличными</b> при получении</span>
-        </div>
-      </div>
-      <div class="hero-art">
-        <div class="hero-circle"></div>
-        <span class="handwritten">ну очень
-          <br>
-          вкусно! <span aria-hidden="true">↓</span>
-        </span>
-        <div class="hero-photo">
-          <img src="{% static 'food/hero.webp' %}"
-               alt="Сочный бургер с румяной булочкой и свежими овощами"
-               width="600"
-               height="520"
-               fetchpriority="high">
-        </div>
-        <span class="floating-label label-top">
-          <span class="mini-icon">✦</span> Время порадовать себя</span>
-        <span class="floating-label label-bottom">
-          <span class="mini-icon green">♡</span>
-          <span>С теплом, из нашей кухни
-            <br>
-            <small>Прямо к вашему столу</small>
-          </span>
-        </span>
-        <span class="art-spark spark-one">✳</span>
-        <span class="art-spark spark-two">✧</span>
-      </div>
-    </section>
-    <div class="ticker" aria-hidden="true">
-      <span>ГОРЯЧЕЕ И ЛЮБИМОЕ</span>
-      <i>✳</i>
-      <span>ЕЩЁ ОДИН ВКУСНЫЙ ПОВОД</span>
-      <i>✳</i>
-      <span>СОБЕРЁМСЯ ЗА СТОЛОМ</span>
-      <i>✳</i>
-      <span>ГОТОВИМ С ЗАБОТОЙ</span>
+  <section class="street-hero container">
+    <div class="street-copy">
+      <span class="eyebrow"><span class="live-dot"></span> STREET FOOD. БЕЗ ЛИШНИХ СЛОВ.</span>
+      <h1>
+        ГОЛОДЕН?
+        <br>
+        ЭТО ПО
+        <br>
+        <em>НАШЕЙ ЧАСТИ.</em>
+      </h1>
+      <p>
+        Сочный бургер. Картошка с хрустом.
+        <br>
+        Любимый соус. Собирай свой идеальный заказ.
+      </p>
+      <a class="button hero-cta" href="{% url 'menu_list' %}">ПОГНАЛИ В МЕНЮ <span>↗</span></a>
+      <div class="street-proof"><span>Готовим после заказа</span><span>Наличные при получении</span></div>
     </div>
-    <section class="container section">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">Трудно устоять</span>
-          <h2>Начнём с любимого</h2>
-        </div>
-        <a class="text-link" href="{% url 'menu_list' %}">Всё меню <span>→</span>
-        </a>
-      </div>
-      <div class="products">
-        {% for item in featured_items %}
-          {% include "includes/product_card.html" %}
-        {% empty %}
-          <div class="empty-state">
-            <h3>На кухне готовят меню</h3>
-            <p>Совсем скоро здесь появятся любимые блюда.</p>
-          </div>
-        {% endfor %}
-      </div>
-    </section>
-    <section class="container">
-      <div class="comfort-banner">
-        <div>
-          <span class="eyebrow">Вместе вкуснее</span>
-          <h2>
-            На всех —
-            <br>
-            и ещё чуть-чуть.
-          </h2>
-          <p>
-            Соберите заказ от {{ free_delivery_from|money }} сум,
-            <br>
-            и доставка будет за наш счёт.
-          </p>
-          <a class="button dark" href="{% url 'menu_list' %}">Собрать компанию <span>→</span>
-          </a>
-        </div>
-        <div class="banner-illustration" aria-hidden="true">
-          <span>♡</span>
-          <p>
-            еда + вы
-            <br>
-            = счастье
-          </p>
-          <i>✳</i>
-        </div>
-      </div>
-    </section>
-    <section class="container section" id="how">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">Без лишних хлопот</span>
-          <h2>До вкусного — три шага</h2>
-        </div>
-      </div>
-      <div class="steps-grid">
-        <article>
-          <span class="step-number">01</span>
-          <h3>Выберите любимое</h3>
-          <p>Найдите своё блюдо или попробуйте что-нибудь новое.</p>
-        </article>
-        <article>
-          <span class="step-number">02</span>
-          <h3>Скажите, куда привезти</h3>
-          <p>Укажите адрес и пожелания. Мы запомним их, если захотите.</p>
-        </article>
-        <article>
-          <span class="step-number">03</span>
-          <h3>Устраивайтесь поудобнее</h3>
-          <p>Следите за этапами заказа и оплатите его при получении.</p>
-        </article>
-      </div>
-    </section>
+    <div class="street-visual"><div class="street-photo"><img class="food-sheet slot-0"
+     src="{% static 'food/street-menu.webp' %}"
+     alt="Бургер с говядиной, сыром и свежими овощами"
+     width="1536"
+     height="1024"
+     fetchpriority="high"></div><span class="street-stamp">СОЧНО.<br>БЕЗ КОМПРОМИССОВ.</span><span class="street-note">ТВОЙ ПЕРЕРЫВ<br>СТАЛ ВКУСНЕЕ ↗</span></div>
+  </section>
+  <div class="ticker" aria-hidden="true"><span>БОЛЬШЕ ВКУСА</span><i>✳</i><span>МЕНЬШЕ РАЗГОВОРОВ</span><i>✳</i><span>ГОРЯЧИЙ СТРИТФУД</span><i>✳</i><span>ТВОЙ ЗАКАЗ — ТВОИ ПРАВИЛА</span></div>
+  <section class="container section"><div class="section-heading"><div><span class="eyebrow">ТО, ЗА ЧЕМ ВОЗВРАЩАЮТСЯ</span><h2>БЕРИ ЛЮБИМОЕ.</h2></div><a class="text-link" href="{% url 'menu_list' %}">Всё меню ↗</a></div><div class="products">{% for item in featured_items %}{% include "includes/product_card.html" %}{% empty %}<div class="empty-state"><h2>Кухня собирает меню.</h2><p>Загляните чуть позже.</p></div>{% endfor %}</div></section>
+  <section class="container"><div class="street-banner"><span class="banner-tag">ЗОВИ СВОИХ</span><div><h2>НА КОМПАНИЮ?<br><em>ЕЩЁ ЛУЧШЕ.</em></h2><p>От {{ free_delivery_from|money }} сум — доставка за наш счёт.</p></div><a class="button dark" href="{% url 'menu_list' %}">СОБРАТЬ ЗАКАЗ ↗</a><span class="banner-star" aria-hidden="true">✳</span></div></section>
+  <section class="container section" id="how">
+    <div class="section-heading">
+      <h2>ТРИ ШАГА. И ТЫ СЫТ.</h2>
+    </div>
+    <div class="steps-grid">
+      <article><span class="step-number">01</span>
+        <h3>Выбирай.</h3>
+        <p>Бургеры, закуски и всё, что хочется сейчас.</p>
+      </article><article><span class="step-number">02</span>
+        <h3>Скажи, куда.</h3>
+        <p>Адрес, телефон, пожелания — только самое нужное.</p>
+      </article><article><span class="step-number">03</span>
+        <h3>Встречай горячее.</h3>
+        <p>Следи за заказом. Оплачивай при получении.</p>
+      </article>
+    </div>
+  </section>
 {% endblock %}

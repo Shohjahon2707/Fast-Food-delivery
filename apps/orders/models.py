@@ -30,6 +30,9 @@ class Order(BaseModel):
     comment = models.TextField(blank=True, max_length=500)
     checkout_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     cancel_reason = models.TextField(blank=True)
+    ready_at = models.DateTimeField(null=True, blank=True)
+    delivery_eta = models.DateTimeField(null=True, blank=True)
+    dispatch_alert = models.CharField(max_length=250, blank=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -37,6 +40,7 @@ class Order(BaseModel):
             models.Index(fields=["courier", "status"]),
             models.Index(fields=["user", "-created_at"]),
         ]
+        permissions = [("work_kitchen", "Работать с очередью кухни")]
         verbose_name = "заказ"
         verbose_name_plural = "Заказы"
 
@@ -107,3 +111,71 @@ class OrderIssue(models.Model):
                 name="one_open_issue_per_order",
             )
         ]
+
+
+class Restaurant(models.Model):
+    """One dispatch origin; configuration is shared by all workers."""
+
+    name = models.CharField(max_length=100, default="Тёпло")
+    address = models.CharField(max_length=255, blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    preparation_minutes = models.PositiveSmallIntegerField(default=15)
+    accepting_orders = models.BooleanField(default=True)
+    last_dispatch_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "кухня и доставка"
+        verbose_name_plural = "Кухня и доставка"
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValidationError("Укажите обе координаты кухни.")
+        if self.latitude is not None and not (
+            -90 <= self.latitude <= 90 and -180 <= self.longitude <= 180
+        ):
+            raise ValidationError("Координаты кухни вне допустимого диапазона.")
+        if not 1 <= self.preparation_minutes <= 120:
+            raise ValidationError("Время приготовления должно быть от 1 до 120 минут.")
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class DeliveryOffer(models.Model):
+    STATES = [
+        ("pending", "Предложен"),
+        ("accepted", "Зарезервирован"),
+        ("declined", "Отказ"),
+        ("expired", "Нет ответа"),
+        ("cancelled", "Снят"),
+        ("picked_up", "Забран"),
+    ]
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="offers")
+    courier = models.ForeignKey("courier.Courier", on_delete=models.CASCADE, related_name="offers")
+    state = models.CharField(max_length=20, choices=STATES, default="pending")
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+    pickup_minutes = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["order"],
+                condition=models.Q(state__in=["pending", "accepted"]),
+                name="one_live_offer_per_order",
+            ),
+            models.UniqueConstraint(
+                fields=["courier"],
+                condition=models.Q(state__in=["pending", "accepted"]),
+                name="one_next_offer_per_courier",
+            ),
+        ]
+        indexes = [models.Index(fields=["state", "expires_at"])]

@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}Команда кухни — Тёпло{% endblock %}
+{% block content %}<section class="container section narrow"><div class="panel auth-form"><span class="eyebrow">Только для команды</span><h1 class="page-title">Кухня на связи.</h1><form method="post">{% csrf_token %}{% include "includes/form.html" %}<button class="button full">Войти на кухню →</button></form></div></section>{% endblock %}

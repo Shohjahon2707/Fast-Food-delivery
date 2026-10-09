@@ -35,12 +35,22 @@ def create_order(request):
             return redirect("order_success", order_id=order.pk)
     if not items and request.method == "GET":
         return redirect("cart_detail")
+    from .models import Restaurant
+
+    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
     subtotal = sum(item.total for item in items)
     fee = services.shipping(subtotal) if items else 0
     return render(
         request,
         "orders/checkout.html",
-        {"form": form, "items": items, "subtotal": subtotal, "fee": fee, "total": subtotal + fee},
+        {
+            "form": form,
+            "items": items,
+            "subtotal": subtotal,
+            "restaurant": restaurant,
+            "fee": fee,
+            "total": subtotal + fee,
+        },
     )
 
 

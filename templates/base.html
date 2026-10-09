@@ -4,15 +4,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f8f5ef">
+    <meta name="theme-color" content="#141516">
     <meta name="description"
           content="Тёпло — любимая еда с доставкой. Сочные бургеры, хрустящие закуски и забота в каждом заказе.">
     <title>
       {% block title %}
-        Тёпло — еда, которая радует{% endblock %}
+        Тёпло — стритфуд с характером{% endblock %}
     </title>
     <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    {% block extra_head %}{% endblock %}
     <script src="{% static 'js/site.js' %}" defer></script>
   </head>
   <body>
@@ -21,15 +22,17 @@
       <div class="container nav-wrap">
         <a class="brand" href="{% url 'home' %}" aria-label="Тёпло — главная">
           <span class="brand-mark">т.</span>
-          <span>тёпло<span class="brand-caption">еда с заботой</span>
+          <span>ТЁПЛО<span class="brand-caption">STREET FOOD</span>
           </span>
         </a>
         <nav class="main-nav" aria-label="Основная навигация">
-          {% if user.is_staff %}
+          {% if user.role == "kitchen" %}
+            <a href="{% url 'kitchen' %}">Очередь кухни</a>
+          {% elif user.is_staff %}
             {% if can_operate %}
               <a href="{% url 'operations' %}">Рабочая панель</a>
             {% endif %}
-            <a href="{% url 'admin:index' %}">Управление</a>
+            <a href="{% url 'admin:index' %}">Управление</a><a href="{% url 'kitchen' %}">Кухня</a>
           {% elif user.is_courier %}
             <a class="nav-active" href="{% url 'courier_orders' %}">Мои доставки</a>
             <span class="nav-tag">Кабинет курьера</span>
@@ -78,9 +81,9 @@
         <div>
           <a class="brand" href="{% url 'home' %}">
             <span class="brand-mark">т.</span>
-            <span>тёпло</span>
+            <span>ТЁПЛО</span>
           </a>
-          <p>Хорошая еда. Хороший день.</p>
+          <p>Горячо. Сочно. По делу.</p>
         </div>
         <div>
           <span class="eyebrow">Каждый день — со вкусом</span>
@@ -91,7 +94,7 @@
           </p>
         </div>
         <div class="footer-links">
-          <a href="{% url 'preferences' %}">Настройки и cookies</a>
+          <a href="{% url 'preferences' %}">О сервисе</a>
           {% if not user.is_authenticated or user.is_customer %}
             <a href="{% url 'courier_login' %}">Для курьеров</a>
           {% endif %}

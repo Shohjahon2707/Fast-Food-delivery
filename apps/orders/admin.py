@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderIssue, OrderItem
+from .models import DeliveryOffer, Order, OrderIssue, OrderItem, Restaurant
 
 
 class OrderItemInline(admin.TabularInline):
@@ -33,6 +33,29 @@ class OrderAdmin(admin.ModelAdmin):
 class IssueAdmin(admin.ModelAdmin):
     list_display = ("order", "author", "created_at", "resolved_at")
     readonly_fields = tuple(field.name for field in OrderIssue._meta.fields)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Restaurant)
+class RestaurantAdmin(admin.ModelAdmin):
+    readonly_fields = ("last_dispatch_at",)
+
+    def has_add_permission(self, request):
+        return super().has_add_permission(request) and not Restaurant.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(DeliveryOffer)
+class DeliveryOfferAdmin(admin.ModelAdmin):
+    list_display = ("order", "courier", "state", "expires_at")
+    readonly_fields = tuple(field.name for field in DeliveryOffer._meta.fields)
 
     def has_add_permission(self, request):
         return False

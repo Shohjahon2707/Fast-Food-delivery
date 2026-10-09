@@ -40,8 +40,35 @@ class MenuItem(BaseModel):
         verbose_name_plural = "Меню"
 
     @property
+    def photo_sheet(self):
+        return not self.image or str(self.image).endswith(".jfif")
+
+    @property
+    def photo_slot(self):
+        if "двойн" in self.name.lower():
+            return 5
+        key = (self.seed_image or str(self.image)).lower()
+        return next(
+            (
+                index
+                for word, index in [
+                    ("cheese", 1),
+                    ("сыр", 1),
+                    ("fries", 2),
+                    ("карто", 2),
+                    ("wings", 3),
+                    ("крыл", 3),
+                    ("salad", 4),
+                    ("салат", 4),
+                ]
+                if word in key or word in self.name.lower()
+            ),
+            0,
+        )
+
+    @property
     def image_url(self):
-        return self.image.url if self.image else static(self.seed_image or "food/burger.webp")
+        return static("food/street-menu.webp") if self.photo_sheet else self.image.url
 
     def __str__(self):
         return self.name

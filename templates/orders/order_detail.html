@@ -14,7 +14,7 @@
     <div data-live-order="{% url 'order_status' order.pk %}"
          data-version="{{ order.events.count }}"
          class="live-order-note">
-      <span class="live-dot"></span> Статус проверяется автоматически
+      <span class="live-dot"></span> Следим за твоим заказом
     </div>
   {% endif %}
   {% if order.status != "cancel" %}

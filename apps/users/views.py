@@ -15,6 +15,8 @@ from .forms import CustomerLoginForm, ProfileForm, UserRegisterForm
 
 
 def landing(user):
+    if user.role == "kitchen":
+        return "kitchen"
     if user.is_staff:
         return "operations" if user.has_perm("orders.change_order") else "admin:index"
     return "courier_orders" if user.is_courier else "home"

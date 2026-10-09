@@ -9,10 +9,13 @@
       <div class="panel cart-items">
         {% for line in items %}
           <article class="cart-row">
-            <img src="{{ line.menu_item.image_url }}"
-                 alt="{{ line.menu_item.name }}"
-                 width="100"
-                 height="90">
+            <span class="cart-food">
+              <img {% if line.menu_item.photo_sheet %}class="food-sheet slot-{{ line.menu_item.photo_slot }}"{% endif %}
+                   src="{{ line.menu_item.image_url }}"
+                   alt="{{ line.menu_item.name }}"
+                   width="100"
+                   height="90">
+            </span>
             <div class="cart-row-name">
               <h3>{{ line.menu_item.name }}</h3>
               <p>{{ line.menu_item.weight }} · {{ line.menu_item.price|money }} сум</p>

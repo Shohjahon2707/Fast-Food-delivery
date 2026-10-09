@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load food %}{% block title %}Оформление заказа — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food static %}{% block title %}Оформление заказа — Тёпло{% endblock %}{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}"><script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script><script src="{% static 'js/delivery-map.js' %}" defer></script>{% endblock %}{% block content %}
 <section class="container section page-top">
   <a class="back-link" href="{% url 'cart_detail' %}">← В корзину</a>
   <h1 class="page-title">
@@ -10,6 +10,16 @@
       {% csrf_token %}
       <h2>Контакты и доставка</h2>
       {% include "includes/form.html" %}
+      <details class="delivery-map-panel">
+        <summary>Уточнить точку на карте</summary>
+        <p class="help-text">Точка помогает курьеру найти дом. Квартиру и подъезд напишите в адресе.</p>
+        <button class="button secondary small" type="button" data-locate-customer>Моё местоположение</button>
+        <div id="delivery-map"
+             data-lat="{{ restaurant.latitude|default_if_none:'' }}"
+             data-lon="{{ restaurant.longitude|default_if_none:'' }}"></div>
+        <p data-map-status role="status">Нажмите на карту, чтобы поставить точку. Адрес выше всё равно нужен.</p>
+        <button class="text-button" type="button" data-clear-point>Убрать точку</button>
+      </details>
       <div class="notice soft">Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны.</div>
       <button type="submit" class="button full">
         Подтвердить заказ · {{ total|money }} сум <span>→</span>
