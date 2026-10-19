@@ -8,6 +8,8 @@ Django-сервис доставки для одной кухни: тёмный 
 
 Команда: **Саидов Шохжахон** и **Самиев Аюбхон**. Описание проекта, распределение ролей, пользовательские и функциональные требования по четырём заданиям: [Markdown](docs/requirements/PROJECT_REQUIREMENTS.md) · [Word](docs/requirements/PROJECT_REQUIREMENTS.docx).
 
+Презентация на 8 слайдов: [PowerPoint](docs/presentation/Teplo_Presentation_8_slides.pptx) · [PDF](docs/presentation/Teplo_Presentation_8_slides.pdf).
+
 ## Быстрый запуск
 
 Python 3.12+:
