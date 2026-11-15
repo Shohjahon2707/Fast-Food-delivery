@@ -12,4 +12,10 @@ Android, многоресторанная модель и новые плате�
 
 ## Задание 9. Программные файлы в GitHub
 
-Программный код находится в [репозитории студента](https://github.com/Shohjahon2707/Fast-Food-delivery), планы — в [docs/marketplace-v2](https://github.com/Shohjahon2707/Fast-Food-delivery/tree/main/docs/marketplace-v2). Факт загрузки подтверждают удалённый commit и опубликованное дерево. Скриншот страницы добавляется после подтверждения публикации; изображение GitHub нельзя подменять макетом.
+Программный код находится в [репозитории студента](https://github.com/Shohjahon2707/Fast-Food-delivery), планы — в [docs/marketplace-v2](https://github.com/Shohjahon2707/Fast-Food-delivery/tree/main/docs/marketplace-v2). Загрузка документов подтверждена успешным push коммита [97195ed](https://github.com/Shohjahon2707/Fast-Food-delivery/commit/97195ed) в `main` и чтением опубликованной страницы.
+
+Снимок ниже получен 15.11.2026 из Chromium с включённой проверкой HTTPS. Это публичная страница репозитория `Shohjahon2707`, а не авторизованный сеанс студента в браузере. Часть внешних ресурсов оформления была недоступна, поэтому страница отображается с неполными стилями; имена файлов и путь репозитория настоящие. Содержимое страницы не подменялось.
+
+![Опубликованные планы и файлы в GitHub](evidence/github-files.png)
+
+[Полный снимок страницы](evidence/github-page-full.png) · [URL, время и параметры снимка](evidence/github-files.json).
