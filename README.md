@@ -10,6 +10,12 @@ Django-сервис доставки для одной кухни: тёмный 
 
 Презентация на 8 слайдов: [PowerPoint](docs/presentation/Teplo_Presentation_8_slides.pptx) · [PDF](docs/presentation/Teplo_Presentation_8_slides.pdf).
 
+## Планы Android-приложения и платформы ресторанов
+
+Планы следующей версии: [все документы](docs/marketplace-v2/README.md), [минимальный план разработки](docs/marketplace-v2/03_ROADMAP.md), [ТЗ-1–ТЗ-46 с дедлайнами до 5 декабря 2026](docs/marketplace-v2/08_PROJECT_CHECKLIST.md), [Excel со статусами](docs/marketplace-v2/planning/TEPLO_TASKS_TO_05_DEC_2026.xlsx). Подтверждены Flutter покупателя, `uz/ru/en`, Ташкент, разные рестораны, наличные/online и «Умный обед»; новые функции пока описаны как план. Первая реализация — модульный Django + DRF, самостоятельные микросервисы — затем.
+
+Учебные [задания 5–7](docs/marketplace-v2/ASSIGNMENTS_5_7.pdf) и [задания 8–9: главный экран и GitHub](docs/marketplace-v2/09_ASSIGNMENTS_8_9.md). Планы восстановлены по переписке 15.11.2026; статусы задач требуют подтверждения, исходные даты сохранены.
+
 ## Быстрый запуск
 
 Python 3.12+:

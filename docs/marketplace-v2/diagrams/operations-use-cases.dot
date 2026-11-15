@@ -1,0 +1,22 @@
+graph G { graph [rankdir=LR,fontname="DejaVu Sans",nodesep=.22,ranksep=.6,pad=.2];node [fontname="DejaVu Sans",fontsize=12,style=filled,fillcolor="#EDF4F8",color="#30536D"];edge [color="#70899D"];
+owner [shape=box,label="«actor»\nВладелец / менеджер"];
+kitchen [shape=box,label="«actor»\nКухня"];
+courier [shape=box,label="«actor»\nКурьер"];
+operator [shape=box,label="«actor»\nОператор"];
+pay [shape=box,label="«actor»\nПлатёжный провайдер"];
+subgraph cluster_platform {label="Платформа Тёпло";color="#A2B8CA";
+manage [shape=ellipse,label="UC-10 · Филиал и меню"];
+cook [shape=ellipse,label="UC-11 · Принять и приготовить"];
+offer [shape=ellipse,label="UC-12 · Смена / предложение / забор"];
+done [shape=ellipse,label="UC-13 · Вручить / наличные"];
+issues [shape=ellipse,label="UC-14 · Модерация / инциденты"];
+refund [shape=ellipse,label="UC-15 · Оплата / возврат"];
+}
+owner -- manage;
+kitchen -- cook;
+courier -- offer;
+courier -- done;
+operator -- issues;
+operator -- refund;
+pay -- refund;
+}

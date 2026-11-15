@@ -1,0 +1,25 @@
+graph G { graph [rankdir=LR,fontname="DejaVu Sans",nodesep=.22,ranksep=.6,pad=.2];node [fontname="DejaVu Sans",fontsize=12,style=filled,fillcolor="#EDF4F8",color="#30536D"];edge [color="#70899D"];
+buyer [shape=box,label="«actor»\nПокупатель / гость"];
+pay [shape=box,label="«actor»\nПлатёжный провайдер"];
+subgraph cluster_platform {label="Платформа Тёпло";color="#A2B8CA";
+lang [shape=ellipse,label="UC-01 · Выбрать язык"];
+auth [shape=ellipse,label="UC-02 · Войти / сохранить сессию"];
+menu [shape=ellipse,label="UC-03 · Найти ресторан и блюда"];
+smart [shape=ellipse,label="UC-04 · Умный обед"];
+order [shape=ellipse,label="UC-05 · Оформить заказ"];
+online [shape=ellipse,label="UC-06 · Оплатить online"];
+track [shape=ellipse,label="UC-07 · Следить за заказом"];
+repeat [shape=ellipse,label="UC-08 · Повторить заказ"];
+help [shape=ellipse,label="UC-09 · Отмена / обращение"];
+}
+buyer -- lang;
+buyer -- auth;
+buyer -- menu;
+buyer -- smart;
+buyer -- order;
+buyer -- online;
+buyer -- track;
+buyer -- repeat;
+buyer -- help;
+pay -- online;
+}
