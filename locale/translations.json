@@ -1,0 +1,846 @@
+{
+  "доставка со вкусом": {
+    "en": "delivery with taste",
+    "uz": "mazali yetkazib berish"
+  },
+  "Ташкент": {
+    "en": "Tashkent",
+    "uz": "Toshkent"
+  },
+  "ТАШКЕНТ": {
+    "en": "TASHKENT",
+    "uz": "TOSHKENT"
+  },
+  "Указать адрес": {
+    "en": "Set address",
+    "uz": "Manzilni kiriting"
+  },
+  "Основная навигация": {
+    "en": "Main navigation",
+    "uz": "Asosiy navigatsiya"
+  },
+  "Рестораны": {
+    "en": "Restaurants",
+    "uz": "Restoranlar"
+  },
+  "Умный обед": {
+    "en": "Smart lunch",
+    "uz": "Aqlli tushlik"
+  },
+  "Язык": {
+    "en": "Language",
+    "uz": "Til"
+  },
+  "Корзина": {
+    "en": "Cart",
+    "uz": "Savat"
+  },
+  "Войти": {
+    "en": "Log in",
+    "uz": "Kirish"
+  },
+  "Выйти": {
+    "en": "Log out",
+    "uz": "Chiqish"
+  },
+  "Закрыть": {
+    "en": "Close",
+    "uz": "Yopish"
+  },
+  "Перейти к содержимому": {
+    "en": "Skip to content",
+    "uz": "Asosiy qismga o‘tish"
+  },
+  "Хорошая еда. Хороший день.": {
+    "en": "Good food. Good day.",
+    "uz": "Mazali taom. Ajoyib kun."
+  },
+  "Ваш город. Ваш вкус.": {
+    "en": "Your city. Your taste.",
+    "uz": "Sizning shahringiz. Sizning didingiz."
+  },
+  "Рестораны Ташкента в одном месте.": {
+    "en": "Tashkent restaurants in one place.",
+    "uz": "Toshkent restoranlari bir joyda."
+  },
+  "Оплата наличными при получении.": {
+    "en": "Pay cash on delivery.",
+    "uz": "Qabul qilganda naqd to‘lov."
+  },
+  "О сервисе": {
+    "en": "About us",
+    "uz": "Xizmat haqida"
+  },
+  "Мои заказы": {
+    "en": "My orders",
+    "uz": "Buyurtmalarim"
+  },
+  "Вкусный день начинается здесь": {
+    "en": "A delicious day starts here",
+    "uz": "Mazali kun shu yerdan boshlanadi"
+  },
+  "Весь город.": {
+    "en": "The whole city.",
+    "uz": "Butun shahar."
+  },
+  "На вашем": {
+    "en": "On your",
+    "uz": "Sizning"
+  },
+  "столе.": {
+    "en": "table.",
+    "uz": "dasturxoningizda."
+  },
+  "Любимые рестораны и новые вкусы. Найдите то, что хочется именно сейчас.": {
+    "en": "Favourite restaurants and new flavours. Find just what you are craving.",
+    "uz": "Sevimli restoranlar va yangi ta’mlar. Ko‘nglingiz tusagan taomni toping."
+  },
+  "Выбрать ресторан": {
+    "en": "Choose a restaurant",
+    "uz": "Restoran tanlash"
+  },
+  "Счастье": {
+    "en": "Happiness",
+    "uz": "Baxt"
+  },
+  "с доставкой": {
+    "en": "delivered",
+    "uz": "yetkaziladi"
+  },
+  "Ресторан, блюдо или любимая кухня": {
+    "en": "Restaurant, dish or favourite cuisine",
+    "uz": "Restoran, taom yoki sevimli oshxona"
+  },
+  "Поиск ресторанов": {
+    "en": "Search restaurants",
+    "uz": "Restoranlarni qidirish"
+  },
+  "Найти": {
+    "en": "Search",
+    "uz": "Qidirish"
+  },
+  "Все блюда": {
+    "en": "All dishes",
+    "uz": "Barcha taomlar"
+  },
+  "Категории блюд": {
+    "en": "Food categories",
+    "uz": "Taom toifalari"
+  },
+  "ВАШ БЮДЖЕТ — НАШ ОРИЕНТИР": {
+    "en": "YOUR BUDGET, OUR GUIDE",
+    "uz": "BYUDJETINGIZ — BIZNING MEZONIMIZ"
+  },
+  "А что на обед?": {
+    "en": "What's for lunch?",
+    "uz": "Tushlikka nima bor?"
+  },
+  "Выберите категорию и сумму. Мы найдём подходящие блюда во всех ресторанах.": {
+    "en": "Choose a category and budget. We will find matching dishes across restaurants.",
+    "uz": "Toifa va narxni tanlang. Barcha restoranlardan mos taomlarni topamiz."
+  },
+  "ЕСТЬ ИЗ ЧЕГО ВЫБРАТЬ": {
+    "en": "SOMETHING FOR EVERY CRAVING",
+    "uz": "TANLOV KENG"
+  },
+  "Рестораны рядом": {
+    "en": "Restaurants nearby",
+    "uz": "Yaqindagi restoranlar"
+  },
+  "ресторанов": {
+    "en": "restaurants",
+    "uz": "restoran"
+  },
+  "Ничего не нашлось": {
+    "en": "No matches found",
+    "uz": "Hech narsa topilmadi"
+  },
+  "Попробуйте другое название.": {
+    "en": "Try another name.",
+    "uz": "Boshqa nomni kiriting."
+  },
+  "Все рестораны": {
+    "en": "All restaurants",
+    "uz": "Barcha restoranlar"
+  },
+  "Демонстрационные рестораны и меню для знакомства с сервисом.": {
+    "en": "Demo restaurants and menus to explore the service.",
+    "uz": "Xizmat bilan tanishish uchun namoyish restoranlari va menyular."
+  },
+  "ВКУСНО И ПО БЮДЖЕТУ": {
+    "en": "TASTY AND ON BUDGET",
+    "uz": "MAZALI VA HAMYONBOP"
+  },
+  "От 40 до 70 тысяч": {
+    "en": "From 40 to 70 thousand",
+    "uz": "40 mingdan 70 minggacha"
+  },
+  "Показать все": {
+    "en": "View all",
+    "uz": "Barchasini ko‘rish"
+  },
+  "Выберите вкус": {
+    "en": "Choose your flavour",
+    "uz": "Ta’mni tanlang"
+  },
+  "Ресторан или блюдо по вашему бюджету.": {
+    "en": "A restaurant or dish within your budget.",
+    "uz": "Byudjetingizga mos restoran yoki taom."
+  },
+  "Укажите адрес": {
+    "en": "Set your address",
+    "uz": "Manzilingizni kiriting"
+  },
+  "Контакты, адрес и пожелания к заказу.": {
+    "en": "Contact details, address and order notes.",
+    "uz": "Aloqa, manzil va buyurtma izohlari."
+  },
+  "Ждите в тепле": {
+    "en": "Get comfortable",
+    "uz": "Qulay kuting"
+  },
+  "Статус и история — в ваших заказах.": {
+    "en": "Status and history in your orders.",
+    "uz": "Holat va tarix buyurtmalaringizda."
+  },
+  "мин": {
+    "en": "min",
+    "uz": "daq"
+  },
+  "Закрыт": {
+    "en": "Closed",
+    "uz": "Yopiq"
+  },
+  "Доставка": {
+    "en": "Delivery",
+    "uz": "Yetkazib berish"
+  },
+  "сум": {
+    "en": "UZS",
+    "uz": "so‘m"
+  },
+  "блюд": {
+    "en": "dishes",
+    "uz": "taom"
+  },
+  "Ресторан сейчас не принимает заказы.": {
+    "en": "This restaurant is currently closed.",
+    "uz": "Restoran hozir buyurtma qabul qilmayapti."
+  },
+  "МЕНЬШЕ ПОИСКОВ. БОЛЬШЕ ВКУСА.": {
+    "en": "LESS SEARCHING. MORE FLAVOUR.",
+    "uz": "KAMROQ QIDIRUV. KO‘PROQ TA’M."
+  },
+  "МЕНЮ ВСЕГО ГОРОДА": {
+    "en": "THE CITY'S MENU",
+    "uz": "BUTUN SHAHAR MENYUSI"
+  },
+  "Что вам по вкусу?": {
+    "en": "What are you craving?",
+    "uz": "Nimani xohlaysiz?"
+  },
+  "Ваша категория. Ваш бюджет. Подходящие блюда из всех ресторанов.": {
+    "en": "Your category. Your budget. Matching dishes from all restaurants.",
+    "uz": "Sizning toifangiz va byudjetingiz. Barcha restoranlardan mos taomlar."
+  },
+  "Найти блюдо": {
+    "en": "Find a dish",
+    "uz": "Taom topish"
+  },
+  "Название блюда или ресторана": {
+    "en": "Dish or restaurant name",
+    "uz": "Taom yoki restoran nomi"
+  },
+  "Категория": {
+    "en": "Category",
+    "uz": "Toifa"
+  },
+  "Все категории": {
+    "en": "All categories",
+    "uz": "Barcha toifalar"
+  },
+  "Цена от": {
+    "en": "Min price",
+    "uz": "Eng kam narx"
+  },
+  "Цена до": {
+    "en": "Max price",
+    "uz": "Eng yuqori narx"
+  },
+  "Подобрать": {
+    "en": "Find my lunch",
+    "uz": "Tanlash"
+  },
+  "Предпочтения": {
+    "en": "Preferences",
+    "uz": "Istaklar"
+  },
+  "Сортировка": {
+    "en": "Sort by",
+    "uz": "Saralash"
+  },
+  "Сбросить": {
+    "en": "Reset",
+    "uz": "Tozalash"
+  },
+  "Диапазон — за одно блюдо, без доставки. Полная сумма видна в корзине. Один заказ — один ресторан.": {
+    "en": "Price is per dish, excluding delivery. See the full total in your cart. One restaurant per order.",
+    "uz": "Narx bir taom uchun, yetkazishsiz. Jami summa savatda ko‘rinadi. Bir buyurtma — bir restoran."
+  },
+  "Подходит вам": {
+    "en": "Matches for you",
+    "uz": "Sizga mos"
+  },
+  "Пока ничего не нашлось": {
+    "en": "No matches yet",
+    "uz": "Hozircha hech narsa topilmadi"
+  },
+  "Увеличьте бюджет или выберите другую категорию.": {
+    "en": "Increase your budget or choose another category.",
+    "uz": "Byudjetni oshiring yoki boshqa toifani tanlang."
+  },
+  "Сбросить фильтры": {
+    "en": "Reset filters",
+    "uz": "Filtrlarni tozalash"
+  },
+  "Без мяса": {
+    "en": "Meat free",
+    "uz": "Go‘shtsiz"
+  },
+  "Добавить": {
+    "en": "Add",
+    "uz": "Qo‘shish"
+  },
+  "Войти и заказать": {
+    "en": "Log in to order",
+    "uz": "Kiring va buyurtma bering"
+  },
+  "Сменить ресторан?": {
+    "en": "Change restaurant?",
+    "uz": "Restoranni almashtirish?"
+  },
+  "В корзине блюда другого ресторана. Для нового заказа нужно очистить корзину.": {
+    "en": "Your cart contains dishes from another restaurant. Clear it to start a new order.",
+    "uz": "Savatda boshqa restoran taomlari bor. Yangi buyurtma uchun savatni tozalang."
+  },
+  "Очистить и добавить": {
+    "en": "Clear and add",
+    "uz": "Tozalash va qo‘shish"
+  },
+  "Оставить корзину": {
+    "en": "Keep my cart",
+    "uz": "Savatni saqlash"
+  },
+  "Поиск": {
+    "en": "Search",
+    "uz": "Qidirish"
+  },
+  "Рекомендуем": {
+    "en": "Recommended",
+    "uz": "Tavsiya qilamiz"
+  },
+  "Сначала дешевле": {
+    "en": "Price: low to high",
+    "uz": "Avval arzonlari"
+  },
+  "Сначала дороже": {
+    "en": "Price: high to low",
+    "uz": "Avval qimmatlari"
+  },
+  "Цена от не должна быть больше цены до.": {
+    "en": "Minimum price must not exceed maximum price.",
+    "uz": "Eng kam narx eng yuqori narxdan katta bo‘lmasligi kerak."
+  },
+  "Первые блюда": {
+    "en": "Soups",
+    "uz": "Birinchi taomlar"
+  },
+  "Вторые блюда": {
+    "en": "Main courses",
+    "uz": "Ikkinchi taomlar"
+  },
+  "Горячие блюда": {
+    "en": "Hot dishes",
+    "uz": "Issiq taomlar"
+  },
+  "Фастфуд": {
+    "en": "Fast food",
+    "uz": "Fastfud"
+  },
+  "Пицца": {
+    "en": "Pizza",
+    "uz": "Pitsa"
+  },
+  "Салаты": {
+    "en": "Salads",
+    "uz": "Salatlar"
+  },
+  "Десерты": {
+    "en": "Desserts",
+    "uz": "Shirinliklar"
+  },
+  "Напитки": {
+    "en": "Drinks",
+    "uz": "Ichimliklar"
+  },
+  "Узбекская кухня": {
+    "en": "Uzbek cuisine",
+    "uz": "O‘zbek taomlari"
+  },
+  "Бургеры и фастфуд": {
+    "en": "Burgers and fast food",
+    "uz": "Burgerlar va fastfud"
+  },
+  "Итальянская кухня": {
+    "en": "Italian cuisine",
+    "uz": "Italyan taomlari"
+  },
+  "Салаты и лёгкие блюда": {
+    "en": "Salads and light meals",
+    "uz": "Salatlar va yengil taomlar"
+  },
+  "Азиатская кухня": {
+    "en": "Asian cuisine",
+    "uz": "Osiyo taomlari"
+  },
+  "Десерты и напитки": {
+    "en": "Desserts and drinks",
+    "uz": "Shirinliklar va ichimliklar"
+  },
+  "Ташкентский плов": {
+    "en": "Tashkent plov",
+    "uz": "Toshkent oshi"
+  },
+  "Праздничный плов": {
+    "en": "Celebration plov",
+    "uz": "Bayram oshi"
+  },
+  "Шурпа с говядиной": {
+    "en": "Beef shurpa",
+    "uz": "Mol go‘shtli sho‘rva"
+  },
+  "Мастава": {
+    "en": "Mastava",
+    "uz": "Mastava"
+  },
+  "Казан-кебаб": {
+    "en": "Kazan kebab",
+    "uz": "Qozon kabob"
+  },
+  "Ачичук": {
+    "en": "Achichuk salad",
+    "uz": "Achchiq-chuchuk"
+  },
+  "Классик бургер": {
+    "en": "Classic burger",
+    "uz": "Klassik burger"
+  },
+  "Двойной чизбургер": {
+    "en": "Double cheeseburger",
+    "uz": "Qo‘shaloq chizburger"
+  },
+  "Чизбургер": {
+    "en": "Cheeseburger",
+    "uz": "Chizburger"
+  },
+  "Картофель фри": {
+    "en": "French fries",
+    "uz": "Kartoshka fri"
+  },
+  "Крылышки BBQ": {
+    "en": "BBQ wings",
+    "uz": "BBQ qanotchalari"
+  },
+  "Крылышки на компанию": {
+    "en": "Wings to share",
+    "uz": "Katta porsiya qanotchalar"
+  },
+  "Маргарита": {
+    "en": "Margherita",
+    "uz": "Margarita"
+  },
+  "Пепперони": {
+    "en": "Pepperoni",
+    "uz": "Pepperoni"
+  },
+  "Четыре сыра": {
+    "en": "Four cheese",
+    "uz": "To‘rt xil pishloq"
+  },
+  "Паста с грибами": {
+    "en": "Mushroom pasta",
+    "uz": "Qo‘ziqorinli pasta"
+  },
+  "Паста с курицей": {
+    "en": "Chicken pasta",
+    "uz": "Tovuqli pasta"
+  },
+  "Томатный суп": {
+    "en": "Tomato soup",
+    "uz": "Pomidor sho‘rvasi"
+  },
+  "Греческий салат": {
+    "en": "Greek salad",
+    "uz": "Yunon salati"
+  },
+  "Салат с курицей": {
+    "en": "Chicken salad",
+    "uz": "Tovuqli salat"
+  },
+  "Овощной боул": {
+    "en": "Vegetable bowl",
+    "uz": "Sabzavotli boul"
+  },
+  "Овощной суп": {
+    "en": "Vegetable soup",
+    "uz": "Sabzavotli sho‘rva"
+  },
+  "Зелёный микс": {
+    "en": "Green mix",
+    "uz": "Ko‘katlar aralashmasi"
+  },
+  "Суп с лапшой": {
+    "en": "Noodle soup",
+    "uz": "Ugrali sho‘rva"
+  },
+  "Лагман": {
+    "en": "Lagman",
+    "uz": "Lag‘mon"
+  },
+  "Рис с овощами": {
+    "en": "Rice with vegetables",
+    "uz": "Sabzavotli guruch"
+  },
+  "Курица терияки": {
+    "en": "Teriyaki chicken",
+    "uz": "Teriyaki tovuq"
+  },
+  "Острый суп": {
+    "en": "Spicy soup",
+    "uz": "Achchiq sho‘rva"
+  },
+  "Чизкейк": {
+    "en": "Cheesecake",
+    "uz": "Chizkeyk"
+  },
+  "Медовик": {
+    "en": "Honey cake",
+    "uz": "Asalli tort"
+  },
+  "Ягодный десерт": {
+    "en": "Berry dessert",
+    "uz": "Rezavorli shirinlik"
+  },
+  "Домашний лимонад": {
+    "en": "Homemade lemonade",
+    "uz": "Uy limonadi"
+  },
+  "Ваше имя": {
+    "en": "Your name",
+    "uz": "Ismingiz"
+  },
+  "Номер телефона": {
+    "en": "Phone number",
+    "uz": "Telefon raqami"
+  },
+  "Адрес доставки": {
+    "en": "Delivery address",
+    "uz": "Yetkazish manzili"
+  },
+  "Комментарий": {
+    "en": "Comment",
+    "uz": "Izoh"
+  },
+  "Наличными при получении": {
+    "en": "Cash on delivery",
+    "uz": "Qabul qilganda naqd"
+  },
+  "Сохранить адрес в профиле": {
+    "en": "Save address in profile",
+    "uz": "Manzilni profilda saqlash"
+  },
+  "Улица, дом, квартира, подъезд": {
+    "en": "Street, building, flat, entrance",
+    "uz": "Ko‘cha, uy, xonadon, kirish"
+  },
+  "Например: домофон 24, не звонить в дверь": {
+    "en": "For example: intercom 24, do not ring",
+    "uz": "Masalan: domofon 24, qo‘ng‘iroq chalmang"
+  },
+  "Как вас зовут": {
+    "en": "Your name",
+    "uz": "Ismingiz"
+  },
+  "Телефон": {
+    "en": "Phone",
+    "uz": "Telefon"
+  },
+  "Электронная почта": {
+    "en": "Email",
+    "uz": "Elektron pochta"
+  },
+  "Для восстановления доступа.": {
+    "en": "For password recovery.",
+    "uz": "Parolni tiklash uchun."
+  },
+  "Запомнить меня на 30 дней": {
+    "en": "Remember me for 30 days",
+    "uz": "Meni 30 kun eslab qolish"
+  },
+  "Имя": {
+    "en": "Name",
+    "uz": "Ism"
+  },
+  "Адрес по умолчанию": {
+    "en": "Default address",
+    "uz": "Asosiy manzil"
+  },
+  "Создать аккаунт": {
+    "en": "Create account",
+    "uz": "Hisob ochish"
+  },
+  "С возвращением": {
+    "en": "Welcome back",
+    "uz": "Qaytganingizdan xursandmiz"
+  },
+  "Вход для покупателей": {
+    "en": "Customer login",
+    "uz": "Xaridorlar uchun kirish"
+  },
+  "Не помню пароль": {
+    "en": "Forgot password",
+    "uz": "Parolni unutdim"
+  },
+  "Рады видеть вас снова": {
+    "en": "Good to see you again",
+    "uz": "Sizni yana ko‘rganimizdan xursandmiz"
+  },
+  "Давайте знакомиться": {
+    "en": "Let's get to know you",
+    "uz": "Keling, tanishamiz"
+  },
+  "Для ваших вкусных планов": {
+    "en": "For your delicious plans",
+    "uz": "Mazali rejalaringiz uchun"
+  },
+  "Ваша": {
+    "en": "Your",
+    "uz": "Sizning"
+  },
+  "корзина": {
+    "en": "cart",
+    "uz": "savatingiz"
+  },
+  "Всё вместе": {
+    "en": "Order summary",
+    "uz": "Buyurtma jami"
+  },
+  "Блюда": {
+    "en": "Dishes",
+    "uz": "Taomlar"
+  },
+  "Бесплатно": {
+    "en": "Free",
+    "uz": "Bepul"
+  },
+  "Итого": {
+    "en": "Total",
+    "uz": "Jami"
+  },
+  "Удалить": {
+    "en": "Remove",
+    "uz": "O‘chirish"
+  },
+  "К оформлению": {
+    "en": "Checkout",
+    "uz": "Rasmiylashtirish"
+  },
+  "Контакты и доставка": {
+    "en": "Contact and delivery",
+    "uz": "Aloqa va yetkazish"
+  },
+  "Ваш заказ": {
+    "en": "Your order",
+    "uz": "Buyurtmangiz"
+  },
+  "Куда и кому": {
+    "en": "Delivery details",
+    "uz": "Kimga va qayerga"
+  },
+  "История заказа": {
+    "en": "Order history",
+    "uz": "Buyurtma tarixi"
+  },
+  "Состав заказа": {
+    "en": "Order items",
+    "uz": "Buyurtma tarkibi"
+  },
+  "Причина": {
+    "en": "Reason",
+    "uz": "Sabab"
+  },
+  "Отменить заказ": {
+    "en": "Cancel order",
+    "uz": "Buyurtmani bekor qilish"
+  },
+  "Отправить запрос": {
+    "en": "Send request",
+    "uz": "So‘rov yuborish"
+  },
+  "Принят": {
+    "en": "Accepted",
+    "uz": "Qabul qilindi"
+  },
+  "Готовится": {
+    "en": "Preparing",
+    "uz": "Tayyorlanmoqda"
+  },
+  "Готов к выдаче": {
+    "en": "Ready for pickup",
+    "uz": "Olib ketishga tayyor"
+  },
+  "Курьер в пути": {
+    "en": "On the way",
+    "uz": "Kuryer yo‘lda"
+  },
+  "Доставлен": {
+    "en": "Delivered",
+    "uz": "Yetkazildi"
+  },
+  "Отменён": {
+    "en": "Cancelled",
+    "uz": "Bekor qilindi"
+  },
+  "Количество": {
+    "en": "Quantity",
+    "uz": "Miqdor"
+  },
+  "Осталось сказать, куда привезти.": {
+    "en": "Just tell us where to deliver.",
+    "uz": "Faqat qayerga yetkazishni ayting."
+  },
+  "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны.": {
+    "en": "Pay the courier on delivery. No bank details needed.",
+    "uz": "Qabul qilganda kuryerga to‘lang. Bank ma’lumotlari kerak emas."
+  },
+  "Подтвердить заказ": {
+    "en": "Confirm order",
+    "uz": "Buyurtmani tasdiqlash"
+  },
+  "Оформляем…": {
+    "en": "Placing order…",
+    "uz": "Rasmiylashtirilmoqda…"
+  },
+  "Есть обновление заказа — показать →": {
+    "en": "Order updated — view →",
+    "uz": "Buyurtma yangilandi — ko‘rish →"
+  },
+  "Скоро будет": {
+    "en": "It will be",
+    "uz": "Tez orada"
+  },
+  "вкусно.": {
+    "en": "delicious.",
+    "uz": "mazali bo‘ladi."
+  },
+  "Спасибо за заказ": {
+    "en": "Thank you for your order",
+    "uz": "Buyurtmangiz uchun rahmat"
+  },
+  "Следить за заказом": {
+    "en": "Track order",
+    "uz": "Buyurtmani kuzatish"
+  },
+  "Вернуться в меню": {
+    "en": "Back to menu",
+    "uz": "Menyuga qaytish"
+  },
+  "Ваши вкусные истории": {
+    "en": "Your delicious stories",
+    "uz": "Mazali tarixingiz"
+  },
+  "Подробнее →": {
+    "en": "View details →",
+    "uz": "Batafsil →"
+  },
+  "Первый заказ — впереди": {
+    "en": "Your first order awaits",
+    "uz": "Birinchi buyurtmangiz oldinda"
+  },
+  "Давайте начнём с чего-нибудь вкусного.": {
+    "en": "Let's start with something delicious.",
+    "uz": "Mazali taomdan boshlaymiz."
+  },
+  "Выбрать еду": {
+    "en": "Choose food",
+    "uz": "Taom tanlash"
+  },
+  "Ещё немного вкусного": {
+    "en": "More delicious choices",
+    "uz": "Yana mazali tanlovlar"
+  },
+  "Добавить в корзину": {
+    "en": "Add to cart",
+    "uz": "Savatga qo‘shish"
+  },
+  "Здесь ещё есть место для вкусного": {
+    "en": "Room for something delicious",
+    "uz": "Mazali taomlar uchun joy bor"
+  },
+  "Начните с любимого блюда. Остальное — за нами.": {
+    "en": "Start with your favourite dish. We will do the rest.",
+    "uz": "Sevimli taomingizni tanlang. Qolganini biz qilamiz."
+  },
+  "Открыть меню →": {
+    "en": "Explore menu →",
+    "uz": "Menyuni ochish →"
+  },
+  "← Добавить ещё что-нибудь": {
+    "en": "← Add something else",
+    "uz": "← Yana taom qo‘shish"
+  },
+  "← В корзину": {
+    "en": "← Back to cart",
+    "uz": "← Savatga qaytish"
+  },
+  "← Всё меню": {
+    "en": "← Full menu",
+    "uz": "← Barcha taomlar"
+  },
+  "← Мои заказы": {
+    "en": "← My orders",
+    "uz": "← Buyurtmalarim"
+  },
+  "Почти": {
+    "en": "Almost",
+    "uz": "Deyarli"
+  },
+  "у вас.": {
+    "en": "there.",
+    "uz": "sizda."
+  },
+  "Мои": {
+    "en": "My",
+    "uz": "Mening"
+  },
+  "заказы": {
+    "en": "orders",
+    "uz": "buyurtmalarim"
+  },
+  "Заказ": {
+    "en": "Order",
+    "uz": "Buyurtma"
+  },
+  "Заказ №": {
+    "en": "Order #",
+    "uz": "Buyurtma №"
+  },
+  "Сохранить": {
+    "en": "Save",
+    "uz": "Saqlash"
+  },
+  "Мой профиль": {
+    "en": "My profile",
+    "uz": "Profilim"
+  }
+}

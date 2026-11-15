@@ -10,8 +10,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(MenuItem)
 class MenuItemAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "price", "is_available", "is_vegetarian")
+    list_display = ("name", "restaurant", "category", "price", "is_available", "is_vegetarian")
     list_editable = ("price", "is_available")
-    list_filter = ("category", "is_available", "is_vegetarian")
+    list_filter = ("restaurant", "category", "is_available", "is_vegetarian")
     search_fields = ("name",)
-    list_select_related = ("category",)
+    list_select_related = ("category", "restaurant")

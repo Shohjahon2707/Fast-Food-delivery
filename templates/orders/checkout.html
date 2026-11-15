@@ -1,14 +1,14 @@
-{% extends "base.html" %}{% load food static %}{% block title %}Оформление заказа — Тёпло{% endblock %}{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}"><script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script><script src="{% static 'js/delivery-map.js' %}" defer></script>{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food static i18n %}{% block title %}Оформление заказа — Тёпло{% endblock %}{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}"><script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script><script src="{% static 'js/delivery-map.js' %}" defer></script>{% endblock %}{% block content %}
 <section class="container section page-top">
-  <a class="back-link" href="{% url 'cart_detail' %}">← В корзину</a>
+  <a class="back-link" href="{% url 'cart_detail' %}">{% translate "← В корзину" %}</a>
   <h1 class="page-title">
-    Почти <em>у вас.</em>
+    {% translate "Почти" %} <em>{% translate "у вас." %}</em>
   </h1>
-  <p class="lead">Осталось сказать, куда привезти.</p>
+  <p class="lead">{% translate "Осталось сказать, куда привезти." %}</p>
   <div class="checkout-grid">
     <form class="panel form-panel" method="post" data-submit-once>
       {% csrf_token %}
-      <h2>Контакты и доставка</h2>
+      <h2>{% translate "Контакты и доставка" %}</h2>
       {% include "includes/form.html" %}
       <details class="delivery-map-panel">
         <summary>Уточнить точку на карте</summary>
@@ -20,13 +20,13 @@
         <p data-map-status role="status">Нажмите на карту, чтобы поставить точку. Адрес выше всё равно нужен.</p>
         <button class="text-button" type="button" data-clear-point>Убрать точку</button>
       </details>
-      <div class="notice soft">Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны.</div>
+      <div class="notice soft">{% translate "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны." %}</div>
       <button type="submit" class="button full">
-        Подтвердить заказ · {{ total|money }} сум <span>→</span>
+        Подтвердить заказ · {{ total|money }} {% translate "сум" %} <span>→</span>
       </button>
     </form>
     <aside class="panel summary">
-      <h2>Ваш заказ</h2>
+      <h2>{% translate "Ваш заказ" %}</h2><p>{{ restaurant.name }}</p>
       {% for item in items %}
         <div class="sum-row">
           <span>{{ item.menu_item.name }} <small>× {{ item.quantity }}</small>
@@ -35,15 +35,15 @@
         </div>
       {% endfor %}
       <div class="sum-row">
-        <span>Доставка</span>
+        <span>{% translate "Доставка" %}</span>
         <span>
           {% if fee %}
-            {{ fee|money }}{% else %}Бесплатно{% endif %}
+            {{ fee|money }}{% else %}{% translate "Бесплатно" %}{% endif %}
         </span>
       </div>
       <div class="sum-row sum-total">
-        <strong>Итого</strong>
-        <strong>{{ total|money }} сум</strong>
+        <strong>{% translate "Итого" %}</strong>
+        <strong>{{ total|money }} {% translate "сум" %}</strong>
       </div>
       <p class="help-text">До начала приготовления заказ можно отменить сразу. После — отправить запрос администратору в деталях заказа.</p>
     </aside>

@@ -1,32 +1,33 @@
-{% extends "base.html" %}{% load food %}{% block title %}Мои заказы — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n %}{% block title %}Мои заказы — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top narrow">
-  <span class="eyebrow">Ваши вкусные истории</span>
+  <span class="eyebrow">{% translate "Ваши вкусные истории" %}</span>
   <h1 class="page-title">
-    Мои <em>заказы</em>
+    {% translate "Мои" %} <em>{% translate "заказы" %}</em>
   </h1>
   <div class="stack">
     {% for order in page_obj %}
       <a class="panel order-card" href="{% url 'order_detail' order.pk %}">
         <div class="row-between">
-          <h2>Заказ №{{ order.pk }}</h2>
-          <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+          <h2>{% translate "Заказ №" %}{{ order.pk }}</h2>
+          <span class="status {{ order.status }}">{% translate order.get_status_display %}</span>
         </div>
+        <p>{{ order.restaurant.name }}</p>
         <p>{{ order.created_at|date:'d E, H:i' }} · {{ order.address|truncatechars:55 }}</p>
         <p>
           {% for line in order.items.all %}
             {{ line.name|default:line.menu_item.name }} × {{ line.quantity }}{% if not forloop.last %}, {% endif %}{% endfor %}
         </p>
         <div class="row-between">
-          <strong>{{ order.total_price|money }} сум</strong>
-          <span class="text-link">Подробнее →</span>
+          <strong>{{ order.total_price|money }} {% translate "сум" %}</strong>
+          <span class="text-link">{% translate "Подробнее →" %}</span>
         </div>
       </a>
     {% empty %}
       <div class="empty-state">
         <span class="empty-icon">✳</span>
-        <h2>Первый заказ — впереди</h2>
-        <p>Давайте начнём с чего-нибудь вкусного.</p>
-        <a class="button" href="{% url 'menu_list' %}">Выбрать еду</a>
+        <h2>{% translate "Первый заказ — впереди" %}</h2>
+        <p>{% translate "Давайте начнём с чего-нибудь вкусного." %}</p>
+        <a class="button" href="{% url 'menu_list' %}">{% translate "Выбрать еду" %}</a>
       </div>
     {% endfor %}
   </div>

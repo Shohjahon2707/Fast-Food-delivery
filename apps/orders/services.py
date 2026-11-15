@@ -31,9 +31,6 @@ def checkout(user, data):
         raise PermissionDenied
     from .models import Restaurant
 
-    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
-    if not restaurant.accepting_orders:
-        raise ValidationError("Кухня сейчас не принимает заказы. Возвращайтесь чуть позже.")
     # Lock the cart for both quantity changes and checkout. The unique token is an
     # additional guard against a repeated browser submit after the cart is refilled.
     cart, _ = Cart.objects.get_or_create(user=user)
@@ -43,17 +40,27 @@ def checkout(user, data):
         if previous.user_id != user.pk:
             raise PermissionDenied
         return previous
-    lines = list(cart.items.select_related("menu_item"))
+    lines = list(cart.items.select_related("menu_item__restaurant"))
     if not lines:
         raise ValidationError("Корзина пуста. Добавьте любимое блюдо.")
     if any(not line.menu_item.is_available for line in lines):
         raise ValidationError("Некоторые блюда закончились. Удалите их из корзины.")
+    restaurant_ids = {line.menu_item.restaurant_id for line in lines}
+    if len(restaurant_ids) != 1:
+        raise ValidationError("В одном заказе могут быть блюда только одного ресторана.")
+    restaurant = lines[0].menu_item.restaurant
+    if restaurant is None:
+        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    restaurant = Restaurant.objects.select_for_update().get(pk=restaurant.pk)
+    if not restaurant.accepting_orders:
+        raise ValidationError("Ресторан сейчас не принимает заказы. Возвращайтесь чуть позже.")
     if data["payment_method"] != "cash":
         raise ValidationError("Выберите оплату наличными при получении.")
     subtotal = sum((line.total for line in lines), Decimal("0"))
     fee = shipping(subtotal)
     order = Order.objects.create(
         user=user,
+        restaurant=restaurant,
         total_price=subtotal + fee,
         delivery_fee=fee,
         customer_name=data["customer_name"],
@@ -95,7 +102,9 @@ def advance_order(order_id, actor, target):
 
     from .models import Restaurant
 
-    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    restaurant = order.restaurant
+    if restaurant is None:
+        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
     order.ready_at = (
         timezone.now() + timedelta(minutes=restaurant.preparation_minutes)
         if target == "cooking"
@@ -142,7 +151,9 @@ def take_order(order_id, actor):
 
     from .dispatch import distance_minutes
 
-    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    restaurant = order.restaurant
+    if restaurant is None:
+        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
     order.delivery_eta = timezone.now() + timedelta(
         minutes=distance_minutes(
             (restaurant.latitude, restaurant.longitude),

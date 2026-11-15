@@ -1,0 +1,6 @@
+{% load static i18n food %}<a class="restaurant-card"
+   href="{% url 'restaurant_detail' restaurant.pk %}"><div class="restaurant-cover"><img src="{% static restaurant.cover %}"
+     alt="{{ restaurant.name }}"
+     width="600"
+     height="360"
+     loading="lazy"><span class="restaurant-time">◷ {{ restaurant.delivery_minutes }}–{{ restaurant.delivery_minutes|add:10 }} {% translate "мин" %}</span>{% if not restaurant.accepting_orders %}<span class="closed-label">{% translate "Закрыт" %}</span>{% endif %}</div><div class="restaurant-heading"><h3>{{ restaurant.name }}</h3><span aria-hidden="true">↗</span></div><p>{% translate restaurant.cuisine %}</p><div class="restaurant-meta"><span>{% translate "Доставка" %} {{ delivery_fee|money }} {% translate "сум" %}</span><span>·</span><span>{{ restaurant.dish_count }} {% translate "блюд" %}</span></div></a>

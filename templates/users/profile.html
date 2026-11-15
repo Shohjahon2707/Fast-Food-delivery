@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% block title %}Мой профиль — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load i18n %}{% block title %}Мой профиль — Тёпло{% endblock %}{% block content %}
 <section class="container section narrow page-top">
   <span class="eyebrow">Всегда под рукой</span>
   <h1 class="page-title">
@@ -8,6 +8,6 @@
     {% csrf_token %}
     {% include "includes/form.html" %}
     <button class="button">Сохранить изменения</button>
-  </form>
+  </form><form action="{% url 'logout' %}" method="post" class="spaced">{% csrf_token %}<button class="button secondary">{% translate "Выйти" %}</button></form>
 </section>
 {% endblock %}

@@ -20,6 +20,9 @@ class Category(BaseModel):
 
 
 class MenuItem(BaseModel):
+    restaurant = models.ForeignKey(
+        "orders.Restaurant", on_delete=models.PROTECT, null=True, related_name="menu_items"
+    )
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="items")
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -41,7 +44,7 @@ class MenuItem(BaseModel):
 
     @property
     def photo_sheet(self):
-        return not self.image or str(self.image).endswith(".jfif")
+        return (not self.image and not self.seed_image) or str(self.image).endswith(".jfif")
 
     @property
     def photo_slot(self):
@@ -68,7 +71,9 @@ class MenuItem(BaseModel):
 
     @property
     def image_url(self):
-        return static("food/street-menu.webp") if self.photo_sheet else self.image.url
+        if self.photo_sheet:
+            return static("food/street-menu.webp")
+        return self.image.url if self.image else static(self.seed_image)
 
     def __str__(self):
         return self.name

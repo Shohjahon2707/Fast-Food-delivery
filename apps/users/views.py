@@ -40,7 +40,7 @@ class RoleBasedLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return reverse(landing(self.request.user))
+        return self.get_redirect_url() or reverse(landing(self.request.user))
 
     def throttle_key(self):
         identity = self.request.META.get("REMOTE_ADDR", "")

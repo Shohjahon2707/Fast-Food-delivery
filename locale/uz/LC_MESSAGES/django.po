@@ -1,0 +1,635 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\nLanguage: uz\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "А что на обед?"
+msgstr "Tushlikka nima bor?"
+
+msgid "Адрес доставки"
+msgstr "Yetkazish manzili"
+
+msgid "Адрес по умолчанию"
+msgstr "Asosiy manzil"
+
+msgid "Азиатская кухня"
+msgstr "Osiyo taomlari"
+
+msgid "Ачичук"
+msgstr "Achchiq-chuchuk"
+
+msgid "Без мяса"
+msgstr "Go‘shtsiz"
+
+msgid "Бесплатно"
+msgstr "Bepul"
+
+msgid "Блюда"
+msgstr "Taomlar"
+
+msgid "Бургеры и фастфуд"
+msgstr "Burgerlar va fastfud"
+
+msgid "В корзине блюда другого ресторана. Для нового заказа нужно очистить корзину."
+msgstr "Savatda boshqa restoran taomlari bor. Yangi buyurtma uchun savatni tozalang."
+
+msgid "ВАШ БЮДЖЕТ — НАШ ОРИЕНТИР"
+msgstr "BYUDJETINGIZ — BIZNING MEZONIMIZ"
+
+msgid "ВКУСНО И ПО БЮДЖЕТУ"
+msgstr "MAZALI VA HAMYONBOP"
+
+msgid "Ваш город. Ваш вкус."
+msgstr "Sizning shahringiz. Sizning didingiz."
+
+msgid "Ваш заказ"
+msgstr "Buyurtmangiz"
+
+msgid "Ваша"
+msgstr "Sizning"
+
+msgid "Ваша категория. Ваш бюджет. Подходящие блюда из всех ресторанов."
+msgstr "Sizning toifangiz va byudjetingiz. Barcha restoranlardan mos taomlar."
+
+msgid "Ваше имя"
+msgstr "Ismingiz"
+
+msgid "Ваши вкусные истории"
+msgstr "Mazali tarixingiz"
+
+msgid "Вернуться в меню"
+msgstr "Menyuga qaytish"
+
+msgid "Весь город."
+msgstr "Butun shahar."
+
+msgid "Вкусный день начинается здесь"
+msgstr "Mazali kun shu yerdan boshlanadi"
+
+msgid "Войти"
+msgstr "Kirish"
+
+msgid "Войти и заказать"
+msgstr "Kiring va buyurtma bering"
+
+msgid "Все блюда"
+msgstr "Barcha taomlar"
+
+msgid "Все категории"
+msgstr "Barcha toifalar"
+
+msgid "Все рестораны"
+msgstr "Barcha restoranlar"
+
+msgid "Всё вместе"
+msgstr "Buyurtma jami"
+
+msgid "Вторые блюда"
+msgstr "Ikkinchi taomlar"
+
+msgid "Вход для покупателей"
+msgstr "Xaridorlar uchun kirish"
+
+msgid "Выберите вкус"
+msgstr "Ta’mni tanlang"
+
+msgid "Выберите категорию и сумму. Мы найдём подходящие блюда во всех ресторанах."
+msgstr "Toifa va narxni tanlang. Barcha restoranlardan mos taomlarni topamiz."
+
+msgid "Выбрать еду"
+msgstr "Taom tanlash"
+
+msgid "Выбрать ресторан"
+msgstr "Restoran tanlash"
+
+msgid "Выйти"
+msgstr "Chiqish"
+
+msgid "Горячие блюда"
+msgstr "Issiq taomlar"
+
+msgid "Готов к выдаче"
+msgstr "Olib ketishga tayyor"
+
+msgid "Готовится"
+msgstr "Tayyorlanmoqda"
+
+msgid "Греческий салат"
+msgstr "Yunon salati"
+
+msgid "Давайте знакомиться"
+msgstr "Keling, tanishamiz"
+
+msgid "Давайте начнём с чего-нибудь вкусного."
+msgstr "Mazali taomdan boshlaymiz."
+
+msgid "Двойной чизбургер"
+msgstr "Qo‘shaloq chizburger"
+
+msgid "Демонстрационные рестораны и меню для знакомства с сервисом."
+msgstr "Xizmat bilan tanishish uchun namoyish restoranlari va menyular."
+
+msgid "Десерты"
+msgstr "Shirinliklar"
+
+msgid "Десерты и напитки"
+msgstr "Shirinliklar va ichimliklar"
+
+msgid "Диапазон — за одно блюдо, без доставки. Полная сумма видна в корзине. Один заказ — один ресторан."
+msgstr "Narx bir taom uchun, yetkazishsiz. Jami summa savatda ko‘rinadi. Bir buyurtma — bir restoran."
+
+msgid "Для ваших вкусных планов"
+msgstr "Mazali rejalaringiz uchun"
+
+msgid "Для восстановления доступа."
+msgstr "Parolni tiklash uchun."
+
+msgid "Добавить"
+msgstr "Qo‘shish"
+
+msgid "Добавить в корзину"
+msgstr "Savatga qo‘shish"
+
+msgid "Домашний лимонад"
+msgstr "Uy limonadi"
+
+msgid "Доставка"
+msgstr "Yetkazib berish"
+
+msgid "Доставлен"
+msgstr "Yetkazildi"
+
+msgid "ЕСТЬ ИЗ ЧЕГО ВЫБРАТЬ"
+msgstr "TANLOV KENG"
+
+msgid "Есть обновление заказа — показать →"
+msgstr "Buyurtma yangilandi — ko‘rish →"
+
+msgid "Ещё немного вкусного"
+msgstr "Yana mazali tanlovlar"
+
+msgid "Ждите в тепле"
+msgstr "Qulay kuting"
+
+msgid "Заказ"
+msgstr "Buyurtma"
+
+msgid "Заказ №"
+msgstr "Buyurtma №"
+
+msgid "Закрыт"
+msgstr "Yopiq"
+
+msgid "Закрыть"
+msgstr "Yopish"
+
+msgid "Запомнить меня на 30 дней"
+msgstr "Meni 30 kun eslab qolish"
+
+msgid "Здесь ещё есть место для вкусного"
+msgstr "Mazali taomlar uchun joy bor"
+
+msgid "Зелёный микс"
+msgstr "Ko‘katlar aralashmasi"
+
+msgid "Имя"
+msgstr "Ism"
+
+msgid "История заказа"
+msgstr "Buyurtma tarixi"
+
+msgid "Итальянская кухня"
+msgstr "Italyan taomlari"
+
+msgid "Итого"
+msgstr "Jami"
+
+msgid "К оформлению"
+msgstr "Rasmiylashtirish"
+
+msgid "Казан-кебаб"
+msgstr "Qozon kabob"
+
+msgid "Как вас зовут"
+msgstr "Ismingiz"
+
+msgid "Картофель фри"
+msgstr "Kartoshka fri"
+
+msgid "Категории блюд"
+msgstr "Taom toifalari"
+
+msgid "Категория"
+msgstr "Toifa"
+
+msgid "Классик бургер"
+msgstr "Klassik burger"
+
+msgid "Количество"
+msgstr "Miqdor"
+
+msgid "Комментарий"
+msgstr "Izoh"
+
+msgid "Контакты и доставка"
+msgstr "Aloqa va yetkazish"
+
+msgid "Контакты, адрес и пожелания к заказу."
+msgstr "Aloqa, manzil va buyurtma izohlari."
+
+msgid "Корзина"
+msgstr "Savat"
+
+msgid "Крылышки BBQ"
+msgstr "BBQ qanotchalari"
+
+msgid "Крылышки на компанию"
+msgstr "Katta porsiya qanotchalar"
+
+msgid "Куда и кому"
+msgstr "Kimga va qayerga"
+
+msgid "Курица терияки"
+msgstr "Teriyaki tovuq"
+
+msgid "Курьер в пути"
+msgstr "Kuryer yo‘lda"
+
+msgid "Лагман"
+msgstr "Lag‘mon"
+
+msgid "Любимые рестораны и новые вкусы. Найдите то, что хочется именно сейчас."
+msgstr "Sevimli restoranlar va yangi ta’mlar. Ko‘nglingiz tusagan taomni toping."
+
+msgid "МЕНЬШЕ ПОИСКОВ. БОЛЬШЕ ВКУСА."
+msgstr "KAMROQ QIDIRUV. KO‘PROQ TA’M."
+
+msgid "МЕНЮ ВСЕГО ГОРОДА"
+msgstr "BUTUN SHAHAR MENYUSI"
+
+msgid "Маргарита"
+msgstr "Margarita"
+
+msgid "Мастава"
+msgstr "Mastava"
+
+msgid "Медовик"
+msgstr "Asalli tort"
+
+msgid "Мои"
+msgstr "Mening"
+
+msgid "Мои заказы"
+msgstr "Buyurtmalarim"
+
+msgid "Мой профиль"
+msgstr "Profilim"
+
+msgid "На вашем"
+msgstr "Sizning"
+
+msgid "Название блюда или ресторана"
+msgstr "Taom yoki restoran nomi"
+
+msgid "Найти"
+msgstr "Qidirish"
+
+msgid "Найти блюдо"
+msgstr "Taom topish"
+
+msgid "Наличными при получении"
+msgstr "Qabul qilganda naqd"
+
+msgid "Напитки"
+msgstr "Ichimliklar"
+
+msgid "Например: домофон 24, не звонить в дверь"
+msgstr "Masalan: domofon 24, qo‘ng‘iroq chalmang"
+
+msgid "Начните с любимого блюда. Остальное — за нами."
+msgstr "Sevimli taomingizni tanlang. Qolganini biz qilamiz."
+
+msgid "Не помню пароль"
+msgstr "Parolni unutdim"
+
+msgid "Ничего не нашлось"
+msgstr "Hech narsa topilmadi"
+
+msgid "Номер телефона"
+msgstr "Telefon raqami"
+
+msgid "О сервисе"
+msgstr "Xizmat haqida"
+
+msgid "Овощной боул"
+msgstr "Sabzavotli boul"
+
+msgid "Овощной суп"
+msgstr "Sabzavotli sho‘rva"
+
+msgid "Оплата наличными при получении."
+msgstr "Qabul qilganda naqd to‘lov."
+
+msgid "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны."
+msgstr "Qabul qilganda kuryerga to‘lang. Bank ma’lumotlari kerak emas."
+
+msgid "Основная навигация"
+msgstr "Asosiy navigatsiya"
+
+msgid "Оставить корзину"
+msgstr "Savatni saqlash"
+
+msgid "Осталось сказать, куда привезти."
+msgstr "Faqat qayerga yetkazishni ayting."
+
+msgid "Острый суп"
+msgstr "Achchiq sho‘rva"
+
+msgid "От 40 до 70 тысяч"
+msgstr "40 mingdan 70 minggacha"
+
+msgid "Открыть меню →"
+msgstr "Menyuni ochish →"
+
+msgid "Отменить заказ"
+msgstr "Buyurtmani bekor qilish"
+
+msgid "Отменён"
+msgstr "Bekor qilindi"
+
+msgid "Отправить запрос"
+msgstr "So‘rov yuborish"
+
+msgid "Оформляем…"
+msgstr "Rasmiylashtirilmoqda…"
+
+msgid "Очистить и добавить"
+msgstr "Tozalash va qo‘shish"
+
+msgid "Паста с грибами"
+msgstr "Qo‘ziqorinli pasta"
+
+msgid "Паста с курицей"
+msgstr "Tovuqli pasta"
+
+msgid "Пепперони"
+msgstr "Pepperoni"
+
+msgid "Первые блюда"
+msgstr "Birinchi taomlar"
+
+msgid "Первый заказ — впереди"
+msgstr "Birinchi buyurtmangiz oldinda"
+
+msgid "Перейти к содержимому"
+msgstr "Asosiy qismga o‘tish"
+
+msgid "Пицца"
+msgstr "Pitsa"
+
+msgid "Подобрать"
+msgstr "Tanlash"
+
+msgid "Подробнее →"
+msgstr "Batafsil →"
+
+msgid "Подтвердить заказ"
+msgstr "Buyurtmani tasdiqlash"
+
+msgid "Подходит вам"
+msgstr "Sizga mos"
+
+msgid "Поиск"
+msgstr "Qidirish"
+
+msgid "Поиск ресторанов"
+msgstr "Restoranlarni qidirish"
+
+msgid "Пока ничего не нашлось"
+msgstr "Hozircha hech narsa topilmadi"
+
+msgid "Показать все"
+msgstr "Barchasini ko‘rish"
+
+msgid "Попробуйте другое название."
+msgstr "Boshqa nomni kiriting."
+
+msgid "Почти"
+msgstr "Deyarli"
+
+msgid "Праздничный плов"
+msgstr "Bayram oshi"
+
+msgid "Предпочтения"
+msgstr "Istaklar"
+
+msgid "Принят"
+msgstr "Qabul qilindi"
+
+msgid "Причина"
+msgstr "Sabab"
+
+msgid "Рады видеть вас снова"
+msgstr "Sizni yana ko‘rganimizdan xursandmiz"
+
+msgid "Рекомендуем"
+msgstr "Tavsiya qilamiz"
+
+msgid "Ресторан или блюдо по вашему бюджету."
+msgstr "Byudjetingizga mos restoran yoki taom."
+
+msgid "Ресторан сейчас не принимает заказы."
+msgstr "Restoran hozir buyurtma qabul qilmayapti."
+
+msgid "Ресторан, блюдо или любимая кухня"
+msgstr "Restoran, taom yoki sevimli oshxona"
+
+msgid "Рестораны"
+msgstr "Restoranlar"
+
+msgid "Рестораны Ташкента в одном месте."
+msgstr "Toshkent restoranlari bir joyda."
+
+msgid "Рестораны рядом"
+msgstr "Yaqindagi restoranlar"
+
+msgid "Рис с овощами"
+msgstr "Sabzavotli guruch"
+
+msgid "С возвращением"
+msgstr "Qaytganingizdan xursandmiz"
+
+msgid "Салат с курицей"
+msgstr "Tovuqli salat"
+
+msgid "Салаты"
+msgstr "Salatlar"
+
+msgid "Салаты и лёгкие блюда"
+msgstr "Salatlar va yengil taomlar"
+
+msgid "Сбросить"
+msgstr "Tozalash"
+
+msgid "Сбросить фильтры"
+msgstr "Filtrlarni tozalash"
+
+msgid "Скоро будет"
+msgstr "Tez orada"
+
+msgid "Следить за заказом"
+msgstr "Buyurtmani kuzatish"
+
+msgid "Сменить ресторан?"
+msgstr "Restoranni almashtirish?"
+
+msgid "Сначала дешевле"
+msgstr "Avval arzonlari"
+
+msgid "Сначала дороже"
+msgstr "Avval qimmatlari"
+
+msgid "Создать аккаунт"
+msgstr "Hisob ochish"
+
+msgid "Сортировка"
+msgstr "Saralash"
+
+msgid "Состав заказа"
+msgstr "Buyurtma tarkibi"
+
+msgid "Сохранить"
+msgstr "Saqlash"
+
+msgid "Сохранить адрес в профиле"
+msgstr "Manzilni profilda saqlash"
+
+msgid "Спасибо за заказ"
+msgstr "Buyurtmangiz uchun rahmat"
+
+msgid "Статус и история — в ваших заказах."
+msgstr "Holat va tarix buyurtmalaringizda."
+
+msgid "Суп с лапшой"
+msgstr "Ugrali sho‘rva"
+
+msgid "Счастье"
+msgstr "Baxt"
+
+msgid "ТАШКЕНТ"
+msgstr "TOSHKENT"
+
+msgid "Ташкент"
+msgstr "Toshkent"
+
+msgid "Ташкентский плов"
+msgstr "Toshkent oshi"
+
+msgid "Телефон"
+msgstr "Telefon"
+
+msgid "Томатный суп"
+msgstr "Pomidor sho‘rvasi"
+
+msgid "Увеличьте бюджет или выберите другую категорию."
+msgstr "Byudjetni oshiring yoki boshqa toifani tanlang."
+
+msgid "Удалить"
+msgstr "O‘chirish"
+
+msgid "Узбекская кухня"
+msgstr "O‘zbek taomlari"
+
+msgid "Укажите адрес"
+msgstr "Manzilingizni kiriting"
+
+msgid "Указать адрес"
+msgstr "Manzilni kiriting"
+
+msgid "Улица, дом, квартира, подъезд"
+msgstr "Ko‘cha, uy, xonadon, kirish"
+
+msgid "Умный обед"
+msgstr "Aqlli tushlik"
+
+msgid "Фастфуд"
+msgstr "Fastfud"
+
+msgid "Хорошая еда. Хороший день."
+msgstr "Mazali taom. Ajoyib kun."
+
+msgid "Цена до"
+msgstr "Eng yuqori narx"
+
+msgid "Цена от"
+msgstr "Eng kam narx"
+
+msgid "Цена от не должна быть больше цены до."
+msgstr "Eng kam narx eng yuqori narxdan katta bo‘lmasligi kerak."
+
+msgid "Четыре сыра"
+msgstr "To‘rt xil pishloq"
+
+msgid "Чизбургер"
+msgstr "Chizburger"
+
+msgid "Чизкейк"
+msgstr "Chizkeyk"
+
+msgid "Что вам по вкусу?"
+msgstr "Nimani xohlaysiz?"
+
+msgid "Шурпа с говядиной"
+msgstr "Mol go‘shtli sho‘rva"
+
+msgid "Электронная почта"
+msgstr "Elektron pochta"
+
+msgid "Ягодный десерт"
+msgstr "Rezavorli shirinlik"
+
+msgid "Язык"
+msgstr "Til"
+
+msgid "блюд"
+msgstr "taom"
+
+msgid "вкусно."
+msgstr "mazali bo‘ladi."
+
+msgid "доставка со вкусом"
+msgstr "mazali yetkazib berish"
+
+msgid "заказы"
+msgstr "buyurtmalarim"
+
+msgid "корзина"
+msgstr "savatingiz"
+
+msgid "мин"
+msgstr "daq"
+
+msgid "ресторанов"
+msgstr "restoran"
+
+msgid "с доставкой"
+msgstr "yetkaziladi"
+
+msgid "столе."
+msgstr "dasturxoningizda."
+
+msgid "сум"
+msgstr "so‘m"
+
+msgid "у вас."
+msgstr "sizda."
+
+msgid "← В корзину"
+msgstr "← Savatga qaytish"
+
+msgid "← Всё меню"
+msgstr "← Barcha taomlar"
+
+msgid "← Добавить ещё что-нибудь"
+msgstr "← Yana taom qo‘shish"
+
+msgid "← Мои заказы"
+msgstr "← Buyurtmalarim"

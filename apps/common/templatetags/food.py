@@ -19,3 +19,17 @@ def querystring(context, **kwargs):
         else:
             query[key] = str(value)
     return "?" + query.urlencode()
+
+
+@register.filter
+def category_icon(value):
+    return {
+        "Первые блюда": "🍜",
+        "Вторые блюда": "🍚",
+        "Горячие блюда": "🍗",
+        "Фастфуд": "🍔",
+        "Пицца": "🍕",
+        "Салаты": "🥗",
+        "Десерты": "🍰",
+        "Напитки": "🥤",
+    }.get(value, "🍽")

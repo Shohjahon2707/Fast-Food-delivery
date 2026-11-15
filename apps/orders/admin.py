@@ -45,8 +45,8 @@ class IssueAdmin(admin.ModelAdmin):
 class RestaurantAdmin(admin.ModelAdmin):
     readonly_fields = ("last_dispatch_at",)
 
-    def has_add_permission(self, request):
-        return super().has_add_permission(request) and not Restaurant.objects.exists()
+    list_display = ("name", "cuisine", "accepting_orders", "is_demo")
+    list_filter = ("accepting_orders", "is_demo")
 
     def has_delete_permission(self, request, obj=None):
         return False

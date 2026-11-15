@@ -1,14 +1,15 @@
-{% extends "base.html" %}{% load food %}{% block title %}Заказ №{{ order.pk }} — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n %}{% block title %}{% translate "Заказ №" %}{{ order.pk }} — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top">
-  <a href="{% url 'order_list' %}" class="back-link">← Мои заказы</a>
+  <a href="{% url 'order_list' %}" class="back-link">{% translate "← Мои заказы" %}</a>
   <div class="section-heading">
     <div>
       <h1 class="page-title">
-        Заказ <em>№{{ order.pk }}</em>
+        {% translate "Заказ" %} <em>№{{ order.pk }}</em>
       </h1>
+      <p>{{ order.restaurant.name }}</p>
       <p>{{ order.created_at|date:'d E Y, H:i' }}</p>
     </div>
-    <span class="status {{ order.status }}">{{ order.get_status_display }}</span>
+    <span class="status {{ order.status }}">{% translate order.get_status_display %}</span>
   </div>
   {% if order.is_active %}
     <div data-live-order="{% url 'order_status' order.pk %}"
@@ -26,7 +27,7 @@
             {% if step.complete %}
               ✓{% else %}{{ forloop.counter }}{% endif %}
           </span>
-          <b>{{ step.label }}</b>
+          <b>{% translate step.label %}</b>
         </li>
       {% endfor %}
     </ol>
@@ -45,7 +46,7 @@
 <div class="checkout-grid">
   <div class="stack">
     <div class="panel">
-      <h2>Куда и кому</h2>
+      <h2>{% translate "Куда и кому" %}</h2>
       <p class="address">{{ order.address }}</p>
       <p>{{ order.customer_name }} · {{ order.phone }}</p>
       {% if order.comment %}
@@ -65,7 +66,7 @@
     </div>
     <div class="panel">
       <div class="row-between">
-        <h2>История заказа</h2>
+        <h2>{% translate "История заказа" %}</h2>
         {% if order.is_active %}
           <a class="text-link" href="{{ request.path }}">Обновить ↻</a>
         {% endif %}
@@ -95,19 +96,19 @@
         </p>
         <form action="{% url 'cancel_order' order.pk %}" method="post">
           {% csrf_token %}
-          <label for="cancel-reason">Причина</label>
+          <label for="cancel-reason">{% translate "Причина" %}</label>
           <textarea id="cancel-reason" name="reason" required minlength="5" maxlength="500" rows="3" placeholder="Расскажите, что случилось">
 </textarea>
           <button class="button secondary" type="submit">
             {% if order.can_cancel %}
-              Отменить заказ{% else %}Отправить запрос{% endif %}
+              {% translate "Отменить заказ" %}{% else %}{% translate "Отправить запрос" %}{% endif %}
           </button>
         </form>
       </details>
     {% endif %}
   </div>
   <aside class="panel summary">
-    <h2>Состав заказа</h2>
+    <h2>{% translate "Состав заказа" %}</h2>
     {% for line in order.items.all %}
       <div class="sum-row">
         <span>{{ line.name|default:line.menu_item.name }} <small>× {{ line.quantity }}</small>
@@ -116,12 +117,12 @@
       </div>
     {% endfor %}
     <div class="sum-row">
-      <span>Доставка</span>
+      <span>{% translate "Доставка" %}</span>
       <span>{{ order.delivery_fee|money }}</span>
     </div>
     <div class="sum-row sum-total">
-      <strong>Итого</strong>
-      <strong>{{ order.total_price|money }} сум</strong>
+      <strong>{% translate "Итого" %}</strong>
+      <strong>{{ order.total_price|money }} {% translate "сум" %}</strong>
     </div>
     <span class="status">{{ order.payment.get_status_display }}</span>
     <p class="help-text">{{ order.payment.get_method_display }}</p>

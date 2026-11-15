@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-from apps.menu.views import home
+from apps.menu.views import home, restaurant_detail, smart_lunch
 from apps.orders import kitchen, operations
 
 admin.site.site_header = "Тёпло · управление"
@@ -16,6 +16,9 @@ urlpatterns = [
     path("kitchen/<int:pk>/", kitchen.action, name="kitchen_action"),
     path("admin/", admin.site.urls),
     path("", home, name="home"),
+    path("restaurants/<int:pk>/", restaurant_detail, name="restaurant_detail"),
+    path("smart-lunch/", smart_lunch, name="smart_lunch"),
+    path("i18n/", include("django.conf.urls.i18n")),
     path("menu/", include("apps.menu.urls")),
     path("cart/", include("apps.cart.urls")),
     path("orders/", include("apps.orders.urls")),

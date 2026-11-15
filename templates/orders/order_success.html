@@ -1,13 +1,13 @@
-{% extends "base.html" %}{% load food %}{% block title %}Заказ принят — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n %}{% block title %}Заказ принят — Тёпло{% endblock %}{% block content %}
 <section class="container section">
   <div class="success-card panel">
     <span class="success-icon">✓</span>
-    <span class="eyebrow">Спасибо за заказ</span>
+    <span class="eyebrow">{% translate "Спасибо за заказ" %}</span>
     <h1>
-      Скоро будет <em>вкусно.</em>
+      {% translate "Скоро будет" %} <em>{% translate "вкусно." %}</em>
     </h1>
     <p>
-      Заказ №{{ order.id }} принят.
+      {% translate "Заказ №" %}{{ order.id }} принят.
       <br>
       Следите за приготовлением и доставкой в его деталях.
     </p>
@@ -15,9 +15,9 @@
       <span>{{ order.address }}</span>
       <strong>{{ order.total_price|money }} сум · наличными</strong>
     </div>
-    <a class="button full" href="{% url 'order_detail' order.pk %}">Следить за заказом <span>→</span>
+    <a class="button full" href="{% url 'order_detail' order.pk %}">{% translate "Следить за заказом" %} <span>→</span>
     </a>
-    <a class="text-link" href="{% url 'menu_list' %}">Вернуться в меню</a>
+    <a class="text-link" href="{% url 'menu_list' %}">{% translate "Вернуться в меню" %}</a>
   </div>
 </section>
 {% endblock %}

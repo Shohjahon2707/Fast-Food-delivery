@@ -70,6 +70,16 @@ class DispatchTests(TestCase):
         self.assertEqual(self.order.status, "delivery")
         self.assertIsNotNone(self.order.delivery_eta)
 
+    def test_dispatch_uses_each_orders_restaurant_not_the_global_origin(self):
+        other_courier = self.another_rider()
+        other_restaurant = Restaurant.objects.create(
+            name="Second kitchen", address="Second street 10", latitude=42, longitude=70
+        )
+        self.order.restaurant = other_restaurant
+        self.order.save()
+        self.assertEqual(dispatch_once(), 1)
+        self.assertEqual(DeliveryOffer.objects.get(order=self.order).courier_id, other_courier.pk)
+
     def test_stale_or_imprecise_or_missing_location_is_ineligible(self):
         for fields in [
             {"location_updated_at": timezone.now() - timedelta(minutes=4)},

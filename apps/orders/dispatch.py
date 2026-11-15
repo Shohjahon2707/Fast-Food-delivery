@@ -72,11 +72,6 @@ def dispatch_once():
         DeliveryOffer.objects.filter(pk=offer_id, state__in=["pending", "accepted"]).update(
             state="cancelled", responded_at=now
         )
-    if restaurant.latitude is None or restaurant.longitude is None or not restaurant.address:
-        Order.objects.filter(status__in=["cooking", "ready"], courier__isnull=True).update(
-            dispatch_alert="Укажите адрес и координаты кухни в настройках доставки."
-        )
-        return 0
     Order.objects.filter(status__in=["cancel", "done"]).exclude(dispatch_alert="").update(
         dispatch_alert=""
     )
@@ -92,6 +87,16 @@ def dispatch_once():
             or order.offers.filter(state__in=["pending", "accepted"]).exists()
             or order.issues.filter(resolved_at__isnull=True).exists()
         ):
+            continue
+        origin_restaurant = order.restaurant or restaurant
+        if (
+            origin_restaurant.latitude is None
+            or origin_restaurant.longitude is None
+            or not origin_restaurant.address
+        ):
+            Order.objects.filter(pk=order.pk).update(
+                dispatch_alert="Укажите адрес и координаты кухни в настройках доставки."
+            )
             continue
         # Start looking near readiness, not at checkout.
         if (
@@ -136,7 +141,7 @@ def dispatch_once():
                     continue
                 origin = (current.latitude, current.longitude)
             travel = distance_minutes(
-                origin, (restaurant.latitude, restaurant.longitude), courier.vehicle
+                origin, (origin_restaurant.latitude, origin_restaurant.longitude), courier.vehicle
             )
             prep = max(0, ((order.ready_at or now) - now).total_seconds() / 60)
             arrival = wait + travel

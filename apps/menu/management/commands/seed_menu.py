@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from apps.menu.models import Category, MenuItem
+from apps.orders.models import Restaurant
 
 PRODUCTS = [
     (
@@ -92,11 +93,15 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
+        restaurant, _ = Restaurant.objects.get_or_create(
+            name="Тёпло", defaults={"cuisine": "Бургеры и фастфуд"}
+        )
         created = 0
         for category_name, name, description, price, weight, image, vegetarian, badge in PRODUCTS:
             category, _ = Category.objects.get_or_create(name=category_name)
             _, new = MenuItem.objects.get_or_create(
                 name=name,
+                restaurant=restaurant,
                 category=category,
                 defaults={
                     "description": description,

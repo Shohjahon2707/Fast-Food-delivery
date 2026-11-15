@@ -18,7 +18,7 @@ from .models import Order
 @customer_required
 def create_order(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    items = list(cart.items.select_related("menu_item"))
+    items = list(cart.items.select_related("menu_item__restaurant"))
     initial = {
         "customer_name": request.user.first_name or request.user.username,
         "phone": request.user.phone,
@@ -37,7 +37,9 @@ def create_order(request):
         return redirect("cart_detail")
     from .models import Restaurant
 
-    restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+    restaurant = items[0].menu_item.restaurant if items else None
+    if restaurant is None:
+        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
     subtotal = sum(item.total for item in items)
     fee = services.shipping(subtotal) if items else 0
     return render(
@@ -58,7 +60,7 @@ def create_order(request):
 def order_list(request):
     orders = (
         Order.objects.filter(user=request.user)
-        .select_related("payment")
+        .select_related("payment", "restaurant")
         .prefetch_related("items__menu_item")
     )
     return render(

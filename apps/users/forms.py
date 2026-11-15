@@ -2,6 +2,7 @@ import re
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.translation import gettext_lazy as _
 
 from .models import User
 
@@ -14,9 +15,11 @@ def clean_phone(value):
 
 
 class UserRegisterForm(UserCreationForm):
-    first_name = forms.CharField(label="Как вас зовут", max_length=150)
-    phone = forms.CharField(label="Телефон", max_length=20)
-    email = forms.EmailField(label="Электронная почта", help_text="Для восстановления доступа.")
+    first_name = forms.CharField(label=_("Как вас зовут"), max_length=150)
+    phone = forms.CharField(label=_("Телефон"), max_length=20)
+    email = forms.EmailField(
+        label=_("Электронная почта"), help_text=_("Для восстановления доступа.")
+    )
 
     class Meta:
         model = User
@@ -35,7 +38,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 class CustomerLoginForm(AuthenticationForm):
-    remember_me = forms.BooleanField(required=False, label="Запомнить меня на 30 дней")
+    remember_me = forms.BooleanField(required=False, label=_("Запомнить меня на 30 дней"))
 
     def confirm_login_allowed(self, user):
         super().confirm_login_allowed(user)
@@ -49,7 +52,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("first_name", "phone", "address")
-        labels = {"first_name": "Имя", "phone": "Телефон", "address": "Адрес по умолчанию"}
+        labels = {"first_name": _("Имя"), "phone": _("Телефон"), "address": _("Адрес по умолчанию")}
         widgets = {"address": forms.Textarea(attrs={"rows": 3, "maxlength": 255})}
 
     def clean_phone(self):

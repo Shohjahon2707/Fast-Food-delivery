@@ -208,3 +208,9 @@ __marimo__/
 media/
 # Generated Django static files (python manage.py collectstatic)
 /staticfiles/
+
+# Ship ready-to-use UI translations; source/compiler are also tracked.
+!locale/**/LC_MESSAGES/django.mo
+# SQLite transient files contain local data.
+*.sqlite3-wal
+*.sqlite3-shm

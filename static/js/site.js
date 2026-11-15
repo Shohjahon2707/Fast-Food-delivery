@@ -62,6 +62,20 @@ document.querySelectorAll("[data-add-cart]").forEach((form) =>
         window.location.assign(response.url);
         return;
       }
+      const conflict = response.status === 409 ? await response.json() : null;
+      if (conflict) {
+        if (conflict.replace_required && window.confirm(conflict.message)) {
+          const replace = document.createElement("input");
+          replace.type = "hidden";
+          replace.name = "replace";
+          replace.value = "yes";
+          form.append(replace);
+          form.submit();
+        } else if (!conflict.replace_required) {
+          toast(conflict.message, true);
+        }
+        return;
+      }
       if (!response.ok)
         throw new Error(
           "Не удалось добавить блюдо. Обновите страницу и попробуйте снова.",

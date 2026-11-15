@@ -1,40 +1,41 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from apps.users.forms import clean_phone
 
 
 class CheckoutForm(forms.Form):
-    customer_name = forms.CharField(label="Ваше имя", max_length=150)
+    customer_name = forms.CharField(label=_("Ваше имя"), max_length=150)
     phone = forms.CharField(
-        label="Номер телефона",
+        label=_("Номер телефона"),
         max_length=20,
         widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
     )
     address = forms.CharField(
-        label="Адрес доставки",
+        label=_("Адрес доставки"),
         min_length=8,
         max_length=255,
         widget=forms.Textarea(
             attrs={
                 "rows": 2,
                 "autocomplete": "street-address",
-                "placeholder": "Улица, дом, квартира, подъезд",
+                "placeholder": _("Улица, дом, квартира, подъезд"),
             }
         ),
     )
     comment = forms.CharField(
-        label="Комментарий",
+        label=_("Комментарий"),
         max_length=500,
         required=False,
         widget=forms.Textarea(
-            attrs={"rows": 2, "placeholder": "Например: домофон 24, не звонить в дверь"}
+            attrs={"rows": 2, "placeholder": _("Например: домофон 24, не звонить в дверь")}
         ),
     )
     payment_method = forms.ChoiceField(
-        choices=[("cash", "Наличными при получении")], initial="cash", widget=forms.RadioSelect
+        choices=[("cash", _("Наличными при получении"))], initial="cash", widget=forms.RadioSelect
     )
     save_address = forms.BooleanField(
-        label="Сохранить адрес в профиле", required=False, initial=True
+        label=_("Сохранить адрес в профиле"), required=False, initial=True
     )
     checkout_token = forms.UUIDField(widget=forms.HiddenInput)
 

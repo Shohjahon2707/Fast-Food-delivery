@@ -1,10 +1,11 @@
-{% extends "base.html" %}{% load food %}{% block title %}Корзина — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n %}{% block title %}Корзина — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top">
-  <a href="{% url 'menu_list' %}" class="back-link">← Добавить ещё что-нибудь</a>
+  <a href="{% url 'menu_list' %}" class="back-link">{% translate "← Добавить ещё что-нибудь" %}</a>
   <h1 class="page-title">
-    Ваша <em>корзина</em>
+    {% translate "Ваша" %} <em>{% translate "корзина" %}</em>
   </h1>
   {% if items %}
+    {% if restaurant %}<p><a class="text-link" href="{% url 'restaurant_detail' restaurant.pk %}">{{ restaurant.name }} ↗</a> · Один заказ — один ресторан</p>{% endif %}
     <div class="checkout-grid">
       <div class="panel cart-items">
         {% for line in items %}
@@ -12,19 +13,19 @@
             <span class="cart-food">
               <img {% if line.menu_item.photo_sheet %}class="food-sheet slot-{{ line.menu_item.photo_slot }}"{% endif %}
                    src="{{ line.menu_item.image_url }}"
-                   alt="{{ line.menu_item.name }}"
+                   alt="{% translate line.menu_item.name %}"
                    width="100"
                    height="90">
             </span>
             <div class="cart-row-name">
-              <h3>{{ line.menu_item.name }}</h3>
-              <p>{{ line.menu_item.weight }} · {{ line.menu_item.price|money }} сум</p>
+              <h3>{% translate line.menu_item.name %}</h3>
+              <p>{{ line.menu_item.weight }} · {{ line.menu_item.price|money }} {% translate "сум" %}</p>
               {% if not line.menu_item.is_available %}
                 <span class="field-error">Закончилось — удалите из корзины</span>
               {% endif %}
               <form method="post" action="{% url 'remove_from_cart' line.pk %}">
                 {% csrf_token %}
-                <button type="submit" class="text-button muted">Удалить</button>
+                <button type="submit" class="text-button muted">{% translate "Удалить" %}</button>
               </form>
             </div>
             <form class="quantity"
@@ -33,39 +34,39 @@
               {% csrf_token %}
               <button name="quantity"
                       value="{{ line.quantity|add:'-1' }}"
-                      aria-label="Уменьшить количество {{ line.menu_item.name }}">−</button>
+                      aria-label="Уменьшить количество {% translate line.menu_item.name %}">−</button>
               <span aria-label="Количество">{{ line.quantity }}</span>
               <button name="quantity"
                       value="{{ line.quantity|add:'1' }}"
-                      aria-label="Увеличить количество {{ line.menu_item.name }}"
+                      aria-label="Увеличить количество {% translate line.menu_item.name %}"
                       {% if line.quantity >= 30 %}disabled{% endif %}>+</button>
             </form>
-            <strong>{{ line.total|money }} <small>сум</small>
+            <strong>{{ line.total|money }} <small>{% translate "сум" %}</small>
             </strong>
           </article>
         {% endfor %}
       </div>
       <aside class="panel summary">
-        <h2>Всё вместе</h2>
+        <h2>{% translate "Всё вместе" %}</h2>
         <div class="sum-row">
-          <span>Блюда</span>
-          <span>{{ subtotal|money }} сум</span>
+          <span>{% translate "Блюда" %}</span>
+          <span>{{ subtotal|money }} {% translate "сум" %}</span>
         </div>
         <div class="sum-row">
-          <span>Доставка</span>
+          <span>{% translate "Доставка" %}</span>
           <span>
             {% if fee %}
-              {{ fee|money }} сум{% else %}Бесплатно{% endif %}
+              {{ fee|money }} {% translate "сум" %}{% else %}{% translate "Бесплатно" %}{% endif %}
           </span>
         </div>
         <div class="sum-row sum-total">
-          <strong>Итого</strong>
-          <strong>{{ total|money }} сум</strong>
+          <strong>{% translate "Итого" %}</strong>
+          <strong>{{ total|money }} {% translate "сум" %}</strong>
         </div>
         {% if unavailable %}
           <p class="form-error">Удалите недоступные блюда, чтобы продолжить.</p>
         {% else %}
-          <a href="{% url 'create_order' %}" class="button full">К оформлению <span>→</span>
+          <a href="{% url 'create_order' %}" class="button full">{% translate "К оформлению" %} <span>→</span>
           </a>
         {% endif %}
         <p class="help-text">Бесплатная доставка от {{ free_delivery_from|money }} сум. Окончательная сумма видна до подтверждения.</p>
@@ -74,9 +75,9 @@
   {% else %}
     <div class="empty-state">
       <span class="empty-icon">♡</span>
-      <h2>Здесь ещё есть место для вкусного</h2>
-      <p>Начните с любимого блюда. Остальное — за нами.</p>
-      <a class="button" href="{% url 'menu_list' %}">Открыть меню →</a>
+      <h2>{% translate "Здесь ещё есть место для вкусного" %}</h2>
+      <p>{% translate "Начните с любимого блюда. Остальное — за нами." %}</p>
+      <a class="button" href="{% url 'menu_list' %}">{% translate "Открыть меню →" %}</a>
     </div>
   {% endif %}
 </section>

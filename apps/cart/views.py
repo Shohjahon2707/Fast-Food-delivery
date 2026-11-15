@@ -16,7 +16,7 @@ from .models import Cart, CartItem
 @customer_required
 def cart_detail(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    items = list(cart.items.select_related("menu_item"))
+    items = list(cart.items.select_related("menu_item__restaurant"))
     subtotal = sum(item.total for item in items)
     fee = shipping(subtotal) if items else 0
     return render(
@@ -28,7 +28,12 @@ def cart_detail(request):
             "subtotal": subtotal,
             "fee": fee,
             "total": subtotal + fee,
-            "unavailable": any(not item.menu_item.is_available for item in items),
+            "restaurant": items[0].menu_item.restaurant if items else None,
+            "unavailable": any(
+                not line.menu_item.is_available
+                or (line.menu_item.restaurant and not line.menu_item.restaurant.accepting_orders)
+                for line in items
+            ),
         },
     )
 
@@ -40,6 +45,25 @@ def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, pk=item_id, is_available=True)
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart = Cart.objects.select_for_update().get(pk=cart.pk)
+    if item.restaurant and not item.restaurant.accepting_orders:
+        if request.headers.get("Accept") == "application/json":
+            return JsonResponse({"message": "Ресторан сейчас закрыт."}, status=409)
+        messages.error(request, "Ресторан сейчас закрыт.")
+        return redirect("cart_detail")
+    other = cart.items.exclude(menu_item__restaurant_id=item.restaurant_id)
+    if other.exists():
+        if request.POST.get("replace") == "yes":
+            cart.items.all().delete()
+        elif request.headers.get("Accept") == "application/json":
+            return JsonResponse(
+                {
+                    "replace_required": True,
+                    "message": "В корзине блюда другого ресторана. Очистить её и добавить это блюдо?",
+                },
+                status=409,
+            )
+        else:
+            return render(request, "cart/replace.html", {"item": item})
     line, created = CartItem.objects.get_or_create(cart=cart, menu_item=item)
     if not created and line.quantity < 30:
         line.quantity += 1

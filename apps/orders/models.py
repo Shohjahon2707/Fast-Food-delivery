@@ -18,6 +18,9 @@ class Order(BaseModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="orders"
     )
+    restaurant = models.ForeignKey(
+        "Restaurant", on_delete=models.PROTECT, null=True, related_name="orders"
+    )
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new", db_index=True)
@@ -114,9 +117,14 @@ class OrderIssue(models.Model):
 
 
 class Restaurant(models.Model):
-    """One dispatch origin; configuration is shared by all workers."""
+    """A restaurant owns its menu and is the pickup origin for its orders."""
 
     name = models.CharField(max_length=100, default="Тёпло")
+    description = models.TextField(blank=True)
+    cuisine = models.CharField(max_length=100, blank=True)
+    cover = models.CharField(max_length=100, default="food/burger.webp")
+    delivery_minutes = models.PositiveSmallIntegerField(default=35)
+    is_demo = models.BooleanField(default=False)
     address = models.CharField(max_length=255, blank=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
@@ -125,8 +133,9 @@ class Restaurant(models.Model):
     last_dispatch_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "кухня и доставка"
-        verbose_name_plural = "Кухня и доставка"
+        ordering = ["id"]
+        verbose_name = "ресторан"
+        verbose_name_plural = "Рестораны"
 
     def clean(self):
         from django.core.exceptions import ValidationError
@@ -139,10 +148,6 @@ class Restaurant(models.Model):
             raise ValidationError("Координаты кухни вне допустимого диапазона.")
         if not 1 <= self.preparation_minutes <= 120:
             raise ValidationError("Время приготовления должно быть от 1 до 120 минут.")
-
-    def save(self, *args, **kwargs):
-        self.pk = 1
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
