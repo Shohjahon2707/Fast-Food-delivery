@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.templatetags.static import static
+from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import BaseModel
 
@@ -20,6 +21,12 @@ class Category(BaseModel):
 
 
 class MenuItem(BaseModel):
+    class LunchRole(models.TextChoices):
+        MAIN = "main", _("Основное")
+        SIDE = "side", _("Гарнир или салат")
+        DRINK = "drink", _("Напиток")
+        DESSERT = "dessert", _("Десерт")
+
     restaurant = models.ForeignKey(
         "orders.Restaurant", on_delete=models.PROTECT, null=True, related_name="menu_items"
     )
@@ -33,11 +40,25 @@ class MenuItem(BaseModel):
     weight = models.CharField(max_length=30, blank=True, verbose_name="Вес / объём")
     badge = models.CharField(max_length=30, blank=True, verbose_name="Метка")
     seed_image = models.CharField(max_length=100, blank=True, editable=False)
+    lunch_role = models.CharField(max_length=10, choices=LunchRole, blank=True)
+    servings = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1)])
+    is_halal = models.BooleanField(blank=True, null=True)
+    spice_level = models.PositiveSmallIntegerField(
+        choices=[(0, _("Неострое")), (1, _("Умеренно острое")), (2, _("Острое"))],
+        blank=True, null=True,
+    )
+    calories = models.PositiveSmallIntegerField(blank=True, null=True)
+    protein = models.PositiveSmallIntegerField(blank=True, null=True)
+    fat = models.PositiveSmallIntegerField(blank=True, null=True)
+    carbohydrates = models.PositiveSmallIntegerField(blank=True, null=True)
+    allergens = models.JSONField(blank=True, null=True)
+    cooking_minutes = models.PositiveSmallIntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ["id"]
         constraints = [
-            models.CheckConstraint(condition=models.Q(price__gt=0), name="menu_price_positive")
+            models.CheckConstraint(condition=models.Q(price__gt=0), name="menu_price_positive"),
+            models.CheckConstraint(condition=models.Q(servings__gte=1), name="menu_servings_positive"),
         ]
         verbose_name = "блюдо"
         verbose_name_plural = "Меню"
@@ -77,3 +98,15 @@ class MenuItem(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        if self.allergens is not None:
+            from .smart_forms import ALLERGEN_CHOICES
+
+            valid = dict(ALLERGEN_CHOICES)
+            if not isinstance(self.allergens, list) or any(
+                not isinstance(code, str) or code not in valid for code in self.allergens
+            ):
+                raise ValidationError({"allergens": _("Укажите список кодов аллергенов.")})

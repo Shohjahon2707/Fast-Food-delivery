@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.models import Sum
 
+from apps.cart.basket import SESSION_KEY
 from apps.cart.models import CartItem
 
 
@@ -10,6 +11,8 @@ def site_context(request):
         count = (
             CartItem.objects.filter(cart__user=request.user).aggregate(n=Sum("quantity"))["n"] or 0
         )
+    elif not request.user.is_authenticated:
+        count = sum(request.session.get(SESSION_KEY, {}).values())
     preference = request.get_signed_cookie("food_preferences", default="", salt="food-preferences")
     parts = preference.split(":")
     return {

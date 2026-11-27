@@ -34,8 +34,9 @@ document.querySelectorAll("[data-confirm-button]").forEach((button) =>
   }),
 );
 document.querySelectorAll("[data-submit-once]").forEach((form) =>
-  form.addEventListener("submit", () => {
-    const button = form.querySelector("button[type=submit]");
+  form.addEventListener("submit", (event) => {
+    const button = event.submitter;
+    if (button?.value === "quote") return;
     if (button) {
       button.disabled = true;
       button.textContent = "Оформляем…";
@@ -104,6 +105,7 @@ if (liveOrder) {
       });
       if (!response.ok || response.redirected) return;
       const data = await response.json();
+      liveOrder.dispatchEvent(new CustomEvent("order:location", { detail: data.courier_position }));
       if (
         String(data.version) !== liveOrder.dataset.version &&
         !liveOrder.querySelector("a")
@@ -119,5 +121,6 @@ if (liveOrder) {
       /* Keep the last known order and the manual refresh link. */
     }
   };
+  if (document.querySelector("[data-courier-tracking]")) checkStatus();
   setInterval(checkStatus, 20000);
 }

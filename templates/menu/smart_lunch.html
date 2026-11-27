@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static food i18n %}
+{% block title %}{% translate "Умный обед" %} — Тёпло{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+  <link rel="stylesheet" href="{% static 'css/smart-lunch.css' %}">
+  <script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script>
+  <script src="{% static 'js/delivery-map.js' %}" defer></script>
+{% endblock %}
+{% block content %}
+<div class="container lunch-page">
+  <section class="lunch-hero" aria-labelledby="lunch-title">
+    <div>
+      <h1 id="lunch-title">{% translate "Умный обед" %}</h1>
+      <p>{% translate "Готовые наборы из одного ресторана. Доставка входит в бюджет." %}</p>
+    </div>
+    <img src="{% static 'food/salad.webp' %}" width="480" height="320" alt="">
+  </section>
+  <div class="lunch-layout">
+    <form method="post" class="panel lunch-filter">
+      {% csrf_token %}
+      <h2>{% translate "Подберите свой обед" %}</h2>
+      {{ form.non_field_errors }}
+      <div class="lunch-fields">
+        {% for field in form.visible_fields %}
+          {% if field.name != "latitude" and field.name != "longitude" and field.name != "allergens" %}
+            <div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <details {% if form.allergens.value %}open{% endif %}>
+        <summary>{% translate "Исключить аллергены" %}</summary>
+        <p class="help-text">{% translate "Покажем только блюда, для которых известны аллергены." %}</p>
+        {{ form.allergens.errors }}{{ form.allergens }}
+      </details>
+      <details class="delivery-map-panel" {% if form.latitude.errors or form.longitude.errors %}open{% endif %}>
+        <summary>{% translate "Точка доставки" %}</summary>
+        <p class="help-text">{% translate "Выберите точку на карте или введите координаты." %}</p>
+        <div class="lunch-fields">
+          <div>{{ form.latitude.label_tag }}{{ form.latitude }}{{ form.latitude.errors }}</div>
+          <div>{{ form.longitude.label_tag }}{{ form.longitude }}{{ form.longitude.errors }}</div>
+        </div>
+        <button type="button" class="button secondary small" data-locate-customer>{% translate "Моё местоположение" %}</button>
+        <div id="delivery-map" data-lat="41.311081" data-lon="69.240562"></div>
+        <p role="status" data-map-status></p>
+        <button class="text-button" type="button" data-clear-point>{% translate "Убрать точку" %}</button>
+      </details>
+      <button class="button full" type="submit">{% translate "Подобрать обед" %}</button>
+    </form>
+    <section aria-labelledby="lunch-results" class="lunch-results">
+      <h2 id="lunch-results">{% translate "Ваши варианты" %}</h2>
+      {% for lunch, token in lunches %}
+        <article class="lunch-result">
+          <img src="{{ lunch.lines.0.0.image_url }}" width="400" height="280" loading="lazy" alt="">
+          <div class="lunch-result-body">
+            <div class="lunch-result-meta">
+              <a href="{% url 'restaurant_detail' lunch.restaurant.pk %}">{{ lunch.restaurant.name }}</a>
+              <span>~{{ lunch.minutes }} {% translate "мин" %}</span>
+            </div>
+            <h3>{% translate lunch.lines.0.0.name %}</h3>
+            <ul>
+              {% for item, quantity in lunch.lines %}<li>{{ quantity }} × {% translate item.name %}</li>{% endfor %}
+            </ul>
+            <p class="lunch-match">{% translate "В пределах бюджета с доставкой" %}</p>
+            <div class="lunch-result-total">
+              <div><strong>{{ lunch.total|money }} {% translate "сум" %}</strong><small>{% translate "Доставка" %} · {% if lunch.fee %}{{ lunch.fee|money }} {% translate "сум" %}{% else %}{% translate "Бесплатно" %}{% endif %}</small></div>
+              <form method="post" action="{% url 'add_lunch' %}">
+                {% csrf_token %}
+                <input type="hidden" name="lunch" value="{{ token }}">
+                <button type="submit" class="button">{% translate "Добавить набор" %}</button>
+              </form>
+            </div>
+          </div>
+        </article>
+      {% empty %}
+        <div class="lunch-empty">
+          {% if searched %}
+            <h3>{% translate "Подходящих наборов нет" %}</h3>
+            {% if closest %}
+              <p>{% translate "Ближайший вариант" %} · {{ closest.restaurant.name }}</p>
+              <ul>{% for item, quantity in closest.lines %}<li>{{ quantity }} × {% translate item.name %}</li>{% endfor %}</ul>
+              <p><strong>{{ closest.total|money }} {% translate "сум" %}</strong> · {% translate "Не хватает" %} {{ closest.extra|money }} {% translate "сум" %}</p>
+            {% else %}
+              <p>{% translate "Проверьте точку доставки, время или предпочтения." %}</p>
+            {% endif %}
+          {% else %}
+            <p>{% translate "Укажите бюджет и число человек, чтобы увидеть наборы." %}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

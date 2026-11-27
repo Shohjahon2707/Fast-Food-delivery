@@ -4,6 +4,14 @@
   <h1 class="page-title">
     {% translate "Ваша" %} <em>{% translate "корзина" %}</em>
   </h1>
+  {% if guest_conflict %}
+    <form class="panel" method="post" action="{% url 'resolve_guest_basket' %}">
+      {% csrf_token %}
+      <p>{% translate "Выберите, какую корзину сохранить." %}</p>
+      <button class="button" name="keep" value="guest">{% translate "Корзину до входа" %}</button>
+      <button class="button secondary" name="keep" value="profile">{% translate "Корзину аккаунта" %}</button>
+    </form>
+  {% endif %}
   {% if items %}
     {% if restaurant %}<p><a class="text-link" href="{% url 'restaurant_detail' restaurant.pk %}">{{ restaurant.name }} ↗</a> · Один заказ — один ресторан</p>{% endif %}
     <div class="checkout-grid">
@@ -55,18 +63,20 @@
         <div class="sum-row">
           <span>{% translate "Доставка" %}</span>
           <span>
-            {% if fee %}
+            {% if delivery_error %}—{% elif fee %}
               {{ fee|money }} {% translate "сум" %}{% else %}{% translate "Бесплатно" %}{% endif %}
           </span>
         </div>
         <div class="sum-row sum-total">
           <strong>{% translate "Итого" %}</strong>
-          <strong>{{ total|money }} {% translate "сум" %}</strong>
+          <strong>{% if delivery_error %}—{% else %}{{ total|money }} {% translate "сум" %}{% endif %}</strong>
         </div>
+        {% if delivery_error %}<p class="form-error">{{ delivery_error }}</p>{% endif %}
+        {% if delivery %}<p>~{{ delivery.minutes }} {% translate "мин" %}</p>{% endif %}
         {% if unavailable %}
           <p class="form-error">Удалите недоступные блюда, чтобы продолжить.</p>
         {% else %}
-          <a href="{% url 'create_order' %}" class="button full">{% translate "К оформлению" %} <span>→</span>
+          <a href="{% url 'create_order' %}" class="button full">{% if user.is_authenticated %}{% translate "К оформлению" %}{% else %}{% translate "Войти и оформить" %}{% endif %} <span>→</span>
           </a>
         {% endif %}
         <p class="help-text">Бесплатная доставка от {{ free_delivery_from|money }} сум. Окончательная сумма видна до подтверждения.</p>

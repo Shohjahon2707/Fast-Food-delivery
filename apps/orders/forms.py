@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from apps.payments.payme import enabled as payme_enabled
 from apps.users.forms import clean_phone
 
 
@@ -38,6 +39,8 @@ class CheckoutForm(forms.Form):
         label=_("Сохранить адрес в профиле"), required=False, initial=True
     )
     checkout_token = forms.UUIDField(widget=forms.HiddenInput)
+    quoted_fee = forms.DecimalField(required=False, min_value=0, widget=forms.HiddenInput)
+    quoted_total = forms.DecimalField(required=False, min_value=0, widget=forms.HiddenInput)
 
     latitude = forms.DecimalField(
         required=False, min_value=-90, max_value=90, decimal_places=6, widget=forms.HiddenInput
@@ -45,6 +48,12 @@ class CheckoutForm(forms.Form):
     longitude = forms.DecimalField(
         required=False, min_value=-180, max_value=180, decimal_places=6, widget=forms.HiddenInput
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if payme_enabled():
+            field = self.fields["payment_method"]
+            field.choices = [*field.choices, ("payme", _("Картой через Payme"))]
 
     def clean(self):
         data = super().clean()

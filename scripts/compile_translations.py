@@ -5,7 +5,7 @@ import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-translations = json.loads((ROOT / "locale/translations.json").read_text())
+translations = json.loads((ROOT / "locale/translations.json").read_text(encoding="utf-8"))
 for language in ("en", "uz"):
     messages = {key: value[language] for key, value in translations.items()}
     messages[""] = (
@@ -40,6 +40,6 @@ for language in ("en", "uz"):
             + json.dumps(messages[key], ensure_ascii=False)
             for key in keys
         )
-        + "\n"
+        + "\n", encoding="utf-8"
     )
     print(f"{language}: {count - 1} translations compiled")

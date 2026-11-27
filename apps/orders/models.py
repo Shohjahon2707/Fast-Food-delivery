@@ -1,7 +1,9 @@
 import uuid
 
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import BaseModel
 
@@ -130,6 +132,13 @@ class Restaurant(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     preparation_minutes = models.PositiveSmallIntegerField(default=15)
     accepting_orders = models.BooleanField(default=True)
+    opens_at = models.TimeField(blank=True, null=True)
+    closes_at = models.TimeField(blank=True, null=True)
+    minimum_subtotal = models.PositiveIntegerField(default=0)
+    delivery_radius_km = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True,
+        validators=[MinValueValidator(0.01)],
+    )
     last_dispatch_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -140,6 +149,10 @@ class Restaurant(models.Model):
     def clean(self):
         from django.core.exceptions import ValidationError
 
+        if (self.opens_at is None) != (self.closes_at is None):
+            raise ValidationError(_("Укажите время открытия и закрытия."))
+        if self.delivery_radius_km is not None and self.latitude is None:
+            raise ValidationError(_("Для зоны доставки нужны координаты ресторана."))
         if (self.latitude is None) != (self.longitude is None):
             raise ValidationError("Укажите обе координаты кухни.")
         if self.latitude is not None and not (
@@ -148,6 +161,12 @@ class Restaurant(models.Model):
             raise ValidationError("Координаты кухни вне допустимого диапазона.")
         if not 1 <= self.preparation_minutes <= 120:
             raise ValidationError("Время приготовления должно быть от 1 до 120 минут.")
+
+    @property
+    def is_open(self):
+        from .delivery import is_open
+
+        return is_open(self)
 
     def __str__(self):
         return self.name

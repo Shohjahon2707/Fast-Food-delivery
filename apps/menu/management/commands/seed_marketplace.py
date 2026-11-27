@@ -56,6 +56,9 @@ RESTAURANTS = [
 ]
 # restaurant, category, dish, price in UZS, weight, artwork, vegetarian, description
 DISHES = [
+    (3, "Вторые блюда", "Рис с нутом", 15000, "200 г", "plov.svg", True, "Рис, нут и зелень."),
+    (3, "Салаты", "Салат из огурцов", 6000, "100 г", "salad.webp", True, "Огурцы и зелень."),
+    (3, "Напитки", "Вода без газа", 4000, "330 мл", "drink.svg", True, "Питьевая вода."),
     (
         0,
         "Вторые блюда",
@@ -385,7 +388,11 @@ class Command(BaseCommand):
         added = 0
         for index, category_name, name, price, weight, image, veg, description in DISHES:
             category, _ = Category.objects.get_or_create(name=category_name)
-            _, created = MenuItem.objects.get_or_create(
+            role = {
+                "Салаты": "side", "Закуски": "side", "Гарниры": "side",
+                "Напитки": "drink", "Десерты": "dessert",
+            }.get(category_name, "main")
+            item, created = MenuItem.objects.get_or_create(
                 restaurant=restaurants[index],
                 name=name,
                 defaults={
@@ -395,8 +402,12 @@ class Command(BaseCommand):
                     "seed_image": "food/" + image,
                     "is_vegetarian": veg,
                     "description": description,
+                    "lunch_role": role,
                 },
             )
+            if not item.lunch_role:
+                item.lunch_role = role
+                item.save(update_fields=["lunch_role"])
             added += created
         self.stdout.write(
             self.style.SUCCESS(

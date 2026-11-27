@@ -18,10 +18,20 @@
       {% if item.is_vegetarian %}
         <span class="chip">{% translate "Без мяса" %}</span>
       {% endif %}
+      {% if item.is_halal %}<span class="chip">{% translate "Подтверждённый халяль" %}</span>{% endif %}
+      {% if item.spice_level != None %}<span class="chip">{{ item.get_spice_level_display }}</span>{% endif %}
+      <dl class="dish-facts">
+        {% if item.calories != None %}<dt>{% translate "Калорийность" %}</dt><dd>{{ item.calories }} {% translate "ккал" %}</dd>{% endif %}
+        {% if item.protein != None %}<dt>{% translate "Белки" %}</dt><dd>{{ item.protein }} {% translate "г" %}</dd>{% endif %}
+        {% if item.fat != None %}<dt>{% translate "Жиры" %}</dt><dd>{{ item.fat }} {% translate "г" %}</dd>{% endif %}
+        {% if item.carbohydrates != None %}<dt>{% translate "Углеводы" %}</dt><dd>{{ item.carbohydrates }} {% translate "г" %}</dd>{% endif %}
+        {% if item.cooking_minutes != None %}<dt>{% translate "Приготовление" %}</dt><dd>{{ item.cooking_minutes }} {% translate "мин" %}</dd>{% endif %}
+        {% if item.allergens != None %}<dt>{% translate "Аллергены" %}</dt><dd>{% if allergen_labels %}{{ allergen_labels|join:", " }}{% else %}{% translate "Нет заявленных аллергенов" %}{% endif %}</dd>{% endif %}
+      </dl>
       <div class="detail-price">
         {{ item.price|money }} <small>{% translate "сум" %}</small>
       </div>
-      {% if user.is_customer %}
+      {% if user.is_customer or not user.is_authenticated %}{% if not item.restaurant or item.restaurant.is_open %}
         <form method="post" action="{% url 'add_to_cart' item.id %}" data-add-cart>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">
@@ -29,9 +39,7 @@
             {% translate "Добавить в корзину" %} <span>+</span>
           </button>
         </form>
-      {% else %}
-        <a href="{% url 'login' %}" class="button">{% translate "Войти и заказать" %}</a>
-      {% endif %}
+      {% else %}<p>{% translate "Ресторан сейчас закрыт." %}</p>{% endif %}{% endif %}
       <p class="help-text">Есть пищевая аллергия? Укажите её в комментарии к заказу. Состав можно уточнить до приготовления через обращение в заказе.</p>
     </div>
   </div>

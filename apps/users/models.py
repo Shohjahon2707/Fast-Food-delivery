@@ -13,6 +13,9 @@ class User(AbstractUser, BaseModel):
     ]
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
+    address_latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    address_longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    lunch_preferences = models.JSONField(default=dict, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="customer")
 
     def __str__(self):

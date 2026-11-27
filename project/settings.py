@@ -130,4 +130,8 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() == "true"
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "hello@localhost")
 DELIVERY_FEE = Decimal(os.getenv("DELIVERY_FEE", "10000"))
+PAYME_MERCHANT_ID = os.getenv("PAYME_MERCHANT_ID", "")
+PAYME_API_KEY = os.getenv("PAYME_API_KEY", "")
+PAYME_LOGIN = os.getenv("PAYME_LOGIN", "Paycom")
+PAYME_SANDBOX = os.getenv("PAYME_SANDBOX", "true").lower() == "true"
 FREE_DELIVERY_FROM = Decimal(os.getenv("FREE_DELIVERY_FROM", "100000"))

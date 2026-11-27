@@ -842,5 +842,381 @@
   "Мой профиль": {
     "en": "My profile",
     "uz": "Profilim"
+  },
+  "Основное": {
+    "en": "Main course",
+    "uz": "Asosiy taom"
+  },
+  "Гарнир или салат": {
+    "en": "Side or salad",
+    "uz": "Garnir yoki salat"
+  },
+  "Напиток": {
+    "en": "Drink",
+    "uz": "Ichimlik"
+  },
+  "Десерт": {
+    "en": "Dessert",
+    "uz": "Desert"
+  },
+  "Неострое": {
+    "en": "Mild",
+    "uz": "Achchiq emas"
+  },
+  "Умеренно острое": {
+    "en": "Medium spicy",
+    "uz": "O‘rtacha achchiq"
+  },
+  "Острое": {
+    "en": "Spicy",
+    "uz": "Achchiq"
+  },
+  "Укажите список кодов аллергенов.": {
+    "en": "Enter a list of allergen codes.",
+    "uz": "Allergen kodlari ro‘yxatini kiriting."
+  },
+  "Укажите время открытия и закрытия.": {
+    "en": "Enter opening and closing times.",
+    "uz": "Ochilish va yopilish vaqtini kiriting."
+  },
+  "Для зоны доставки нужны координаты ресторана.": {
+    "en": "The delivery area requires the restaurant's coordinates.",
+    "uz": "Yetkazish hududi uchun restoran koordinatalari kerak."
+  },
+  "Ресторан сейчас закрыт.": {
+    "en": "The restaurant is closed.",
+    "uz": "Restoran hozir yopiq."
+  },
+  "Минимальная сумма блюд в этом ресторане — %(amount)s сум.": {
+    "en": "This restaurant has a food minimum of %(amount)s UZS.",
+    "uz": "Bu restoranda taomlar uchun eng kam summa %(amount)s so‘m."
+  },
+  "Укажите точку доставки, чтобы проверить зону ресторана.": {
+    "en": "Set a delivery point to check the restaurant's coverage.",
+    "uz": "Yetkazish hududini tekshirish uchun nuqtani belgilang."
+  },
+  "Адрес вне зоны доставки этого ресторана.": {
+    "en": "The address is outside this restaurant's delivery area.",
+    "uz": "Manzil ushbu restoranning yetkazish hududidan tashqarida."
+  },
+  "Глютен": {
+    "en": "Gluten",
+    "uz": "Glyuten"
+  },
+  "Молоко": {
+    "en": "Milk",
+    "uz": "Sut"
+  },
+  "Яйца": {
+    "en": "Eggs",
+    "uz": "Tuxum"
+  },
+  "Орехи": {
+    "en": "Tree nuts",
+    "uz": "Yong‘oqlar"
+  },
+  "Арахис": {
+    "en": "Peanuts",
+    "uz": "Yeryong‘oq"
+  },
+  "Соя": {
+    "en": "Soy",
+    "uz": "Soya"
+  },
+  "Рыба": {
+    "en": "Fish",
+    "uz": "Baliq"
+  },
+  "Кунжут": {
+    "en": "Sesame",
+    "uz": "Kunjut"
+  },
+  "Моллюски и ракообразные": {
+    "en": "Molluscs and crustaceans",
+    "uz": "Mollyuskalar va qisqichbaqasimonlar"
+  },
+  "Горчица": {
+    "en": "Mustard",
+    "uz": "Xantal"
+  },
+  "Сельдерей": {
+    "en": "Celery",
+    "uz": "Selderey"
+  },
+  "Люпин": {
+    "en": "Lupin",
+    "uz": "Lyupin"
+  },
+  "Сульфиты": {
+    "en": "Sulphites",
+    "uz": "Sulfitlar"
+  },
+  "Широта": {
+    "en": "Latitude",
+    "uz": "Kenglik"
+  },
+  "Долгота": {
+    "en": "Longitude",
+    "uz": "Uzunlik"
+  },
+  "Укажите обе координаты доставки.": {
+    "en": "Enter both delivery coordinates.",
+    "uz": "Yetkazish nuqtasining ikkala koordinatasini kiriting."
+  },
+  "Весь бюджет, сум": {
+    "en": "Total budget, UZS",
+    "uz": "Jami budjet, so‘m"
+  },
+  "Сколько человек": {
+    "en": "Number of people",
+    "uz": "Odam soni"
+  },
+  "Любые блюда": {
+    "en": "Any dishes",
+    "uz": "Barcha taomlar"
+  },
+  "Подтверждённый халяль": {
+    "en": "Verified halal",
+    "uz": "Tasdiqlangan halol"
+  },
+  "Время доставки": {
+    "en": "Delivery time",
+    "uz": "Yetkazish vaqti"
+  },
+  "Неважно": {
+    "en": "Any time",
+    "uz": "Farqi yo‘q"
+  },
+  "До 30 минут": {
+    "en": "Within 30 minutes",
+    "uz": "30 daqiqagacha"
+  },
+  "До 40 минут": {
+    "en": "Within 40 minutes",
+    "uz": "40 daqiqagacha"
+  },
+  "До 50 минут": {
+    "en": "Within 50 minutes",
+    "uz": "50 daqiqagacha"
+  },
+  "До 60 минут": {
+    "en": "Within 60 minutes",
+    "uz": "60 daqiqagacha"
+  },
+  "Исключить аллергены": {
+    "en": "Exclude allergens",
+    "uz": "Allergenlarni chiqarish"
+  },
+  "Выберите, какую корзину сохранить.": {
+    "en": "Choose which basket to keep.",
+    "uz": "Qaysi savatni saqlashni tanlang."
+  },
+  "Корзину до входа": {
+    "en": "Guest basket",
+    "uz": "Mehmon savati"
+  },
+  "Корзину аккаунта": {
+    "en": "Account basket",
+    "uz": "Hisobdagi savat"
+  },
+  "В корзине блюда другого ресторана. Заменить их?": {
+    "en": "The basket has dishes from another restaurant. Replace them?",
+    "uz": "Savatda boshqa restoran taomlari bor. Almashtirilsinmi?"
+  },
+  "Блюдо в корзине.": {
+    "en": "Dish added to the basket.",
+    "uz": "Taom savatga qo‘shildi."
+  },
+  "Условия изменились. Подберите обед ещё раз.": {
+    "en": "The options changed. Search for lunch again.",
+    "uz": "Shartlar o‘zgardi. Tushlikni qayta tanlang."
+  },
+  "Заменить текущие блюда выбранным набором?": {
+    "en": "Replace the current dishes with this set?",
+    "uz": "Savatdagi taomlar ushbu to‘plamga almashtirilsinmi?"
+  },
+  "Набор в корзине.": {
+    "en": "Set added to the basket.",
+    "uz": "To‘plam savatga qo‘shildi."
+  },
+  "Можно выбрать от 1 до 30 порций.": {
+    "en": "You can choose 1 to 30 servings.",
+    "uz": "1 dan 30 gacha porsiya tanlash mumkin."
+  },
+  "Стоимость доставки обновилась. Проверьте сумму и подтвердите заказ.": {
+    "en": "The delivery fee changed. Review the total and confirm your order.",
+    "uz": "Yetkazish narxi o‘zgardi. Summani tekshirib, buyurtmani tasdiqlang."
+  },
+  "Готовые наборы из одного ресторана. Доставка входит в бюджет.": {
+    "en": "Complete meals from one restaurant, with delivery included in the budget.",
+    "uz": "Bitta restorandan tayyor to‘plamlar. Yetkazish budjetga kiradi."
+  },
+  "Подберите свой обед": {
+    "en": "Find your lunch",
+    "uz": "Tushlikni tanlang"
+  },
+  "Покажем только блюда, для которых известны аллергены.": {
+    "en": "We show only dishes with allergen information.",
+    "uz": "Faqat allergenlari ma’lum taomlarni ko‘rsatamiz."
+  },
+  "Точка доставки": {
+    "en": "Delivery point",
+    "uz": "Yetkazish nuqtasi"
+  },
+  "Выберите точку на карте или введите координаты.": {
+    "en": "Choose a point on the map or enter coordinates.",
+    "uz": "Xaritada nuqtani tanlang yoki koordinatalarni kiriting."
+  },
+  "Моё местоположение": {
+    "en": "My location",
+    "uz": "Joylashuvim"
+  },
+  "Убрать точку": {
+    "en": "Clear point",
+    "uz": "Nuqtani olib tashlash"
+  },
+  "Подобрать обед": {
+    "en": "Find lunch",
+    "uz": "Tushlikni topish"
+  },
+  "Ваши варианты": {
+    "en": "Your options",
+    "uz": "Sizga mos variantlar"
+  },
+  "В пределах бюджета с доставкой": {
+    "en": "Within budget including delivery",
+    "uz": "Yetkazish bilan budjetga mos"
+  },
+  "Добавить набор": {
+    "en": "Add set",
+    "uz": "To‘plamni qo‘shish"
+  },
+  "Подходящих наборов нет": {
+    "en": "No matching sets",
+    "uz": "Mos to‘plam topilmadi"
+  },
+  "Ближайший вариант": {
+    "en": "Closest option",
+    "uz": "Eng yaqin variant"
+  },
+  "Не хватает": {
+    "en": "Over budget by",
+    "uz": "Yetishmaydi"
+  },
+  "Проверьте точку доставки, время или предпочтения.": {
+    "en": "Check the delivery point, time or preferences.",
+    "uz": "Yetkazish nuqtasi, vaqt yoki istaklarni tekshiring."
+  },
+  "Укажите бюджет и число человек, чтобы увидеть наборы.": {
+    "en": "Enter your budget and group size to see meal sets.",
+    "uz": "To‘plamlarni ko‘rish uchun budjet va odam sonini kiriting."
+  },
+  "Войти и оформить": {
+    "en": "Sign in to order",
+    "uz": "Kirish va buyurtma berish"
+  },
+  "Рассчитать доставку": {
+    "en": "Calculate delivery",
+    "uz": "Yetkazishni hisoblash"
+  },
+  "Откроется в": {
+    "en": "Opens at",
+    "uz": "Ochilish vaqti"
+  },
+  "Доставка от": {
+    "en": "Delivery from",
+    "uz": "Yetkazish narxi"
+  },
+  "Укажите бюджет и число человек. Подберём наборы с доставкой.": {
+    "en": "Enter your budget and group size. We will find meal sets with delivery.",
+    "uz": "Budjet va odam sonini kiriting. Yetkazish bilan mos to‘plamlarni topamiz."
+  },
+  "Рис с нутом": {
+    "en": "Rice with chickpeas",
+    "uz": "No‘xatli guruch"
+  },
+  "Салат из огурцов": {
+    "en": "Cucumber salad",
+    "uz": "Bodring salati"
+  },
+  "Вода без газа": {
+    "en": "Still water",
+    "uz": "Gazsiz suv"
+  },
+  "Данные о блюде": {
+    "en": "Dish information",
+    "uz": "Taom haqida"
+  },
+  "Калорийность": {
+    "en": "Calories",
+    "uz": "Kaloriya"
+  },
+  "Белки": {
+    "en": "Protein",
+    "uz": "Oqsil"
+  },
+  "Жиры": {
+    "en": "Fat",
+    "uz": "Yog‘"
+  },
+  "Углеводы": {
+    "en": "Carbohydrates",
+    "uz": "Uglevodlar"
+  },
+  "Аллергены": {
+    "en": "Allergens",
+    "uz": "Allergenlar"
+  },
+  "Нет заявленных аллергенов": {
+    "en": "No declared allergens",
+    "uz": "Ko‘rsatilgan allergenlar yo‘q"
+  },
+  "Приготовление": {
+    "en": "Preparation",
+    "uz": "Tayyorlash"
+  },
+  "ккал": {
+    "en": "kcal",
+    "uz": "kkal"
+  },
+  "г": {
+    "en": "g",
+    "uz": "g"
+  },
+  "Картой через Payme": {
+    "en": "Card via Payme",
+    "uz": "Payme orqali karta"
+  },
+  "Оплатить через Payme": {
+    "en": "Pay with Payme",
+    "uz": "Payme orqali to‘lash"
+  },
+  "Этот способ оплаты сейчас недоступен.": {
+    "en": "This payment method is unavailable.",
+    "uz": "Bu to‘lov usuli hozir mavjud emas."
+  },
+  "Дождитесь подтверждения оплаты Payme.": {
+    "en": "Wait for Payme to confirm payment.",
+    "uz": "Payme to‘lovni tasdiqlashini kuting."
+  },
+  "Способ оплаты Payme нельзя изменить после оформления.": {
+    "en": "Payme cannot be changed after placing the order.",
+    "uz": "Buyurtma berilgach Payme to‘lov usulini o‘zgartirib bo‘lmaydi."
+  },
+  "Сумма заказа изменилась. Проверьте её перед подтверждением.": {
+    "en": "The order total changed. Review it before confirming.",
+    "uz": "Buyurtma summasi o‘zgardi. Tasdiqlashdan oldin tekshiring."
+  },
+  "Курьер на карте": {
+    "en": "Courier on the map",
+    "uz": "Kuryer xaritada"
+  },
+  "Ожидаем координаты курьера.": {
+    "en": "Waiting for the courier's location.",
+    "uz": "Kuryer joylashuvi kutilmoqda."
+  },
+  "Показано последнее местоположение курьера.": {
+    "en": "Showing the courier's latest position.",
+    "uz": "Kuryerning so‘nggi joylashuvi ko‘rsatilgan."
   }
 }

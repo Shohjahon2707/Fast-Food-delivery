@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тёпло · презентация проекта</title>
+<style>
+  :root{font-family:system-ui,sans-serif;color:#271b3b;background:#f2eef9}
+  *{box-sizing:border-box} body{margin:0} main{width:min(94%,1100px);margin:2rem auto}
+  .slide{display:grid;align-content:center;gap:1.3rem;min-height:min(75vh,620px);background:#fff;padding:clamp(1.5rem,6vw,5rem);border-radius:1.2rem}
+  .slide[hidden]{display:none}.hero{background:#301c59;color:white;grid-template-columns:1.1fr 1fr;align-items:center}
+  .hero img{width:100%;height:100%;max-height:335px;object-fit:cover;border-radius:1rem}
+  h1,h2,h3,p{margin:0}h1{font-size:clamp(4rem,12vw,8rem);line-height:.95}h2{font-size:clamp(1.9rem,5vw,3.8rem);line-height:1.05}
+  h3{font-size:clamp(1rem,3vw,1.45rem)}p,li{font-size:clamp(1rem,2.3vw,1.45rem);line-height:1.5}
+  .subtitle{font-size:clamp(1.15rem,3.6vw,2rem);margin:1.2rem 0 2rem}.small{font-size:.95rem;opacity:.86}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.tile{padding:1rem;background:#f4effc;border-radius:.7rem}
+  .highlight{font-weight:750;color:#493081}.total{font-size:clamp(2rem,7vw,5rem);color:#493081;font-weight:800}
+  nav{display:flex;gap:1rem;justify-content:center;align-items:center;padding:1rem}
+  button{border:0;border-radius:.65rem;padding:.7rem 1rem;font:inherit;background:#493081;color:#fff;cursor:pointer}
+  button:disabled{opacity:.4;cursor:default}
+  @media(max-width:600px){.hero,.grid{grid-template-columns:1fr}.hero img{height:10rem}.slide{min-height:72vh}}
+  @media print{@page{size:A4 landscape;margin:0} body,main{margin:0;width:100%}.slide,.slide[hidden]{display:grid;height:209mm;break-after:page;border-radius:0} nav{display:none}*{print-color-adjust:exact}}
+</style>
+<main>
+  <section class="slide hero">
+    <div><p class="small">Задание 11 · Ташкент, 2026</p><h1>Тёпло</h1><p class="subtitle">Доставка еды и подбор обеда по бюджету</p><p class="small">Shohjahon Saidov · @Shohjahon2707</p></div>
+    <img src="../../static/food/salad.webp" alt="Салат из меню">
+  </section>
+  <section class="slide">
+    <h2>Цель программного обеспечения</h2>
+    <p>Помочь покупателю выбрать блюда из ресторанов Ташкента, узнать стоимость доставки и оформить заказ в одном сервисе.</p>
+    <div class="grid"><div class="tile"><h3>Покупатель</h3><p>Подбирает обед на компанию и видит итоговую цену до подтверждения.</p></div><div class="tile"><h3>Команда доставки</h3><p>Кухня, курьер и оператор работают со статусами одного заказа.</p></div></div>
+  </section>
+  <section class="slide">
+    <h2>Функциональные требования</h2>
+    <div class="grid">
+      <div class="tile"><h3>Каталог</h3><p>Поиск по блюду, ресторану и кухне. Цены и доступность.</p></div>
+      <div class="tile"><h3>Корзина</h3><p>Добавление без входа. Перенос в аккаунт и выбор при конфликте.</p></div>
+      <div class="tile"><h3>Доставка</h3><p>Учёт часов работы, минимальной суммы и зоны ресторана.</p></div>
+      <div class="tile"><h3>Оплата</h3><p>Наличные при получении. Payme после подключения веб-кассы.</p></div>
+    </div>
+  </section>
+  <section class="slide">
+    <h2>О проекте</h2>
+    <p>«Умный обед» подбирает наборы из одного ресторана по бюджету, числу человек, составу и времени. Сумма включает доставку.</p>
+    <p class="total">60 000 сум</p>
+    <p><span class="highlight">Два человека · без мяса · около 25 минут</span><br>Рис с нутом, салат и вода — 50 000 сум. Базовая доставка — 10 000 сум.</p>
+  </section>
+  <section class="slide">
+    <h2>Использованные программные среды</h2>
+    <div class="grid">
+      <div class="tile"><h3>Сервер</h3><p>Python, Django 5.2, Gunicorn, WhiteNoise</p></div>
+      <div class="tile"><h3>Интерфейс</h3><p>Django Templates, HTML, CSS, JavaScript, Leaflet</p></div>
+      <div class="tile"><h3>Хранение данных</h3><p>SQLite локально, PostgreSQL в CI и серверном окружении</p></div>
+      <div class="tile"><h3>Разработка и проверки</h3><p>Git, GitHub, GitHub Actions и тесты Django</p></div>
+    </div>
+  </section>
+  <section class="slide">
+    <h2>Заключение</h2>
+    <p>Веб-версия показывает полный путь покупателя от выбора обеда до заказа. Общий расчёт доставки связывает подбор, корзину и оформление.</p>
+    <p>Для рабочего запуска требуется подключить веб-кассу Payme и подтвердить сценарии оплаты в песочнице. Следующий этап включает отзывы, повтор заказов и кабинет партнёра.</p>
+    <p class="small"><a href="https://github.com/Shohjahon2707/Fast-Food-delivery">Исходный код проекта</a></p>
+  </section>
+</main>
+<nav aria-label="Навигация по презентации" hidden>
+  <button type="button" id="back">Назад</button><output id="progress" aria-live="polite"></output><button type="button" id="next">Далее</button>
+</nav>
+<script>
+  const slides=[...document.querySelectorAll(".slide")];
+  const back=document.querySelector("#back"), next=document.querySelector("#next");
+  let index=0;
+  function show(number){
+    index=Math.max(0,Math.min(number,slides.length-1));
+    slides.forEach((slide,n)=>{slide.hidden=n!==index;});
+    back.disabled=index===0; next.disabled=index===slides.length-1;
+    document.querySelector("#progress").textContent=`${index+1} / ${slides.length}`;
+  }
+  document.querySelector("nav").hidden=false;
+  back.addEventListener("click",()=>show(index-1));
+  next.addEventListener("click",()=>show(index+1));
+  document.addEventListener("keydown",event=>{
+    if(event.key==="ArrowLeft") show(index-1);
+    if(event.key==="ArrowRight") show(index+1);
+  });
+  show(0);
+</script>
+</html>

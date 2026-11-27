@@ -4,6 +4,9 @@ msgstr "Content-Type: text/plain; charset=UTF-8\nLanguage: en\nPlural-Forms: npl
 msgid "А что на обед?"
 msgstr "What's for lunch?"
 
+msgid "Адрес вне зоны доставки этого ресторана."
+msgstr "The address is outside this restaurant's delivery area."
+
 msgid "Адрес доставки"
 msgstr "Delivery address"
 
@@ -13,23 +16,44 @@ msgstr "Default address"
 msgid "Азиатская кухня"
 msgstr "Asian cuisine"
 
+msgid "Аллергены"
+msgstr "Allergens"
+
+msgid "Арахис"
+msgstr "Peanuts"
+
 msgid "Ачичук"
 msgstr "Achichuk salad"
 
 msgid "Без мяса"
 msgstr "Meat free"
 
+msgid "Белки"
+msgstr "Protein"
+
 msgid "Бесплатно"
 msgstr "Free"
 
+msgid "Ближайший вариант"
+msgstr "Closest option"
+
 msgid "Блюда"
 msgstr "Dishes"
+
+msgid "Блюдо в корзине."
+msgstr "Dish added to the basket."
 
 msgid "Бургеры и фастфуд"
 msgstr "Burgers and fast food"
 
 msgid "В корзине блюда другого ресторана. Для нового заказа нужно очистить корзину."
 msgstr "Your cart contains dishes from another restaurant. Clear it to start a new order."
+
+msgid "В корзине блюда другого ресторана. Заменить их?"
+msgstr "The basket has dishes from another restaurant. Replace them?"
+
+msgid "В пределах бюджета с доставкой"
+msgstr "Within budget including delivery"
 
 msgid "ВАШ БЮДЖЕТ — НАШ ОРИЕНТИР"
 msgstr "YOUR BUDGET, OUR GUIDE"
@@ -52,11 +76,17 @@ msgstr "Your category. Your budget. Matching dishes from all restaurants."
 msgid "Ваше имя"
 msgstr "Your name"
 
+msgid "Ваши варианты"
+msgstr "Your options"
+
 msgid "Ваши вкусные истории"
 msgstr "Your delicious stories"
 
 msgid "Вернуться в меню"
 msgstr "Back to menu"
+
+msgid "Весь бюджет, сум"
+msgstr "Total budget, UZS"
 
 msgid "Весь город."
 msgstr "The whole city."
@@ -64,11 +94,20 @@ msgstr "The whole city."
 msgid "Вкусный день начинается здесь"
 msgstr "A delicious day starts here"
 
+msgid "Вода без газа"
+msgstr "Still water"
+
 msgid "Войти"
 msgstr "Log in"
 
 msgid "Войти и заказать"
 msgstr "Log in to order"
+
+msgid "Войти и оформить"
+msgstr "Sign in to order"
+
+msgid "Время доставки"
+msgstr "Delivery time"
 
 msgid "Все блюда"
 msgstr "All dishes"
@@ -94,6 +133,12 @@ msgstr "Choose your flavour"
 msgid "Выберите категорию и сумму. Мы найдём подходящие блюда во всех ресторанах."
 msgstr "Choose a category and budget. We will find matching dishes across restaurants."
 
+msgid "Выберите точку на карте или введите координаты."
+msgstr "Choose a point on the map or enter coordinates."
+
+msgid "Выберите, какую корзину сохранить."
+msgstr "Choose which basket to keep."
+
 msgid "Выбрать еду"
 msgstr "Choose food"
 
@@ -102,6 +147,15 @@ msgstr "Choose a restaurant"
 
 msgid "Выйти"
 msgstr "Log out"
+
+msgid "Гарнир или салат"
+msgstr "Side or salad"
+
+msgid "Глютен"
+msgstr "Gluten"
+
+msgid "Горчица"
+msgstr "Mustard"
 
 msgid "Горячие блюда"
 msgstr "Hot dishes"
@@ -112,6 +166,9 @@ msgstr "Ready for pickup"
 msgid "Готовится"
 msgstr "Preparing"
 
+msgid "Готовые наборы из одного ресторана. Доставка входит в бюджет."
+msgstr "Complete meals from one restaurant, with delivery included in the budget."
+
 msgid "Греческий салат"
 msgstr "Greek salad"
 
@@ -121,11 +178,17 @@ msgstr "Let's get to know you"
 msgid "Давайте начнём с чего-нибудь вкусного."
 msgstr "Let's start with something delicious."
 
+msgid "Данные о блюде"
+msgstr "Dish information"
+
 msgid "Двойной чизбургер"
 msgstr "Double cheeseburger"
 
 msgid "Демонстрационные рестораны и меню для знакомства с сервисом."
 msgstr "Demo restaurants and menus to explore the service."
+
+msgid "Десерт"
+msgstr "Dessert"
 
 msgid "Десерты"
 msgstr "Desserts"
@@ -142,17 +205,44 @@ msgstr "For your delicious plans"
 msgid "Для восстановления доступа."
 msgstr "For password recovery."
 
+msgid "Для зоны доставки нужны координаты ресторана."
+msgstr "The delivery area requires the restaurant's coordinates."
+
+msgid "До 30 минут"
+msgstr "Within 30 minutes"
+
+msgid "До 40 минут"
+msgstr "Within 40 minutes"
+
+msgid "До 50 минут"
+msgstr "Within 50 minutes"
+
+msgid "До 60 минут"
+msgstr "Within 60 minutes"
+
 msgid "Добавить"
 msgstr "Add"
 
 msgid "Добавить в корзину"
 msgstr "Add to cart"
 
+msgid "Добавить набор"
+msgstr "Add set"
+
+msgid "Дождитесь подтверждения оплаты Payme."
+msgstr "Wait for Payme to confirm payment."
+
+msgid "Долгота"
+msgstr "Longitude"
+
 msgid "Домашний лимонад"
 msgstr "Homemade lemonade"
 
 msgid "Доставка"
 msgstr "Delivery"
+
+msgid "Доставка от"
+msgstr "Delivery from"
 
 msgid "Доставлен"
 msgstr "Delivered"
@@ -169,6 +259,9 @@ msgstr "More delicious choices"
 msgid "Ждите в тепле"
 msgstr "Get comfortable"
 
+msgid "Жиры"
+msgstr "Fat"
+
 msgid "Заказ"
 msgstr "Order"
 
@@ -181,6 +274,9 @@ msgstr "Closed"
 msgid "Закрыть"
 msgstr "Close"
 
+msgid "Заменить текущие блюда выбранным набором?"
+msgstr "Replace the current dishes with this set?"
+
 msgid "Запомнить меня на 30 дней"
 msgstr "Remember me for 30 days"
 
@@ -192,6 +288,9 @@ msgstr "Green mix"
 
 msgid "Имя"
 msgstr "Name"
+
+msgid "Исключить аллергены"
+msgstr "Exclude allergens"
 
 msgid "История заказа"
 msgstr "Order history"
@@ -210,6 +309,12 @@ msgstr "Kazan kebab"
 
 msgid "Как вас зовут"
 msgstr "Your name"
+
+msgid "Калорийность"
+msgstr "Calories"
+
+msgid "Картой через Payme"
+msgstr "Card via Payme"
 
 msgid "Картофель фри"
 msgstr "French fries"
@@ -238,6 +343,12 @@ msgstr "Contact details, address and order notes."
 msgid "Корзина"
 msgstr "Cart"
 
+msgid "Корзину аккаунта"
+msgstr "Account basket"
+
+msgid "Корзину до входа"
+msgstr "Guest basket"
+
 msgid "Крылышки BBQ"
 msgstr "BBQ wings"
 
@@ -247,17 +358,29 @@ msgstr "Wings to share"
 msgid "Куда и кому"
 msgstr "Delivery details"
 
+msgid "Кунжут"
+msgstr "Sesame"
+
 msgid "Курица терияки"
 msgstr "Teriyaki chicken"
 
 msgid "Курьер в пути"
 msgstr "On the way"
 
+msgid "Курьер на карте"
+msgstr "Courier on the map"
+
 msgid "Лагман"
 msgstr "Lagman"
 
 msgid "Любимые рестораны и новые вкусы. Найдите то, что хочется именно сейчас."
 msgstr "Favourite restaurants and new flavours. Find just what you are craving."
+
+msgid "Любые блюда"
+msgstr "Any dishes"
+
+msgid "Люпин"
+msgstr "Lupin"
 
 msgid "МЕНЬШЕ ПОИСКОВ. БОЛЬШЕ ВКУСА."
 msgstr "LESS SEARCHING. MORE FLAVOUR."
@@ -274,6 +397,12 @@ msgstr "Mastava"
 msgid "Медовик"
 msgstr "Honey cake"
 
+msgid "Минимальная сумма блюд в этом ресторане — %(amount)s сум."
+msgstr "This restaurant has a food minimum of %(amount)s UZS."
+
+msgid "Можно выбрать от 1 до 30 порций."
+msgstr "You can choose 1 to 30 servings."
+
 msgid "Мои"
 msgstr "My"
 
@@ -283,8 +412,20 @@ msgstr "My orders"
 msgid "Мой профиль"
 msgstr "My profile"
 
+msgid "Моллюски и ракообразные"
+msgstr "Molluscs and crustaceans"
+
+msgid "Молоко"
+msgstr "Milk"
+
+msgid "Моё местоположение"
+msgstr "My location"
+
 msgid "На вашем"
 msgstr "On your"
+
+msgid "Набор в корзине."
+msgstr "Set added to the basket."
 
 msgid "Название блюда или ресторана"
 msgstr "Dish or restaurant name"
@@ -301,6 +442,9 @@ msgstr "Cash on delivery"
 msgid "Напитки"
 msgstr "Drinks"
 
+msgid "Напиток"
+msgstr "Drink"
+
 msgid "Например: домофон 24, не звонить в дверь"
 msgstr "For example: intercom 24, do not ring"
 
@@ -309,6 +453,18 @@ msgstr "Start with your favourite dish. We will do the rest."
 
 msgid "Не помню пароль"
 msgstr "Forgot password"
+
+msgid "Не хватает"
+msgstr "Over budget by"
+
+msgid "Неважно"
+msgstr "Any time"
+
+msgid "Неострое"
+msgstr "Mild"
+
+msgid "Нет заявленных аллергенов"
+msgstr "No declared allergens"
 
 msgid "Ничего не нашлось"
 msgstr "No matches found"
@@ -325,14 +481,26 @@ msgstr "Vegetable bowl"
 msgid "Овощной суп"
 msgstr "Vegetable soup"
 
+msgid "Ожидаем координаты курьера."
+msgstr "Waiting for the courier's location."
+
 msgid "Оплата наличными при получении."
 msgstr "Pay cash on delivery."
 
 msgid "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны."
 msgstr "Pay the courier on delivery. No bank details needed."
 
+msgid "Оплатить через Payme"
+msgstr "Pay with Payme"
+
+msgid "Орехи"
+msgstr "Tree nuts"
+
 msgid "Основная навигация"
 msgstr "Main navigation"
+
+msgid "Основное"
+msgstr "Main course"
 
 msgid "Оставить корзину"
 msgstr "Keep my cart"
@@ -340,11 +508,17 @@ msgstr "Keep my cart"
 msgid "Осталось сказать, куда привезти."
 msgstr "Just tell us where to deliver."
 
+msgid "Острое"
+msgstr "Spicy"
+
 msgid "Острый суп"
 msgstr "Spicy soup"
 
 msgid "От 40 до 70 тысяч"
 msgstr "From 40 to 70 thousand"
+
+msgid "Откроется в"
+msgstr "Opens at"
 
 msgid "Открыть меню →"
 msgstr "Explore menu →"
@@ -385,8 +559,14 @@ msgstr "Skip to content"
 msgid "Пицца"
 msgstr "Pizza"
 
+msgid "Подберите свой обед"
+msgstr "Find your lunch"
+
 msgid "Подобрать"
 msgstr "Find my lunch"
+
+msgid "Подобрать обед"
+msgstr "Find lunch"
 
 msgid "Подробнее →"
 msgstr "View details →"
@@ -394,8 +574,14 @@ msgstr "View details →"
 msgid "Подтвердить заказ"
 msgstr "Confirm order"
 
+msgid "Подтверждённый халяль"
+msgstr "Verified halal"
+
 msgid "Подходит вам"
 msgstr "Matches for you"
+
+msgid "Подходящих наборов нет"
+msgstr "No matching sets"
 
 msgid "Поиск"
 msgstr "Search"
@@ -405,6 +591,12 @@ msgstr "Search restaurants"
 
 msgid "Пока ничего не нашлось"
 msgstr "No matches yet"
+
+msgid "Покажем только блюда, для которых известны аллергены."
+msgstr "We show only dishes with allergen information."
+
+msgid "Показано последнее местоположение курьера."
+msgstr "Showing the courier's latest position."
 
 msgid "Показать все"
 msgstr "View all"
@@ -421,20 +613,32 @@ msgstr "Celebration plov"
 msgid "Предпочтения"
 msgstr "Preferences"
 
+msgid "Приготовление"
+msgstr "Preparation"
+
 msgid "Принят"
 msgstr "Accepted"
 
 msgid "Причина"
 msgstr "Reason"
 
+msgid "Проверьте точку доставки, время или предпочтения."
+msgstr "Check the delivery point, time or preferences."
+
 msgid "Рады видеть вас снова"
 msgstr "Good to see you again"
+
+msgid "Рассчитать доставку"
+msgstr "Calculate delivery"
 
 msgid "Рекомендуем"
 msgstr "Recommended"
 
 msgid "Ресторан или блюдо по вашему бюджету."
 msgstr "A restaurant or dish within your budget."
+
+msgid "Ресторан сейчас закрыт."
+msgstr "The restaurant is closed."
 
 msgid "Ресторан сейчас не принимает заказы."
 msgstr "This restaurant is currently closed."
@@ -451,11 +655,20 @@ msgstr "Tashkent restaurants in one place."
 msgid "Рестораны рядом"
 msgstr "Restaurants nearby"
 
+msgid "Рис с нутом"
+msgstr "Rice with chickpeas"
+
 msgid "Рис с овощами"
 msgstr "Rice with vegetables"
 
+msgid "Рыба"
+msgstr "Fish"
+
 msgid "С возвращением"
 msgstr "Welcome back"
+
+msgid "Салат из огурцов"
+msgstr "Cucumber salad"
 
 msgid "Салат с курицей"
 msgstr "Chicken salad"
@@ -471,6 +684,12 @@ msgstr "Reset"
 
 msgid "Сбросить фильтры"
 msgstr "Reset filters"
+
+msgid "Сельдерей"
+msgstr "Celery"
+
+msgid "Сколько человек"
+msgstr "Number of people"
 
 msgid "Скоро будет"
 msgstr "It will be"
@@ -502,11 +721,26 @@ msgstr "Save"
 msgid "Сохранить адрес в профиле"
 msgstr "Save address in profile"
 
+msgid "Соя"
+msgstr "Soy"
+
 msgid "Спасибо за заказ"
 msgstr "Thank you for your order"
 
+msgid "Способ оплаты Payme нельзя изменить после оформления."
+msgstr "Payme cannot be changed after placing the order."
+
 msgid "Статус и история — в ваших заказах."
 msgstr "Status and history in your orders."
+
+msgid "Стоимость доставки обновилась. Проверьте сумму и подтвердите заказ."
+msgstr "The delivery fee changed. Review the total and confirm your order."
+
+msgid "Сульфиты"
+msgstr "Sulphites"
+
+msgid "Сумма заказа изменилась. Проверьте её перед подтверждением."
+msgstr "The order total changed. Review it before confirming."
 
 msgid "Суп с лапшой"
 msgstr "Noodle soup"
@@ -529,8 +763,17 @@ msgstr "Phone"
 msgid "Томатный суп"
 msgstr "Tomato soup"
 
+msgid "Точка доставки"
+msgstr "Delivery point"
+
+msgid "Убрать точку"
+msgstr "Clear point"
+
 msgid "Увеличьте бюджет или выберите другую категорию."
 msgstr "Increase your budget or choose another category."
+
+msgid "Углеводы"
+msgstr "Carbohydrates"
 
 msgid "Удалить"
 msgstr "Remove"
@@ -541,14 +784,38 @@ msgstr "Uzbek cuisine"
 msgid "Укажите адрес"
 msgstr "Set your address"
 
+msgid "Укажите бюджет и число человек, чтобы увидеть наборы."
+msgstr "Enter your budget and group size to see meal sets."
+
+msgid "Укажите бюджет и число человек. Подберём наборы с доставкой."
+msgstr "Enter your budget and group size. We will find meal sets with delivery."
+
+msgid "Укажите время открытия и закрытия."
+msgstr "Enter opening and closing times."
+
+msgid "Укажите обе координаты доставки."
+msgstr "Enter both delivery coordinates."
+
+msgid "Укажите список кодов аллергенов."
+msgstr "Enter a list of allergen codes."
+
+msgid "Укажите точку доставки, чтобы проверить зону ресторана."
+msgstr "Set a delivery point to check the restaurant's coverage."
+
 msgid "Указать адрес"
 msgstr "Set address"
 
 msgid "Улица, дом, квартира, подъезд"
 msgstr "Street, building, flat, entrance"
 
+msgid "Умеренно острое"
+msgstr "Medium spicy"
+
 msgid "Умный обед"
 msgstr "Smart lunch"
+
+msgid "Условия изменились. Подберите обед ещё раз."
+msgstr "The options changed. Search for lunch again."
 
 msgid "Фастфуд"
 msgstr "Fast food"
@@ -577,11 +844,17 @@ msgstr "Cheesecake"
 msgid "Что вам по вкусу?"
 msgstr "What are you craving?"
 
+msgid "Широта"
+msgstr "Latitude"
+
 msgid "Шурпа с говядиной"
 msgstr "Beef shurpa"
 
 msgid "Электронная почта"
 msgstr "Email"
+
+msgid "Этот способ оплаты сейчас недоступен."
+msgstr "This payment method is unavailable."
 
 msgid "Ягодный десерт"
 msgstr "Berry dessert"
@@ -589,17 +862,26 @@ msgstr "Berry dessert"
 msgid "Язык"
 msgstr "Language"
 
+msgid "Яйца"
+msgstr "Eggs"
+
 msgid "блюд"
 msgstr "dishes"
 
 msgid "вкусно."
 msgstr "delicious."
 
+msgid "г"
+msgstr "g"
+
 msgid "доставка со вкусом"
 msgstr "delivery with taste"
 
 msgid "заказы"
 msgstr "orders"
+
+msgid "ккал"
+msgstr "kcal"
 
 msgid "корзина"
 msgstr "cart"

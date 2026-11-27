@@ -48,6 +48,7 @@
     map.on("click", (event) => setPoint(event.latlng.lat, event.latlng.lng));
     if (existing) setPoint(...center);
   };
+  if (panel.open) initialize();
   panel.addEventListener("toggle", () => {
     if (panel.open) initialize();
   });

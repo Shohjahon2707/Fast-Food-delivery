@@ -37,6 +37,7 @@ def board(request):
         "kitchen/board.html",
         {
             "orders": Order.objects.filter(status__in=["new", "cooking", "ready"])
+            .exclude(payment__method="payme", payment__status="pending")
             .prefetch_related("items", "issues")
             .order_by("created_at")[:60]
         },

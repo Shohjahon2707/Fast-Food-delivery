@@ -1,4 +1,10 @@
-{% extends "base.html" %}{% load food i18n %}{% block title %}{% translate "Заказ №" %}{{ order.pk }} — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n static %}{% block title %}{% translate "Заказ №" %}{{ order.pk }} — Тёпло{% endblock %}
+{% block extra_head %}{% if order.status == "delivery" %}
+  <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+  <script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script>
+  <script src="{% static 'js/order-tracking.js' %}" defer></script>
+{% endif %}{% endblock %}
+{% block content %}
 <section class="container section page-top">
   <a href="{% url 'order_list' %}" class="back-link">{% translate "← Мои заказы" %}</a>
   <div class="section-heading">
@@ -62,6 +68,12 @@
             </p>
           </div>
         </div>
+        <details data-courier-tracking data-waiting="{% translate 'Ожидаем координаты курьера.' %}"
+                 data-current="{% translate 'Показано последнее местоположение курьера.' %}">
+          <summary>{% translate "Курьер на карте" %}</summary>
+          <p data-tracking-status role="status">{% translate "Ожидаем координаты курьера." %}</p>
+          <div id="delivery-map" data-tracking-map hidden></div>
+        </details>
       {% endif %}
     </div>
     <div class="panel">
@@ -126,6 +138,9 @@
     </div>
     <span class="status">{{ order.payment.get_status_display }}</span>
     <p class="help-text">{{ order.payment.get_method_display }}</p>
+    {% if order.payment.method == "payme" and order.payment.status == "pending" and order.status == "new" %}
+      <a class="button" href="{% url 'start_payme' order.pk %}">{% translate "Оплатить через Payme" %}</a>
+    {% endif %}
   </aside>
 </div>
 </section>

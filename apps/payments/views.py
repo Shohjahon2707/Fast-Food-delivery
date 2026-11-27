@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, redirect
 from apps.common.access import customer_required
 from apps.orders.models import Order
 
+from . import payme
+
 
 @customer_required
 def unavailable_card(request, order_id=None):
@@ -20,3 +22,11 @@ def unavailable_card(request, order_id=None):
 def cash_payment_success(request, order_id):
     get_object_or_404(Order, pk=order_id, user=request.user)
     return redirect("order_detail", order_id=order_id)
+
+
+@customer_required
+def start_payme(request, order_id):
+    order = get_object_or_404(Order, pk=order_id, user=request.user, payment__method="payme")
+    if not payme.enabled() or order.status != "new" or order.payment.status != "pending":
+        return redirect("order_detail", order_id=order.pk)
+    return redirect(payme.checkout_url(order))

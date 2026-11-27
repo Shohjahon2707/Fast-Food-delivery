@@ -4,10 +4,13 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.orders.delivery import get_point, saved_point
 from apps.orders.models import Restaurant
 
 from .forms import MealFilterForm
 from .models import Category, MenuItem
+from .smart import recommend, sign_lunch
+from .smart_forms import ALLERGEN_CHOICES, SmartLunchForm
 
 
 def portal_redirect(request):
@@ -25,7 +28,7 @@ def available_items():
     )
 
 
-def catalog(request, restaurant=None, smart=False):
+def catalog(request, restaurant=None):
     redirect_response = portal_redirect(request)
     if redirect_response:
         return redirect_response
@@ -68,7 +71,6 @@ def catalog(request, restaurant=None, smart=False):
             "query": params.get("q", ""),
             "selected_category": params.get("category", ""),
             "restaurant": restaurant,
-            "smart": smart,
             "restaurant_count": items.values("restaurant_id").distinct().count(),
         },
     )
@@ -79,7 +81,41 @@ def menu_list(request):
 
 
 def smart_lunch(request):
-    return catalog(request, smart=True)
+    redirect_response = portal_redirect(request)
+    if redirect_response:
+        return redirect_response
+    if "budget" not in request.GET and any(
+        key in request.GET for key in ("q", "category", "min_price", "max_price", "sort")
+    ):
+        return catalog(request)
+    preference = request.get_signed_cookie("food_preferences", default="", salt="food-preferences")
+    initial = (
+        request.user.lunch_preferences if request.user.is_authenticated
+        else request.session.get("lunch_preferences", {})
+    ).copy()
+    initial.setdefault("diet", preference.split(":")[0] or "all")
+    point = saved_point(request)
+    if point:
+        initial.update(latitude=point[0], longitude=point[1])
+    params = request.POST if request.method == "POST" else request.GET
+    submitted = request.method == "POST" or "budget" in params
+    form = SmartLunchForm(params if submitted else None, initial=initial)
+    lunches, closest = [], None
+    if submitted and form.is_valid():
+        criteria = {
+            key: form.cleaned_data[key]
+            for key in ("budget", "people", "diet", "max_minutes", "allergens")
+        }
+        criteria["point"] = get_point(form.cleaned_data)
+        lunches, closest = recommend(criteria)
+        lunches = [(lunch, sign_lunch(lunch, criteria)) for lunch in lunches]
+    return render(
+        request, "menu/smart_lunch.html",
+        {
+            "form": form, "lunches": lunches, "closest": closest,
+            "searched": submitted and form.is_valid(),
+        },
+    )
 
 
 def restaurant_detail(request, pk):
@@ -96,11 +132,15 @@ def menu_item_detail(request, item_id):
     if redirect_response:
         return redirect_response
     item = get_object_or_404(available_items(), pk=item_id)
+    allergen_labels = dict(ALLERGEN_CHOICES)
     return render(
         request,
         "menu/menu_item_detail.html",
         {
             "item": item,
+            "allergen_labels": [
+                allergen_labels[code] for code in (item.allergens or []) if code in allergen_labels
+            ],
             "related": available_items()
             .filter(restaurant_id=item.restaurant_id)
             .exclude(pk=item.pk)[:3],

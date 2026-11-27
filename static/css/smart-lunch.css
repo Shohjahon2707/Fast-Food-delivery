@@ -1,0 +1,39 @@
+.lunch-page { padding-block: clamp(1rem, 4vw, 3rem) 4rem; }
+.lunch-hero { display: grid; grid-template-columns: 1.45fr 1fr; background: #301c59; color: #fff; overflow: hidden; border-radius: 1.5rem; }
+.lunch-hero > div { padding: clamp(1.5rem, 5vw, 4.5rem); align-self: center; }
+.lunch-hero h1 { margin: 0; color: #fff; font-size: clamp(2.3rem, 6vw, 5rem); line-height: 1; }
+.lunch-hero p { max-width: 28rem; margin: 1.15rem 0 0; color: #ede3ff; }
+.lunch-hero img { width: 100%; height: 100%; min-height: 12rem; object-fit: cover; }
+.lunch-layout { display: grid; grid-template-columns: minmax(240px, 335px) minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.5rem); margin-top: 2rem; align-items: start; }
+.lunch-filter { padding: 1.25rem; }
+.lunch-filter h2, .lunch-results h2 { margin: 0 0 1.15rem; }
+.lunch-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.lunch-fields input, .lunch-fields select { width: 100%; min-width: 0; margin-top: .3rem; padding: .55rem; border: 1px solid #87799e; border-radius: .55rem; background: white; }
+.lunch-fields label { font-weight: 650; }
+.lunch-filter details { margin-block: 1rem; padding: .75rem 0; border-top: 1px solid #ded3ee; }
+.lunch-filter summary { cursor: pointer; font-weight: 650; }
+.lunch-filter #id_allergens { display: grid; grid-template-columns: 1fr 1fr; gap: .3rem; }
+.lunch-filter #delivery-map { height: 180px; margin-top: .6rem; }
+.lunch-result, .lunch-empty { border: 1px solid #ded3ee; background: white; border-radius: 1.1rem; overflow: hidden; margin-bottom: 1rem; }
+.lunch-result { display: grid; grid-template-columns: minmax(110px, 30%) minmax(0, 1fr); }
+.lunch-result > img { width: 100%; height: 100%; object-fit: cover; }
+.lunch-result-body, .lunch-empty { padding: clamp(1rem, 2vw, 1.5rem); }
+.lunch-result-meta, .lunch-result-total { display: flex; gap: .6rem; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.lunch-result-meta a { color: #483088; font-weight: 700; }
+.lunch-result h3 { margin: .55rem 0; font-size: clamp(1.25rem, 3vw, 1.65rem); }
+.lunch-result ul { padding-left: 1.2rem; margin-block: .5rem; }
+.lunch-match { color: #20593e; font-weight: 650; }
+.lunch-result-total { border-top: 1px solid #ded3ee; padding-top: .75rem; }
+.lunch-result-total strong, .lunch-result-total small { display: block; }
+.lunch-result-total strong { font-size: 1.15rem; }
+@media (max-width: 740px) {
+  .lunch-layout { grid-template-columns: 1fr; }
+  .lunch-hero { grid-template-columns: 1.4fr 1fr; }
+  .lunch-hero img { min-height: 0; }
+}
+@media (max-width: 410px) {
+  .lunch-hero > div { padding: 1rem; }
+  .lunch-hero h1 { font-size: 2rem; }
+  .lunch-result { grid-template-columns: 1fr; }
+  .lunch-result > img { height: 140px; }
+}

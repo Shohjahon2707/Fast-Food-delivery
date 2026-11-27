@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Payment(models.Model):
-    METHOD_CHOICES = [("cash", "Наличными при получении"), ("card", "Карта (архив)")]
+    METHOD_CHOICES = [("cash", "Наличными при получении"), ("card", "Карта (архив)"), ("payme", "Payme")]
     STATUS_CHOICES = [
         ("pending", "К оплате при получении"),
         ("paid", "Оплачено"),
@@ -35,3 +35,15 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Оплата заказа #{self.order_id}"
+
+
+class PaymeTransaction(models.Model):
+    payment = models.OneToOneField(Payment, on_delete=models.PROTECT, related_name="payme")
+    provider_id = models.CharField(max_length=100, unique=True)
+    provider_time = models.PositiveBigIntegerField(db_index=True)
+    amount = models.PositiveBigIntegerField()
+    create_time = models.PositiveBigIntegerField()
+    perform_time = models.PositiveBigIntegerField(default=0)
+    cancel_time = models.PositiveBigIntegerField(default=0)
+    state = models.SmallIntegerField(default=1)
+    reason = models.PositiveIntegerField(null=True)

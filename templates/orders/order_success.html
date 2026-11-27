@@ -13,8 +13,11 @@
     </p>
     <div class="success-info">
       <span>{{ order.address }}</span>
-      <strong>{{ order.total_price|money }} сум · наличными</strong>
+      <strong>{{ order.total_price|money }} {% translate "сум" %} · {{ order.payment.get_method_display }}</strong>
     </div>
+    {% if order.payment.method == "payme" and order.payment.status == "pending" and order.status == "new" %}
+      <a class="button full" href="{% url 'start_payme' order.pk %}">{% translate "Оплатить через Payme" %}</a>
+    {% endif %}
     <a class="button full" href="{% url 'order_detail' order.pk %}">{% translate "Следить за заказом" %} <span>→</span>
     </a>
     <a class="text-link" href="{% url 'menu_list' %}">{% translate "Вернуться в меню" %}</a>

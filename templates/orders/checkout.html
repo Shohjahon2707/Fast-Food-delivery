@@ -20,10 +20,12 @@
         <p data-map-status role="status">Нажмите на карту, чтобы поставить точку. Адрес выше всё равно нужен.</p>
         <button class="text-button" type="button" data-clear-point>Убрать точку</button>
       </details>
-      <div class="notice soft">{% translate "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны." %}</div>
-      <button type="submit" class="button full">
-        Подтвердить заказ · {{ total|money }} {% translate "сум" %} <span>→</span>
-      </button>
+      {% if not payme_available %}<div class="notice soft">{% translate "Оплатите полную сумму курьеру после получения. Банковские реквизиты не нужны." %}</div>{% endif %}
+      {% if delivery_error %}<p class="form-error">{{ delivery_error }}</p>{% endif %}
+      {% if delivery %}<button type="submit" class="button full">
+        {% translate "Подтвердить заказ" %} · {{ total|money }} {% translate "сум" %}
+      </button>{% endif %}
+      <button type="submit" class="button secondary full" name="action" value="quote">{% translate "Рассчитать доставку" %}</button>
     </form>
     <aside class="panel summary">
       <h2>{% translate "Ваш заказ" %}</h2><p>{{ restaurant.name }}</p>
@@ -37,14 +39,15 @@
       <div class="sum-row">
         <span>{% translate "Доставка" %}</span>
         <span>
-          {% if fee %}
+          {% if delivery_error %}—{% elif fee %}
             {{ fee|money }}{% else %}{% translate "Бесплатно" %}{% endif %}
         </span>
       </div>
       <div class="sum-row sum-total">
         <strong>{% translate "Итого" %}</strong>
-        <strong>{{ total|money }} {% translate "сум" %}</strong>
+        <strong>{% if delivery_error %}—{% else %}{{ total|money }} {% translate "сум" %}{% endif %}</strong>
       </div>
+      {% if delivery %}<p>~{{ delivery.minutes }} {% translate "мин" %}</p>{% endif %}
       <p class="help-text">До начала приготовления заказ можно отменить сразу. После — отправить запрос администратору в деталях заказа.</p>
     </aside>
   </div>

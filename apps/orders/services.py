@@ -4,11 +4,14 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from apps.cart.models import Cart
 from apps.courier.models import Courier
 from apps.payments.models import Payment
+from apps.payments.payme import enabled as payme_enabled
 
+from .delivery import get_point, quote_delivery
 from .models import Order, OrderEvent, OrderIssue, OrderItem
 
 
@@ -33,7 +36,7 @@ def checkout(user, data):
 
     # Lock the cart for both quantity changes and checkout. The unique token is an
     # additional guard against a repeated browser submit after the cart is refilled.
-    cart, _ = Cart.objects.get_or_create(user=user)
+    cart, _created = Cart.objects.get_or_create(user=user)
     cart = Cart.objects.select_for_update().get(pk=cart.pk)
     previous = Order.objects.filter(checkout_token=data["checkout_token"]).first()
     if previous:
@@ -50,14 +53,18 @@ def checkout(user, data):
         raise ValidationError("В одном заказе могут быть блюда только одного ресторана.")
     restaurant = lines[0].menu_item.restaurant
     if restaurant is None:
-        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+        restaurant, _created = Restaurant.objects.get_or_create(pk=1)
     restaurant = Restaurant.objects.select_for_update().get(pk=restaurant.pk)
-    if not restaurant.accepting_orders:
-        raise ValidationError("Ресторан сейчас не принимает заказы. Возвращайтесь чуть позже.")
-    if data["payment_method"] != "cash":
-        raise ValidationError("Выберите оплату наличными при получении.")
+    method = data["payment_method"]
+    if method != "cash" and (method != "payme" or not payme_enabled()):
+        raise ValidationError(_("Этот способ оплаты сейчас недоступен."))
     subtotal = sum((line.total for line in lines), Decimal("0"))
-    fee = shipping(subtotal)
+    point = get_point(data)
+    fee = quote_delivery(restaurant, subtotal, point, require_address=True).fee
+    if data.get("quoted_fee") is not None and data["quoted_fee"] != fee:
+        raise ValidationError(_("Стоимость доставки обновилась. Проверьте сумму и подтвердите заказ."))
+    if data.get("quoted_total") is not None and data["quoted_total"] != subtotal + fee:
+        raise ValidationError(_("Сумма заказа изменилась. Проверьте её перед подтверждением."))
     order = Order.objects.create(
         user=user,
         restaurant=restaurant,
@@ -79,13 +86,17 @@ def checkout(user, data):
             quantity=line.quantity,
             price=line.menu_item.price,
         )
-    Payment.objects.create(order=order, user=user, method="cash")
-    event(order, user, "Заказ принят. Оплата наличными после получения.")
+    Payment.objects.create(order=order, user=user, method=method)
+    note = "Заказ принят. Ожидает оплаты Payme." if method == "payme" else (
+        "Заказ принят. Оплата наличными после получения."
+    )
+    event(order, user, note)
     cart.items.all().delete()
     if data.get("save_address"):
         user.address = data["address"]
         user.phone = data["phone"]
-        user.save(update_fields=["address", "phone"])
+        user.address_latitude, user.address_longitude = point or (None, None)
+        user.save(update_fields=["address", "phone", "address_latitude", "address_longitude"])
     return order
 
 
@@ -96,6 +107,8 @@ def advance_order(order_id, actor, target):
     order = Order.objects.select_for_update().get(pk=order_id)
     if {"new": "cooking", "cooking": "ready"}.get(order.status) != target:
         raise ValidationError("Этот переход уже выполнен или недоступен.")
+    if Payment.objects.filter(order=order, method="payme").exclude(status="paid").exists():
+        raise ValidationError(_("Дождитесь подтверждения оплаты Payme."))
     if order.issues.filter(resolved_at__isnull=True).exists():
         raise ValidationError("Сначала обработайте открытое обращение.")
     from datetime import timedelta
@@ -104,7 +117,7 @@ def advance_order(order_id, actor, target):
 
     restaurant = order.restaurant
     if restaurant is None:
-        restaurant, _ = Restaurant.objects.get_or_create(pk=1)
+        restaurant, _created = Restaurant.objects.get_or_create(pk=1)
     order.ready_at = (
         timezone.now() + timedelta(minutes=restaurant.preparation_minutes)
         if target == "cooking"
@@ -185,10 +198,11 @@ def deliver_order(order_id, actor):
     if order.issues.filter(resolved_at__isnull=True).exists():
         raise ValidationError("Администратор должен сначала решить вопрос с заказом.")
     payment = Payment.objects.select_for_update().get(order=order)
-    if payment.method != "cash" or payment.status != "pending":
+    if payment.method == "cash" and payment.status == "pending":
+        payment.status, payment.paid_at, payment.confirmed_by = "paid", timezone.now(), actor
+        payment.save(update_fields=["status", "paid_at", "confirmed_by"])
+    elif payment.method != "payme" or payment.status != "paid":
         raise ValidationError("Платёж требует проверки администратора.")
-    payment.status, payment.paid_at, payment.confirmed_by = "paid", timezone.now(), actor
-    payment.save(update_fields=["status", "paid_at", "confirmed_by"])
     order.status = "done"
     order.save(update_fields=["status", "updated_at"])
     courier.shift_status = "active"
@@ -197,7 +211,9 @@ def deliver_order(order_id, actor):
     from .dispatch import dispatch_once
 
     transaction.on_commit(dispatch_once)
-    event(order, actor, "Заказ доставлен. Курьер подтвердил получение наличных.")
+    event(order, actor, "Заказ доставлен." if payment.method == "payme" else (
+        "Заказ доставлен. Курьер подтвердил получение наличных."
+    ))
     return order
 
 
@@ -298,6 +314,8 @@ def reconcile_cash(order_id, actor, reason):
     require_operator(actor)
     order = Order.objects.select_for_update().get(pk=order_id)
     payment = Payment.objects.select_for_update().get(order=order)
+    if payment.method == "payme":
+        raise ValidationError(_("Способ оплаты Payme нельзя изменить после оформления."))
     if not order.is_active or payment.status == "pending" and payment.method == "cash":
         raise ValidationError("Для этого заказа изменение оплаты не требуется.")
     if len(reason.strip()) < 5:
