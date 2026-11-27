@@ -11,6 +11,7 @@ from .models import Category, MenuItem
 from .search import search
 from .smart import recommend, sign_lunch
 from .smart_forms import ALLERGEN_CHOICES, SmartLunchForm
+from .structured import restaurant_schema
 
 
 def portal_redirect(request):
@@ -45,7 +46,10 @@ def catalog(request, restaurant=None):
     if form.is_valid():
         data = form.cleaned_data
         if data["q"]:
-            items = search(items, data["q"], ("name", "description", "restaurant__name"))
+            items = search(items, data["q"], (
+                "name", "name_uz", "name_en", "description", "description_uz", "description_en",
+                "restaurant__name",
+            ))
         if data["category"]:
             items = items.filter(category=data["category"])
         if data["min_price"] is not None:
@@ -60,16 +64,18 @@ def catalog(request, restaurant=None):
             items = items.order_by(data["sort"] or "pk", "pk")
     else:
         items = items.none()
+    page = Paginator(items, 12).get_page(request.GET.get("page"))
     return render(
         request,
         "menu/menu_list.html",
         {
             "form": form,
             "categories": Category.objects.all(),
-            "page_obj": Paginator(items, 12).get_page(request.GET.get("page")),
+            "page_obj": page,
             "query": params.get("q", ""),
             "selected_category": params.get("category", ""),
             "restaurant": restaurant,
+            "restaurant_schema": restaurant_schema(request, restaurant, page) if restaurant else None,
             "restaurant_rating": restaurant.orders.aggregate(avg=Avg("review__score"))["avg"]
             if restaurant else None,
             "favorite_restaurant": restaurant and request.user.is_authenticated
@@ -87,7 +93,7 @@ def suggestions(request):
     query = request.GET.get("q", "").strip()[:100]
     if len(query) < 2:
         return JsonResponse({"suggestions": []})
-    dishes = search(available_items(), query, ("name",))
+    dishes = search(available_items(), query, ("name", "name_uz", "name_en"))
     names = dishes.values_list("name", flat=True)[:18]
     return JsonResponse({"suggestions": list(dict.fromkeys(names))[:6]})
 
@@ -178,7 +184,9 @@ def home(request):
     )
     if query:
         restaurants = search(
-            restaurants, query, ("name", "cuisine", "menu_items__name")
+            restaurants, query, (
+                "name", "cuisine", "menu_items__name", "menu_items__name_uz", "menu_items__name_en",
+            ),
         ).distinct()
     if request.GET.get("sort") == "rating":
         restaurants = restaurants.order_by(F("rating").desc(nulls_last=True), "pk")

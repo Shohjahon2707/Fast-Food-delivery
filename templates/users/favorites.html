@@ -15,8 +15,8 @@
   <h2>{% translate "Блюда" %}</h2>
   {% for favorite in dishes %}
     <article class="panel row-between">
-      {% if favorite.dish.is_available %}<a href="{% url 'menu_item_detail' favorite.dish_id %}">{% translate favorite.dish.name %}</a>
-      {% else %}<span>{% translate favorite.dish.name %}</span>{% endif %}
+      {% if favorite.dish.is_available %}<a href="{% url 'menu_item_detail' favorite.dish_id %}">{{ favorite.dish.localized_name }}</a>
+      {% else %}<span>{{ favorite.dish.localized_name }}</span>{% endif %}
       {% include "includes/favorite_button.html" with url_name="favorite_dish" object_id=favorite.dish_id active=True %}
     </article>
   {% empty %}<p>{% translate "В избранном пока нет блюд." %}</p>{% endfor %}

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import BaseModel
+from apps.common.translation import localized
 
 
 class Order(BaseModel):
@@ -188,6 +189,8 @@ class Restaurant(models.Model):
 
     name = models.CharField(max_length=100, default="Тёпло")
     description = models.TextField(blank=True)
+    description_uz = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
     cuisine = models.CharField(max_length=100, blank=True)
     cover = models.CharField(max_length=100, default="food/burger.webp")
     delivery_minutes = models.PositiveSmallIntegerField(default=35)
@@ -236,6 +239,10 @@ class Restaurant(models.Model):
         from .delivery import is_open
 
         return is_open(self)
+
+    @property
+    def localized_description(self):
+        return localized(self, "description")
 
     def __str__(self):
         return self.name

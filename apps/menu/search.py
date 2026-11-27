@@ -1,5 +1,6 @@
 import re
 
+from django.db import connection
 from django.db.models import Case, IntegerField, Q, Value, When
 
 CYRILLIC = dict(zip(
@@ -41,7 +42,22 @@ def search(queryset, query, fields):
         for spelling in (variant, variant.capitalize()):
             exact |= Q(**{f"{fields[0]}__iexact": spelling})
             prefix |= Q(**{f"{fields[0]}__istartswith": spelling})
-    return queryset.filter(conditions).annotate(search_rank=Case(
+    matches = queryset.filter(conditions)
+    if connection.vendor == "postgresql" and not matches.exists() and len(query) >= 4:
+        from django.contrib.postgres.search import SearchQuery, SearchVector, TrigramWordSimilarity
+
+        spellings = variants(query)
+        fuzzy = Q()
+        for spelling in spellings:
+            fuzzy |= Q(**{f"{fields[0]}__trigram_word_similar": spelling})
+        matches = queryset.annotate(
+            full_text=SearchVector(*fields, config="simple"),
+            search_similarity=TrigramWordSimilarity(query, fields[0]),
+        ).filter(fuzzy | Q(full_text=SearchQuery(query, config="simple"))).order_by(
+            "-search_similarity", "pk",
+        )
+        return matches
+    return matches.annotate(search_rank=Case(
         When(exact, then=Value(2)), When(prefix, then=Value(1)),
         default=Value(0), output_field=IntegerField(),
     )).order_by("-search_rank", "pk")

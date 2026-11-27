@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import override
 
 from apps.cart.models import Cart, CartItem
 from apps.menu.models import Category, DishOption, MenuItem
@@ -132,3 +133,16 @@ class CustomerFeaturesTests(TestCase):
         self.assertContains(self.client.get(reverse("menu_list"), {"q": "plov"}), "Ташкентский плов")
         result = self.client.get(reverse("menu_suggestions"), {"q": "plov"}).json()
         self.assertEqual(result["suggestions"], ["Ташкентский плов"])
+
+    def test_translated_content_and_schema_escape_user_input(self):
+        self.dish.name_en = "Rice with chickpeas"
+        self.dish.description_en = "</script><script>demo()</script>"
+        self.dish.save(update_fields=["name_en", "description_en"])
+        with override("en"):
+            self.assertEqual(self.dish.localized_name, "Rice with chickpeas")
+        url = reverse("restaurant_detail", args=[self.restaurant.pk])
+        page = self.client.get(url, headers={"Accept-Language": "en"})
+        self.assertContains(page, "application/ld+json")
+        self.assertContains(page, "Rice with chickpeas")
+        self.assertNotContains(page, "</script><script>demo()")
+        self.assertEqual(self.client.get(reverse("readiness")).json(), {"status": "ok"})

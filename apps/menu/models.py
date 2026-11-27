@@ -4,6 +4,7 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import BaseModel
+from apps.common.translation import localized
 
 
 class DishOption(models.Model):
@@ -45,7 +46,11 @@ class MenuItem(BaseModel):
     )
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="items")
     name = models.CharField(max_length=200)
+    name_uz = models.CharField(max_length=200, blank=True)
+    name_en = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+    description_uz = models.TextField(blank=True)
+    description_en = models.TextField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=0, validators=[MinValueValidator(1)])
     image = models.ImageField(upload_to="menu/", blank=True, null=True)
     is_available = models.BooleanField(default=True)
@@ -108,6 +113,14 @@ class MenuItem(BaseModel):
         if self.photo_sheet:
             return static("food/street-menu.webp")
         return self.image.url if self.image else static(self.seed_image)
+
+    @property
+    def localized_name(self):
+        return localized(self, "name")
+
+    @property
+    def localized_description(self):
+        return localized(self, "description")
 
     def __str__(self):
         return self.name

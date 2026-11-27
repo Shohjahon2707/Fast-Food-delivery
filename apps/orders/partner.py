@@ -33,7 +33,8 @@ class PartnerLoginView(RoleBasedLoginView):
 class RestaurantForm(forms.ModelForm):
     class Meta:
         model = Restaurant
-        fields = ("accepting_orders", "opens_at", "closes_at", "minimum_subtotal")
+        fields = ("accepting_orders", "opens_at", "closes_at", "minimum_subtotal",
+                  "description", "description_uz", "description_en")
         labels = {
             "accepting_orders": _("Принимать заказы"), "opens_at": _("Открытие"),
             "closes_at": _("Закрытие"), "minimum_subtotal": _("Минимальная сумма блюд"),
@@ -48,7 +49,8 @@ class DishForm(forms.ModelForm):
     class Meta:
         model = MenuItem
         fields = ("name", "description", "category", "price", "is_available", "is_vegetarian",
-                  "lunch_role", "servings", "cooking_minutes")
+                  "lunch_role", "servings", "cooking_minutes",
+                  "name_uz", "name_en", "description_uz", "description_en")
         labels = {
             "name": _("Название"), "description": _("Описание"),
             "category": _("Категория"), "price": _("Цена"),

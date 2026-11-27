@@ -57,9 +57,9 @@
               <a href="{% url 'restaurant_detail' lunch.restaurant.pk %}">{{ lunch.restaurant.name }}</a>
               <span>~{{ lunch.minutes }} {% translate "мин" %}</span>
             </div>
-            <h3>{% translate lunch.lines.0.0.name %}</h3>
+            <h3>{{ lunch.lines.0.0.localized_name }}</h3>
             <ul>
-              {% for item, quantity in lunch.lines %}<li>{{ quantity }} × {% translate item.name %}</li>{% endfor %}
+              {% for item, quantity in lunch.lines %}<li>{{ quantity }} × {{ item.localized_name }}</li>{% endfor %}
             </ul>
             <p class="lunch-match">{% translate "В пределах бюджета с доставкой" %}</p>
             <div class="lunch-result-total">
@@ -78,7 +78,7 @@
             <h3>{% translate "Подходящих наборов нет" %}</h3>
             {% if closest %}
               <p>{% translate "Ближайший вариант" %} · {{ closest.restaurant.name }}</p>
-              <ul>{% for item, quantity in closest.lines %}<li>{{ quantity }} × {% translate item.name %}</li>{% endfor %}</ul>
+              <ul>{% for item, quantity in closest.lines %}<li>{{ quantity }} × {{ item.localized_name }}</li>{% endfor %}</ul>
               <p><strong>{{ closest.total|money }} {% translate "сум" %}</strong> · {% translate "Не хватает" %} {{ closest.extra|money }} {% translate "сум" %}</p>
             {% else %}
               <p>{% translate "Проверьте точку доставки, время или предпочтения." %}</p>

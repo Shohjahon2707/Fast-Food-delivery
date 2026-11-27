@@ -1,11 +1,11 @@
-{% extends "base.html" %}{% load food i18n %}{% block title %}{% translate item.name %} — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n %}{% block title %}{{ item.localized_name }} — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top">
   <a class="back-link" href="{% url 'menu_list' %}">{% translate "← Всё меню" %}</a>
   <div class="detail-grid">
     <div class="detail-photo">
       <img {% if item.photo_sheet %}class="food-sheet slot-{{ item.photo_slot }}"{% endif %}
            src="{{ item.image_url }}"
-           alt="{% translate item.name %}"
+           alt="{{ item.localized_name }}"
            width="600"
            height="480">
     </div>
@@ -13,10 +13,10 @@
       <span class="eyebrow">{{ item.category.name }} · {{ item.weight }}</span>
       {% if item.restaurant %}<a class="text-link"
    href="{% url 'restaurant_detail' item.restaurant_id %}">{{ item.restaurant.name }} ↗</a>{% endif %}
-      <h1 class="page-title">{% translate item.name %}</h1>
+      <h1 class="page-title">{{ item.localized_name }}</h1>
       {% if rating %}<p>★ {{ rating|floatformat:1 }} / 5</p>{% endif %}
       {% include "includes/favorite_button.html" with url_name="favorite_dish" object_id=item.pk active=favorite_dish %}
-      <p class="lead">{{ item.description }}</p>
+      <p class="lead">{{ item.localized_description }}</p>
       {% if item.is_vegetarian %}
         <span class="chip">{% translate "Без мяса" %}</span>
       {% endif %}

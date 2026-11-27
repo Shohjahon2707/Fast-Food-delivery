@@ -1,7 +1,10 @@
-{% extends "base.html" %}{% load food i18n static %}{% block title %}{% if restaurant %}{{ restaurant.name }}{% elif smart %}{% translate "Умный обед" %}{% else %}{% translate "Все блюда" %}{% endif %} — Тёпло{% endblock %}{% block content %}
+{% extends "base.html" %}{% load food i18n static structured %}{% block title %}{% if restaurant %}{{ restaurant.name }}{% elif smart %}{% translate "Умный обед" %}{% else %}{% translate "Все блюда" %}{% endif %} — Тёпло{% endblock %}
+{% block description %}{% if restaurant.localized_description %}{{ restaurant.localized_description|truncatechars:160 }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block extra_head %}{% if restaurant_schema %}<script type="application/ld+json">{{ restaurant_schema|json_ld }}</script>{% endif %}{% endblock %}
+{% block content %}
 <section class="container section page-top catalog"><a class="back-link"
    href="{% url 'home' %}">← {% translate "Все рестораны" %}</a>
-  {% if restaurant %}<div class="restaurant-hero"><div><span class="eyebrow">{% translate restaurant.cuisine %}</span><h1 class="page-title">{{ restaurant.name }}</h1><p>{{ restaurant.description }}</p><div class="restaurant-facts"><span>◷ {{ restaurant.delivery_minutes }}–{{ restaurant.delivery_minutes|add:10 }} {% translate "мин" %}</span><span>{% translate "Доставка" %} {{ delivery_fee|money }} {% translate "сум" %}</span><span>{{ restaurant.address }}</span></div>{% if not restaurant.is_open %}<p class="form-error">{% translate "Ресторан сейчас не принимает заказы." %}</p>{% endif %}</div><img src="{% static restaurant.cover %}"
+  {% if restaurant %}<div class="restaurant-hero"><div><span class="eyebrow">{% translate restaurant.cuisine %}</span><h1 class="page-title">{{ restaurant.name }}</h1><p>{{ restaurant.localized_description }}</p><div class="restaurant-facts"><span>◷ {{ restaurant.delivery_minutes }}–{{ restaurant.delivery_minutes|add:10 }} {% translate "мин" %}</span><span>{% translate "Доставка" %} {{ delivery_fee|money }} {% translate "сум" %}</span><span>{{ restaurant.address }}</span></div>{% if not restaurant.is_open %}<p class="form-error">{% translate "Ресторан сейчас не принимает заказы." %}</p>{% endif %}</div><img src="{% static restaurant.cover %}"
      alt="{{ restaurant.name }}"
      width="400"
      height="280"></div>
