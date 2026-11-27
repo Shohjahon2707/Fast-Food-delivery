@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Оценить заказ" %} — Тёпло{% endblock %}
+{% block content %}
+<section class="container section narrow page-top">
+  <a class="back-link" href="{% url 'order_detail' order.pk %}">{% translate "Заказ" %} №{{ order.pk }}</a>
+  <h1 class="page-title">{% translate "Оценить заказ" %}</h1>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    <p>{% translate "Поставьте оценки от 1 до 5." %}</p>
+    {% include "includes/form.html" %}
+    <button class="button">{% translate "Отправить отзыв" %}</button>
+  </form>
+</section>
+{% endblock %}

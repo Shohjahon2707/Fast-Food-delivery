@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from apps.orders.models import Order, OrderEvent
+from apps.orders.notifications import enqueue_status
 
 from .models import Payment, PaymeTransaction
 
@@ -101,7 +102,8 @@ def cancel_entry(entry, order, payment, reason):
     if order.status == "new":
         order.status, order.cancel_reason = "cancel", "Платёж Payme отменён."
         order.save(update_fields=["status", "cancel_reason", "updated_at"])
-        OrderEvent.objects.create(order=order, status="cancel", note=order.cancel_reason)
+        event = OrderEvent.objects.create(order=order, status="cancel", note=order.cancel_reason)
+        enqueue_status(event)
 
 
 @transaction.atomic

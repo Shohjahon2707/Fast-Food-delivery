@@ -13,11 +13,17 @@ msgstr "Yetkazish manzili"
 msgid "Адрес по умолчанию"
 msgstr "Asosiy manzil"
 
+msgid "Адрес с таким названием уже существует."
+msgstr "Bunday nomdagi manzil allaqachon mavjud."
+
 msgid "Азиатская кухня"
 msgstr "Osiyo taomlari"
 
 msgid "Аллергены"
 msgstr "Allergenlar"
+
+msgid "Аналитика заказов"
+msgstr "Buyurtmalar tahlili"
 
 msgid "Арахис"
 msgstr "Yeryong‘oq"
@@ -46,6 +52,15 @@ msgstr "Taom savatga qo‘shildi."
 msgid "Бургеры и фастфуд"
 msgstr "Burgerlar va fastfud"
 
+msgid "В избранное"
+msgstr "Saralanganlarga qo‘shish"
+
+msgid "В избранном пока нет блюд."
+msgstr "Saralangan taomlar hali yo‘q."
+
+msgid "В избранном пока нет ресторанов."
+msgstr "Saralangan restoranlar hali yo‘q."
+
 msgid "В корзине блюда другого ресторана. Для нового заказа нужно очистить корзину."
 msgstr "Savatda boshqa restoran taomlari bor. Yangi buyurtma uchun savatni tozalang."
 
@@ -54,6 +69,9 @@ msgstr "Savatda boshqa restoran taomlari bor. Almashtirilsinmi?"
 
 msgid "В пределах бюджета с доставкой"
 msgstr "Yetkazish bilan budjetga mos"
+
+msgid "В стоп-листе"
+msgstr "Mavjud emas"
 
 msgid "ВАШ БЮДЖЕТ — НАШ ОРИЕНТИР"
 msgstr "BYUDJETINGIZ — BIZNING MEZONIMIZ"
@@ -66,6 +84,9 @@ msgstr "Sizning shahringiz. Sizning didingiz."
 
 msgid "Ваш заказ"
 msgstr "Buyurtmangiz"
+
+msgid "Ваш отзыв"
+msgstr "Sharhingiz"
 
 msgid "Ваша"
 msgstr "Sizning"
@@ -106,8 +127,14 @@ msgstr "Kiring va buyurtma bering"
 msgid "Войти и оформить"
 msgstr "Kirish va buyurtma berish"
 
+msgid "Время Ташкента. Оставьте пустым для ближайшей доставки."
+msgstr "Toshkent vaqti. Tezroq yetkazish uchun bo‘sh qoldiring."
+
 msgid "Время доставки"
 msgstr "Yetkazish vaqti"
+
+msgid "Время приготовления предзаказа ещё не наступило."
+msgstr "Oldindan buyurtmani tayyorlash vaqti hali kelmagan."
 
 msgid "Все блюда"
 msgstr "Barcha taomlar"
@@ -124,11 +151,17 @@ msgstr "Buyurtma jami"
 msgid "Вторые блюда"
 msgstr "Ikkinchi taomlar"
 
+msgid "Вход для партнёров"
+msgstr "Hamkorlar uchun kirish"
+
 msgid "Вход для покупателей"
 msgstr "Xaridorlar uchun kirish"
 
 msgid "Выберите вкус"
 msgstr "Ta’mni tanlang"
+
+msgid "Выберите время с учётом доставки в пределах семи дней."
+msgstr "Yetkazish vaqtini hisobga olib, yetti kun ichidagi vaqtni tanlang."
 
 msgid "Выберите категорию и сумму. Мы найдём подходящие блюда во всех ресторанах."
 msgstr "Toifa va narxni tanlang. Barcha restoranlardan mos taomlarni topamiz."
@@ -139,6 +172,9 @@ msgstr "Xaritada nuqtani tanlang yoki koordinatalarni kiriting."
 msgid "Выберите, какую корзину сохранить."
 msgstr "Qaysi savatni saqlashni tanlang."
 
+msgid "Выбранное время выходит за часы работы ресторана."
+msgstr "Tanlangan vaqt restoran ish vaqtidan tashqarida."
+
 msgid "Выбрать еду"
 msgstr "Taom tanlash"
 
@@ -147,6 +183,9 @@ msgstr "Restoran tanlash"
 
 msgid "Выйти"
 msgstr "Chiqish"
+
+msgid "Выручка доставленных заказов"
+msgstr "Yetkazilgan buyurtmalar tushumi"
 
 msgid "Гарнир или салат"
 msgstr "Garnir yoki salat"
@@ -199,6 +238,9 @@ msgstr "Shirinliklar va ichimliklar"
 msgid "Диапазон — за одно блюдо, без доставки. Полная сумма видна в корзине. Один заказ — один ресторан."
 msgstr "Narx bir taom uchun, yetkazishsiz. Jami summa savatda ko‘rinadi. Bir buyurtma — bir restoran."
 
+msgid "Для Telegram администратор привязывает подтверждённый чат."
+msgstr "Administrator tasdiqlangan Telegram chatini ulaydi."
+
 msgid "Для ваших вкусных планов"
 msgstr "Mazali rejalaringiz uchun"
 
@@ -223,11 +265,23 @@ msgstr "60 daqiqagacha"
 msgid "Добавить"
 msgstr "Qo‘shish"
 
+msgid "Добавить адрес"
+msgstr "Manzil qo‘shish"
+
+msgid "Добавить блюдо"
+msgstr "Taom qo‘shish"
+
 msgid "Добавить в корзину"
 msgstr "Savatga qo‘shish"
 
 msgid "Добавить набор"
 msgstr "To‘plamni qo‘shish"
+
+msgid "Добавки и изменения"
+msgstr "Qo‘shimchalar va o‘zgartirishlar"
+
+msgid "Добавлено в избранное."
+msgstr "Saralanganlarga qo‘shildi."
 
 msgid "Дождитесь подтверждения оплаты Payme."
 msgstr "Payme to‘lovni tasdiqlashini kuting."
@@ -235,17 +289,38 @@ msgstr "Payme to‘lovni tasdiqlashini kuting."
 msgid "Долгота"
 msgstr "Uzunlik"
 
+msgid "Доля доставленных заказов"
+msgstr "Yetkazilgan buyurtmalar ulushi"
+
 msgid "Домашний лимонад"
 msgstr "Uy limonadi"
 
+msgid "Доставить к указанному времени"
+msgstr "Ko‘rsatilgan vaqtgacha yetkazish"
+
 msgid "Доставка"
 msgstr "Yetkazib berish"
+
+msgid "Доставка к"
+msgstr "Yetkazish vaqti"
 
 msgid "Доставка от"
 msgstr "Yetkazish narxi"
 
 msgid "Доставлен"
 msgstr "Yetkazildi"
+
+msgid "Доставлено"
+msgstr "Yetkazilgan"
+
+msgid "Доступно для заказа"
+msgstr "Buyurtma uchun mavjud"
+
+msgid "Доступные блюда добавлены в корзину."
+msgstr "Mavjud taomlar savatga qo‘shildi."
+
+msgid "Доступных блюд для повтора пока нет."
+msgstr "Bu buyurtmadagi taomlar hozir mavjud emas."
 
 msgid "ЕСТЬ ИЗ ЧЕГО ВЫБРАТЬ"
 msgstr "TANLOV KENG"
@@ -268,11 +343,23 @@ msgstr "Buyurtma"
 msgid "Заказ №"
 msgstr "Buyurtma №"
 
+msgid "Заказов пока нет."
+msgstr "Buyurtmalar hali yo‘q."
+
+msgid "Заказы ресторана"
+msgstr "Restoran buyurtmalari"
+
 msgid "Закрыт"
 msgstr "Yopiq"
 
+msgid "Закрытие"
+msgstr "Yopilish vaqti"
+
 msgid "Закрыть"
 msgstr "Yopish"
+
+msgid "Заменить корзину блюдами из заказа?"
+msgstr "Savatni buyurtmadagi taomlar bilan almashtirasizmi?"
 
 msgid "Заменить текущие блюда выбранным набором?"
 msgstr "Savatdagi taomlar ushbu to‘plamga almashtirilsinmi?"
@@ -286,11 +373,20 @@ msgstr "Mazali taomlar uchun joy bor"
 msgid "Зелёный микс"
 msgstr "Ko‘katlar aralashmasi"
 
+msgid "Избранное"
+msgstr "Saralanganlar"
+
+msgid "Изменить добавки и комментарий для всех порций блюда?"
+msgstr "Taomning barcha porsiyalari uchun qo‘shimcha va izohni o‘zgartirasizmi?"
+
 msgid "Имя"
 msgstr "Ism"
 
 msgid "Исключить аллергены"
 msgstr "Allergenlarni chiqarish"
+
+msgid "Использовать адрес"
+msgstr "Manzilni ishlatish"
 
 msgid "История заказа"
 msgstr "Buyurtma tarixi"
@@ -303,6 +399,9 @@ msgstr "Jami"
 
 msgid "К оформлению"
 msgstr "Rasmiylashtirish"
+
+msgid "Кабинет ресторана"
+msgstr "Restoran kabineti"
 
 msgid "Казан-кебаб"
 msgstr "Qozon kabob"
@@ -333,6 +432,12 @@ msgstr "Miqdor"
 
 msgid "Комментарий"
 msgstr "Izoh"
+
+msgid "Комментарий к блюду"
+msgstr "Taomga izoh"
+
+msgid "Конец периода"
+msgstr "Davr oxiri"
 
 msgid "Контакты и доставка"
 msgstr "Aloqa va yetkazish"
@@ -397,6 +502,12 @@ msgstr "Mastava"
 msgid "Медовик"
 msgstr "Asalli tort"
 
+msgid "Меню и стоп-лист"
+msgstr "Menyu va mavjud bo‘lmagan taomlar"
+
+msgid "Минимальная сумма блюд"
+msgstr "Taomlarning minimal summasi"
+
 msgid "Минимальная сумма блюд в этом ресторане — %(amount)s сум."
 msgstr "Bu restoranda taomlar uchun eng kam summa %(amount)s so‘m."
 
@@ -427,6 +538,12 @@ msgstr "Sizning"
 msgid "Набор в корзине."
 msgstr "To‘plam savatga qo‘shildi."
 
+msgid "Название"
+msgstr "Nomi"
+
+msgid "Название адреса"
+msgstr "Manzil nomi"
+
 msgid "Название блюда или ресторана"
 msgstr "Taom yoki restoran nomi"
 
@@ -448,6 +565,15 @@ msgstr "Ichimlik"
 msgid "Например: домофон 24, не звонить в дверь"
 msgstr "Masalan: domofon 24, qo‘ng‘iroq chalmang"
 
+msgid "Настройки ресторана сохранены."
+msgstr "Restoran sozlamalari saqlandi."
+
+msgid "Начало периода"
+msgstr "Davr boshi"
+
+msgid "Начало периода должно быть раньше конца."
+msgstr "Davr boshi oxiridan keyin bo‘lmasligi kerak."
+
 msgid "Начните с любимого блюда. Остальное — за нами."
 msgstr "Sevimli taomingizni tanlang. Qolganini biz qilamiz."
 
@@ -459,6 +585,12 @@ msgstr "Yetishmaydi"
 
 msgid "Неважно"
 msgstr "Farqi yo‘q"
+
+msgid "Недоступные блюда: %(dishes)s"
+msgstr "Mavjud bo‘lmagan taomlar: %(dishes)s"
+
+msgid "Некоторые добавки недоступны. Добавьте блюдо заново."
+msgstr "Ayrim qo‘shimchalar mavjud emas. Taomni qayta qo‘shing."
 
 msgid "Неострое"
 msgstr "Achchiq emas"
@@ -483,6 +615,12 @@ msgstr "Sabzavotli sho‘rva"
 
 msgid "Ожидаем координаты курьера."
 msgstr "Kuryer joylashuvi kutilmoqda."
+
+msgid "Операции"
+msgstr "Operatsiyalar"
+
+msgid "Описание"
+msgstr "Tavsif"
 
 msgid "Оплата наличными при получении."
 msgstr "Qabul qilganda naqd to‘lov."
@@ -517,7 +655,16 @@ msgstr "Achchiq sho‘rva"
 msgid "От 40 до 70 тысяч"
 msgstr "40 mingdan 70 minggacha"
 
+msgid "Отзыв"
+msgstr "Sharh"
+
+msgid "Отзыв на этот заказ уже есть."
+msgstr "Bu buyurtmaga sharh yozilgan."
+
 msgid "Откроется в"
+msgstr "Ochilish vaqti"
+
+msgid "Открытие"
 msgstr "Ochilish vaqti"
 
 msgid "Открыть меню →"
@@ -532,8 +679,17 @@ msgstr "Bekor qilindi"
 msgid "Отправить запрос"
 msgstr "So‘rov yuborish"
 
+msgid "Отправить отзыв"
+msgstr "Sharhni yuborish"
+
 msgid "Оформляем…"
 msgstr "Rasmiylashtirilmoqda…"
+
+msgid "Оценить заказ"
+msgstr "Buyurtmani baholash"
+
+msgid "Оценка ресторана"
+msgstr "Restoran bahosi"
 
 msgid "Очистить и добавить"
 msgstr "Tozalash va qo‘shish"
@@ -556,8 +712,14 @@ msgstr "Birinchi buyurtmangiz oldinda"
 msgid "Перейти к содержимому"
 msgstr "Asosiy qismga o‘tish"
 
+msgid "Пересчитать сумму"
+msgstr "Summani qayta hisoblash"
+
 msgid "Пицца"
 msgstr "Pitsa"
+
+msgid "Повторить заказ"
+msgstr "Buyurtmani takrorlash"
 
 msgid "Подберите свой обед"
 msgstr "Tushlikni tanlang"
@@ -601,8 +763,17 @@ msgstr "Kuryerning so‘nggi joylashuvi ko‘rsatilgan."
 msgid "Показать все"
 msgstr "Barchasini ko‘rish"
 
+msgid "Показать отчёт"
+msgstr "Hisobotni ko‘rsatish"
+
 msgid "Попробуйте другое название."
 msgstr "Boshqa nomni kiriting."
+
+msgid "Популярные блюда"
+msgstr "Ommabop taomlar"
+
+msgid "Поставьте оценки от 1 до 5."
+msgstr "1 dan 5 gacha baholang."
 
 msgid "Почти"
 msgstr "Deyarli"
@@ -616,14 +787,26 @@ msgstr "Istaklar"
 msgid "Приготовление"
 msgstr "Tayyorlash"
 
+msgid "Принимать заказы"
+msgstr "Buyurtmalarni qabul qilish"
+
 msgid "Принят"
 msgstr "Qabul qilindi"
 
 msgid "Причина"
 msgstr "Sabab"
 
+msgid "Проверьте добавки и комментарий к блюду."
+msgstr "Qo‘shimchalar va taom izohini tekshiring."
+
 msgid "Проверьте точку доставки, время или предпочтения."
 msgstr "Yetkazish nuqtasi, vaqt yoki istaklarni tekshiring."
+
+msgid "Промокод"
+msgstr "Promokod"
+
+msgid "Промокод недоступен."
+msgstr "Promokod mavjud emas."
 
 msgid "Рады видеть вас снова"
 msgstr "Sizni yana ko‘rganimizdan xursandmiz"
@@ -661,6 +844,9 @@ msgstr "No‘xatli guruch"
 msgid "Рис с овощами"
 msgstr "Sabzavotli guruch"
 
+msgid "Роль в наборе"
+msgstr "To‘plamdagi roli"
+
 msgid "Рыба"
 msgstr "Baliq"
 
@@ -688,6 +874,9 @@ msgstr "Filtrlarni tozalash"
 msgid "Сельдерей"
 msgstr "Selderey"
 
+msgid "Скидка"
+msgstr "Chegirma"
+
 msgid "Сколько человек"
 msgstr "Odam soni"
 
@@ -706,6 +895,12 @@ msgstr "Avval arzonlari"
 msgid "Сначала дороже"
 msgstr "Avval qimmatlari"
 
+msgid "Сначала по оценке"
+msgstr "Yuqori baholanganlar avval"
+
+msgid "Создано заказов"
+msgstr "Berilgan buyurtmalar"
+
 msgid "Создать аккаунт"
 msgstr "Hisob ochish"
 
@@ -718,14 +913,26 @@ msgstr "Buyurtma tarkibi"
 msgid "Сохранить"
 msgstr "Saqlash"
 
+msgid "Сохранить адрес"
+msgstr "Manzilni saqlash"
+
 msgid "Сохранить адрес в профиле"
 msgstr "Manzilni profilda saqlash"
+
+msgid "Сохранить изменения"
+msgstr "O‘zgarishlarni saqlash"
+
+msgid "Сохранённые адреса"
+msgstr "Saqlangan manzillar"
 
 msgid "Соя"
 msgstr "Soya"
 
 msgid "Спасибо за заказ"
 msgstr "Buyurtmangiz uchun rahmat"
+
+msgid "Спасибо за отзыв."
+msgstr "Sharhingiz uchun rahmat."
 
 msgid "Способ оплаты Payme нельзя изменить после оформления."
 msgstr "Buyurtma berilgach Payme to‘lov usulini o‘zgartirib bo‘lmaydi."
@@ -738,6 +945,9 @@ msgstr "Yetkazish narxi o‘zgardi. Summani tekshirib, buyurtmani tasdiqlang."
 
 msgid "Сульфиты"
 msgstr "Sulfitlar"
+
+msgid "Сумма блюд ниже минимума для промокода."
+msgstr "Taomlar summasi promokod minimumidan kam."
 
 msgid "Сумма заказа изменилась. Проверьте её перед подтверждением."
 msgstr "Buyurtma summasi o‘zgardi. Tasdiqlashdan oldin tekshiring."
@@ -766,14 +976,26 @@ msgstr "Pomidor sho‘rvasi"
 msgid "Точка доставки"
 msgstr "Yetkazish nuqtasi"
 
+msgid "Убрать из избранного"
+msgstr "Saralanganlardan olib tashlash"
+
 msgid "Убрать точку"
 msgstr "Nuqtani olib tashlash"
+
+msgid "Уведомления в Telegram"
+msgstr "Telegram xabarnomalari"
+
+msgid "Уведомления по SMS"
+msgstr "SMS xabarnomalari"
 
 msgid "Увеличьте бюджет или выберите другую категорию."
 msgstr "Byudjetni oshiring yoki boshqa toifani tanlang."
 
 msgid "Углеводы"
 msgstr "Uglevodlar"
+
+msgid "Удалено из избранного."
+msgstr "Saralanganlardan olib tashlandi."
 
 msgid "Удалить"
 msgstr "O‘chirish"
@@ -832,6 +1054,9 @@ msgstr "Eng kam narx"
 msgid "Цена от не должна быть больше цены до."
 msgstr "Eng kam narx eng yuqori narxdan katta bo‘lmasligi kerak."
 
+msgid "Часы и условия работы"
+msgstr "Ish vaqti va buyurtma sozlamalari"
+
 msgid "Четыре сыра"
 msgstr "To‘rt xil pishloq"
 
@@ -840,6 +1065,9 @@ msgstr "Chizburger"
 
 msgid "Чизкейк"
 msgstr "Chizkeyk"
+
+msgid "Число порций"
+msgstr "Porsiyalar soni"
 
 msgid "Что вам по вкусу?"
 msgstr "Nimani xohlaysiz?"
@@ -852,6 +1080,9 @@ msgstr "Mol go‘shtli sho‘rva"
 
 msgid "Электронная почта"
 msgstr "Elektron pochta"
+
+msgid "Этот вход предназначен для партнёров ресторанов."
+msgstr "Bu kirish restoran hamkorlari uchun."
 
 msgid "Этот способ оплаты сейчас недоступен."
 msgstr "Bu to‘lov usuli hozir mavjud emas."

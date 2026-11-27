@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load food i18n static %}{% block title %}{% if restaurant %}{{ restaurant.name }}{% elif smart %}{% translate "Умный обед" %}{% else %}{% translate "Все блюда" %}{% endif %} — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top catalog"><a class="back-link"
    href="{% url 'home' %}">← {% translate "Все рестораны" %}</a>
-  {% if restaurant %}<div class="restaurant-hero"><div><span class="eyebrow">{% translate restaurant.cuisine %}</span><h1 class="page-title">{{ restaurant.name }}</h1><p>{{ restaurant.description }}</p><div class="restaurant-facts"><span>◷ {{ restaurant.delivery_minutes }}–{{ restaurant.delivery_minutes|add:10 }} {% translate "мин" %}</span><span>{% translate "Доставка" %} {{ delivery_fee|money }} {% translate "сум" %}</span><span>{{ restaurant.address }}</span></div>{% if not restaurant.accepting_orders %}<p class="form-error">{% translate "Ресторан сейчас не принимает заказы." %}</p>{% endif %}</div><img src="{% static restaurant.cover %}"
+  {% if restaurant %}<div class="restaurant-hero"><div><span class="eyebrow">{% translate restaurant.cuisine %}</span><h1 class="page-title">{{ restaurant.name }}</h1><p>{{ restaurant.description }}</p><div class="restaurant-facts"><span>◷ {{ restaurant.delivery_minutes }}–{{ restaurant.delivery_minutes|add:10 }} {% translate "мин" %}</span><span>{% translate "Доставка" %} {{ delivery_fee|money }} {% translate "сум" %}</span><span>{{ restaurant.address }}</span></div>{% if not restaurant.is_open %}<p class="form-error">{% translate "Ресторан сейчас не принимает заказы." %}</p>{% endif %}</div><img src="{% static restaurant.cover %}"
      alt="{{ restaurant.name }}"
      width="400"
      height="280"></div>
@@ -29,5 +29,9 @@
        value="{{ form.max_price.value|default_if_none:'' }}"></div><div class="filter-submit"><button class="button full">{% translate "Подобрать" %} ↗</button></div><div class="filter-extras"><label class="diet-label" for="id_diet">{% translate "Предпочтения" %}</label>{{ form.diet }}<label class="visually-hidden" for="id_sort">{% translate "Сортировка" %}</label>{{ form.sort }}<a class="text-link" href="{{ request.path }}?diet=all">{% translate "Сбросить" %}</a></div>
 {% if form.errors %}<div class="form-error full-width" role="alert">{{ form.non_field_errors }}{% for field in form %}{% for error in field.errors %}<p>{{ field.label }}: {{ error }}</p>{% endfor %}{% endfor %}</div>{% endif %}</form>
 <p class="filter-note">{% translate "Диапазон — за одно блюдо, без доставки. Полная сумма видна в корзине. Один заказ — один ресторан." %}</p>
+{% if restaurant %}
+  {% if restaurant_rating %}<p>★ {{ restaurant_rating|floatformat:1 }} / 5</p>{% endif %}
+  {% include "includes/favorite_button.html" with url_name="favorite_restaurant" object_id=restaurant.pk active=favorite_restaurant %}
+{% endif %}
 <div class="section-heading results-heading"><h2>{% translate "Подходит вам" %} <span class="result-count">{{ page_obj.paginator.count }}</span></h2>{% if not restaurant %}<span class="muted">{{ restaurant_count }} {% translate "ресторанов" %}</span>{% endif %}</div>
 <div class="products">{% for item in page_obj %}{% include "includes/product_card.html" %}{% empty %}<div class="empty-state full-width"><span class="empty-icon">⌕</span><h2>{% translate "Пока ничего не нашлось" %}</h2><p>{% translate "Увеличьте бюджет или выберите другую категорию." %}</p><a class="button" href="{{ request.path }}?diet=all">{% translate "Сбросить фильтры" %}</a></div>{% endfor %}</div>{% include "includes/pagination.html" %}</section>{% endblock %}

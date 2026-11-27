@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="container section narrow page-top">
+  <h1 class="page-title">{% translate "Вход для партнёров" %}</h1>
+  <form class="panel form-panel" method="post">
+    {% csrf_token %}{% include "includes/form.html" %}
+    <button class="button">{% translate "Войти" %}</button>
+  </form>
+</section>
+{% endblock %}

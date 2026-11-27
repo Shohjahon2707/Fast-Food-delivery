@@ -12,6 +12,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Личные данные", {"fields": ("email", "phone", "address", "role")}),
+        ("Уведомления", {"fields": ("notify_sms", "notify_telegram", "telegram_chat_id")}),
         (
             "Права доступа",
             {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")},

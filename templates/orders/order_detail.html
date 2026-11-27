@@ -14,6 +14,7 @@
       </h1>
       <p>{{ order.restaurant.name }}</p>
       <p>{{ order.created_at|date:'d E Y, H:i' }}</p>
+      {% if order.scheduled_at %}<p>{% translate "Доставка к" %} {{ order.scheduled_at|date:"d.m H:i" }}</p>{% endif %}
     </div>
     <span class="status {{ order.status }}">{% translate order.get_status_display %}</span>
   </div>
@@ -121,9 +122,20 @@
   </div>
   <aside class="panel summary">
     <h2>{% translate "Состав заказа" %}</h2>
+    {% if order.status == "done" or order.status == "cancel" %}
+      <form method="post" action="{% url 'repeat_order' order.pk %}">
+        {% csrf_token %}<button class="button secondary small">{% translate "Повторить заказ" %}</button>
+      </form>
+    {% endif %}
+    {% if order.status == "done" %}
+      {% if order.review %}<p>★ {{ order.review.score }} / 5 · {% translate "Ваш отзыв" %}</p>
+      {% else %}<p><a class="text-link" href="{% url 'review_order' order.pk %}">{% translate "Оценить заказ" %}</a></p>{% endif %}
+    {% endif %}
     {% for line in order.items.all %}
       <div class="sum-row">
         <span>{{ line.name|default:line.menu_item.name }} <small>× {{ line.quantity }}</small>
+          {% for option in line.options %}<small><br>{% translate option.name %}</small>{% endfor %}
+          {% if line.note %}<small><br>{{ line.note }}</small>{% endif %}
         </span>
         <span>{{ line.total|money }}</span>
       </div>
@@ -136,6 +148,7 @@
       <strong>{% translate "Итого" %}</strong>
       <strong>{{ order.total_price|money }} {% translate "сум" %}</strong>
     </div>
+    {% if order.discount %}<p>{% translate "Скидка" %} · −{{ order.discount|money }} {% translate "сум" %}</p>{% endif %}
     <span class="status">{{ order.payment.get_status_display }}</span>
     <p class="help-text">{{ order.payment.get_method_display }}</p>
     {% if order.payment.method == "payme" and order.payment.status == "pending" and order.status == "new" %}

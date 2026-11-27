@@ -1,0 +1,9 @@
+{% load i18n %}
+{% if user.is_customer %}
+  <form method="post" action="{% url url_name object_id %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    {% if active %}<button class="button secondary small" name="action" value="remove">{% translate "Убрать из избранного" %}</button>
+    {% else %}<button class="button secondary small" name="action" value="add">{% translate "В избранное" %}</button>{% endif %}
+  </form>
+{% endif %}

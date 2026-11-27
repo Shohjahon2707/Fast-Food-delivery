@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import BaseModel
@@ -25,6 +26,8 @@ class Order(BaseModel):
     )
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.PositiveIntegerField(default=0)
+    promo_code = models.CharField(max_length=30, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new", db_index=True)
     courier = models.ForeignKey("courier.Courier", null=True, blank=True, on_delete=models.SET_NULL)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -36,6 +39,8 @@ class Order(BaseModel):
     checkout_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     cancel_reason = models.TextField(blank=True)
     ready_at = models.DateTimeField(null=True, blank=True)
+    scheduled_at = models.DateTimeField(null=True, blank=True)
+    prepare_at = models.DateTimeField(null=True, blank=True, db_index=True)
     delivery_eta = models.DateTimeField(null=True, blank=True)
     dispatch_alert = models.CharField(max_length=250, blank=True)
 
@@ -51,7 +56,7 @@ class Order(BaseModel):
 
     @property
     def subtotal(self):
-        return self.total_price - self.delivery_fee
+        return self.total_price - self.delivery_fee + self.discount
 
     @property
     def is_active(self):
@@ -80,12 +85,59 @@ class OrderItem(BaseModel):
     name = models.CharField(max_length=200, blank=True)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    options = models.JSONField(default=list, blank=True)
+    note = models.CharField(max_length=200, blank=True)
 
     def total(self):
         return self.price * self.quantity
 
     def __str__(self):
         return f"{self.quantity} × {self.name or self.menu_item.name}"
+
+
+class OrderReview(BaseModel):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="review")
+    score = models.PositiveSmallIntegerField()
+    comment = models.CharField(max_length=500, blank=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(score__range=(1, 5)), name="order_review_score_range",
+            ),
+        ]
+
+
+class Promotion(models.Model):
+    code = models.CharField(max_length=30, unique=True)
+    amount = models.PositiveIntegerField()
+    minimum_subtotal = models.PositiveIntegerField(default=0)
+    max_uses = models.PositiveIntegerField(null=True, blank=True)
+    used_count = models.PositiveIntegerField(default=0, editable=False)
+    starts_at = models.DateTimeField(null=True, blank=True)
+    ends_at = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        self.code = self.code.strip().upper()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.code
+
+
+class DishReview(models.Model):
+    review = models.ForeignKey(OrderReview, on_delete=models.CASCADE, related_name="dishes")
+    dish = models.ForeignKey("menu.MenuItem", on_delete=models.PROTECT, related_name="dish_reviews")
+    score = models.PositiveSmallIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["review", "dish"], name="one_score_per_review_dish"),
+            models.CheckConstraint(
+                condition=models.Q(score__range=(1, 5)), name="dish_review_score_range",
+            ),
+        ]
 
 
 class OrderEvent(models.Model):
@@ -97,6 +149,19 @@ class OrderEvent(models.Model):
 
     class Meta:
         ordering = ["created_at", "id"]
+
+
+class StatusNotification(models.Model):
+    event = models.ForeignKey(OrderEvent, on_delete=models.CASCADE)
+    channel = models.CharField(max_length=8)
+    handled_at = models.DateTimeField(null=True, blank=True)
+    next_attempt_at = models.DateTimeField(default=timezone.now)
+    attempts = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["event", "channel"], name="one_notice_per_channel"),
+        ]
 
 
 class OrderIssue(models.Model):
@@ -132,6 +197,10 @@ class Restaurant(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     preparation_minutes = models.PositiveSmallIntegerField(default=15)
     accepting_orders = models.BooleanField(default=True)
+    partner = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name="managed_restaurant",
+        on_delete=models.SET_NULL, null=True, blank=True,
+    )
     opens_at = models.TimeField(blank=True, null=True)
     closes_at = models.TimeField(blank=True, null=True)
     minimum_subtotal = models.PositiveIntegerField(default=0)

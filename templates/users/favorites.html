@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Избранное" %} — Тёпло{% endblock %}
+{% block content %}
+<section class="container section page-top">
+  <a class="back-link" href="{% url 'profile' %}">{% translate "Мой профиль" %}</a>
+  <h1 class="page-title">{% translate "Избранное" %}</h1>
+  <h2>{% translate "Рестораны" %}</h2>
+  {% for favorite in restaurants %}
+    <article class="panel row-between">
+      <a href="{% url 'restaurant_detail' favorite.restaurant_id %}">{{ favorite.restaurant.name }}</a>
+      {% include "includes/favorite_button.html" with url_name="favorite_restaurant" object_id=favorite.restaurant_id active=True %}
+    </article>
+  {% empty %}<p>{% translate "В избранном пока нет ресторанов." %}</p>{% endfor %}
+  <h2>{% translate "Блюда" %}</h2>
+  {% for favorite in dishes %}
+    <article class="panel row-between">
+      {% if favorite.dish.is_available %}<a href="{% url 'menu_item_detail' favorite.dish_id %}">{% translate favorite.dish.name %}</a>
+      {% else %}<span>{% translate favorite.dish.name %}</span>{% endif %}
+      {% include "includes/favorite_button.html" with url_name="favorite_dish" object_id=favorite.dish_id active=True %}
+    </article>
+  {% empty %}<p>{% translate "В избранном пока нет блюд." %}</p>{% endfor %}
+</section>
+{% endblock %}

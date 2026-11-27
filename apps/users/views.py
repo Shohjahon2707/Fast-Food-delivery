@@ -18,6 +18,8 @@ from .forms import CustomerLoginForm, ProfileForm, UserRegisterForm
 
 
 def landing(user):
+    if user.role == "partner" and not user.is_staff:
+        return "partner_dashboard"
     if user.role == "kitchen":
         return "kitchen"
     if user.is_staff:

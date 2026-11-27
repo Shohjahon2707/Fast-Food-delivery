@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n food %}
+{% block content %}
+<section class="container section page-top">
+  <h1 class="page-title">{{ restaurant.name }}</h1>
+  <div class="checkout-grid">
+    <div class="stack">
+      <form method="post" class="panel form-panel">
+        {% csrf_token %}<h2>{% translate "Часы и условия работы" %}</h2>
+        {% include "includes/form.html" %}<button class="button">{% translate "Сохранить изменения" %}</button>
+      </form>
+      <section class="panel">
+        <h2>{% translate "Меню и стоп-лист" %}</h2>
+        <p><a class="button secondary small" href="{% url 'partner_add_dish' %}">{% translate "Добавить блюдо" %}</a></p>
+        {% for dish in dishes %}
+          <div class="sum-row"><a href="{% url 'partner_edit_dish' dish.pk %}">{{ dish.name }}</a>
+            <span>{% if dish.is_available %}{{ dish.price|money }} {% translate "сум" %}{% else %}{% translate "В стоп-листе" %}{% endif %}</span></div>
+        {% endfor %}
+      </section>
+    </div>
+    <aside class="panel">
+      <h2>{% translate "Заказы ресторана" %}</h2>
+      {% for order in page_obj %}
+        <details><summary>№{{ order.pk }} · {% translate order.get_status_display %} · {{ order.created_at|date:"d.m H:i" }}</summary>
+          <ul>{% for item in order.items.all %}<li>{{ item.quantity }} × {{ item.name }}
+            {% for option in item.options %}<small> · {{ option.name }}</small>{% endfor %}
+            {% if item.note %}<p>{{ item.note }}</p>{% endif %}</li>{% endfor %}</ul>
+        </details>
+      {% empty %}<p>{% translate "Заказов пока нет." %}</p>{% endfor %}
+      {% include "includes/pagination.html" %}
+    </aside>
+  </div>
+</section>
+{% endblock %}

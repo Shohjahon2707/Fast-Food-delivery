@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}{% translate "Сохранённые адреса" %} — Тёпло{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+  <script src="{% static 'vendor/leaflet/leaflet.js' %}" defer></script>
+  <script src="{% static 'js/delivery-map.js' %}" defer></script>
+{% endblock %}
+{% block content %}
+<section class="container section narrow page-top">
+  <a class="back-link" href="{% url 'profile' %}">{% translate "Мой профиль" %}</a>
+  <h1 class="page-title">{% translate "Сохранённые адреса" %}</h1>
+  {% for saved in addresses %}
+    <article class="panel">
+      <h2>{{ saved.label }}</h2><p>{{ saved.address }}</p>
+      <form method="post" action="{% url 'delete_address' saved.pk %}">
+        {% csrf_token %}<button class="text-button">{% translate "Удалить" %}</button>
+      </form>
+    </article>
+  {% endfor %}
+  <form class="panel form-panel" method="post">
+    {% csrf_token %}
+    <h2>{% translate "Добавить адрес" %}</h2>
+    {% include "includes/form.html" %}
+    <details class="delivery-map-panel">
+      <summary>{% translate "Точка доставки" %}</summary>
+      <button type="button" class="button secondary small" data-locate-customer>{% translate "Моё местоположение" %}</button>
+      <div id="delivery-map" data-lat="41.311081" data-lon="69.240562"></div>
+      <p role="status" data-map-status></p>
+      <button type="button" class="text-button" data-clear-point>{% translate "Убрать точку" %}</button>
+    </details>
+    <button class="button">{% translate "Сохранить адрес" %}</button>
+  </form>
+</section>
+{% endblock %}

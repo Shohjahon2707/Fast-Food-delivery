@@ -6,6 +6,19 @@ from django.utils.translation import gettext_lazy as _
 from apps.common.models import BaseModel
 
 
+class DishOption(models.Model):
+    dish = models.ForeignKey("MenuItem", related_name="options", on_delete=models.CASCADE)
+    name = models.CharField(max_length=80)
+    extra_price = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["pk"]
+
+    def __str__(self):
+        return self.name
+
+
 class Category(BaseModel):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)

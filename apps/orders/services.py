@@ -13,6 +13,9 @@ from apps.payments.payme import enabled as payme_enabled
 
 from .delivery import get_point, quote_delivery
 from .models import Order, OrderEvent, OrderIssue, OrderItem
+from .notifications import enqueue_status
+from .promotions import discount_for, promotion_for
+from .schedule import preparation_start
 
 
 def shipping(subtotal):
@@ -20,7 +23,10 @@ def shipping(subtotal):
 
 
 def event(order, actor, note):
-    OrderEvent.objects.create(order=order, status=order.status, actor=actor, note=note)
+    previous = order.events.order_by("-pk").values_list("status", flat=True).first()
+    created = OrderEvent.objects.create(order=order, status=order.status, actor=actor, note=note)
+    if previous != order.status:
+        enqueue_status(created)
 
 
 def require_operator(actor):
@@ -43,11 +49,13 @@ def checkout(user, data):
         if previous.user_id != user.pk:
             raise PermissionDenied
         return previous
-    lines = list(cart.items.select_related("menu_item__restaurant"))
+    lines = list(cart.items.select_related("menu_item__restaurant").prefetch_related("menu_item__options"))
     if not lines:
         raise ValidationError("Корзина пуста. Добавьте любимое блюдо.")
     if any(not line.menu_item.is_available for line in lines):
         raise ValidationError("Некоторые блюда закончились. Удалите их из корзины.")
+    if any(not line.options_available for line in lines):
+        raise ValidationError(_("Некоторые добавки недоступны. Добавьте блюдо заново."))
     restaurant_ids = {line.menu_item.restaurant_id for line in lines}
     if len(restaurant_ids) != 1:
         raise ValidationError("В одном заказе могут быть блюда только одного ресторана.")
@@ -60,16 +68,28 @@ def checkout(user, data):
         raise ValidationError(_("Этот способ оплаты сейчас недоступен."))
     subtotal = sum((line.total for line in lines), Decimal("0"))
     point = get_point(data)
-    fee = quote_delivery(restaurant, subtotal, point, require_address=True).fee
+    arrival = data.get("scheduled_at")
+    delivery = quote_delivery(
+        restaurant, subtotal, point, require_address=True, scheduled_at=arrival,
+    )
+    prepare_at = preparation_start(restaurant, arrival, delivery.minutes)
+    fee = delivery.fee
+    promo = promotion_for(data.get("promo_code", ""), subtotal, lock=True)
+    discount = discount_for(promo, subtotal)
+    total = subtotal + fee - discount
     if data.get("quoted_fee") is not None and data["quoted_fee"] != fee:
         raise ValidationError(_("Стоимость доставки обновилась. Проверьте сумму и подтвердите заказ."))
-    if data.get("quoted_total") is not None and data["quoted_total"] != subtotal + fee:
+    if data.get("quoted_total") is not None and data["quoted_total"] != total:
         raise ValidationError(_("Сумма заказа изменилась. Проверьте её перед подтверждением."))
     order = Order.objects.create(
         user=user,
         restaurant=restaurant,
-        total_price=subtotal + fee,
+        total_price=total,
         delivery_fee=fee,
+        discount=discount,
+        promo_code=promo.code if promo else "",
+        scheduled_at=arrival,
+        prepare_at=prepare_at,
         customer_name=data["customer_name"],
         phone=data["phone"],
         address=data["address"],
@@ -84,9 +104,14 @@ def checkout(user, data):
             menu_item=line.menu_item,
             name=line.menu_item.name,
             quantity=line.quantity,
-            price=line.menu_item.price,
+            price=line.unit_price,
+            options=[{"id": option.pk, "name": option.name} for option in line.options],
+            note=line.note,
         )
     Payment.objects.create(order=order, user=user, method=method)
+    if promo:
+        promo.used_count += 1
+        promo.save(update_fields=["used_count"])
     note = "Заказ принят. Ожидает оплаты Payme." if method == "payme" else (
         "Заказ принят. Оплата наличными после получения."
     )
@@ -107,6 +132,8 @@ def advance_order(order_id, actor, target):
     order = Order.objects.select_for_update().get(pk=order_id)
     if {"new": "cooking", "cooking": "ready"}.get(order.status) != target:
         raise ValidationError("Этот переход уже выполнен или недоступен.")
+    if order.prepare_at and order.prepare_at > timezone.now():
+        raise ValidationError(_("Время приготовления предзаказа ещё не наступило."))
     if Payment.objects.filter(order=order, method="payme").exclude(status="paid").exists():
         raise ValidationError(_("Дождитесь подтверждения оплаты Payme."))
     if order.issues.filter(resolved_at__isnull=True).exists():

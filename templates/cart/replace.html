@@ -5,9 +5,11 @@
     <div class="panel">
       <h1 class="page-title">{% translate "Сменить ресторан?" %}</h1>
       <p>{{ confirm_message }}</p>
-      <form action="{% if lunch_token %}{% url 'add_lunch' %}{% else %}{% url 'add_to_cart' item.pk %}{% endif %}" method="post">
+      <form action="{% if lunch_token %}{% url 'add_lunch' %}{% elif repeat_order %}{% url 'repeat_order' repeat_order.pk %}{% else %}{% url 'add_to_cart' item.pk %}{% endif %}" method="post">
         {% csrf_token %}
         {% if lunch_token %}<input type="hidden" name="lunch" value="{{ lunch_token }}">{% endif %}
+        {% if item %}{% for id in options.option_ids %}<input type="hidden" name="option" value="{{ id }}">{% endfor %}
+          <input type="hidden" name="note" value="{{ options.note }}">{% endif %}
         <input type="hidden"
                name="replace"
                value="yes"><button class="button">{% translate "Очистить и добавить" %}</button>

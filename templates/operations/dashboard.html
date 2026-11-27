@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load food static %}{% block title %}Рабочая панель — Тёпло{% endblock %}{% block content %}
 <section class="container section page-top">
   <span class="eyebrow">Только то, что требует внимания</span>
+  {% load i18n %}<p><a class="text-link" href="{% url 'order_analytics' %}">{% translate "Аналитика заказов" %}</a></p>
   <div class="section-heading">
     <h1 class="page-title">
       КОНТРОЛЬ <em>СЕРВИСА</em>

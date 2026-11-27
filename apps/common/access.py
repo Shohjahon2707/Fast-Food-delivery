@@ -6,7 +6,9 @@ from django.core.exceptions import PermissionDenied
 
 def role_required(role):
     def decorator(view):
-        @login_required(login_url="courier_login" if role == "courier" else "login")
+        @login_required(login_url={
+            "courier": "courier_login", "partner": "partner_login",
+        }.get(role, "login"))
         @wraps(view)
         def wrapped(request, *args, **kwargs):
             if request.user.is_staff or request.user.role != role:
@@ -20,6 +22,7 @@ def role_required(role):
 
 customer_required = role_required("customer")
 courier_required = role_required("courier")
+partner_required = role_required("partner")
 
 
 def operator_required(view):

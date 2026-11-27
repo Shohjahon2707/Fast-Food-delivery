@@ -36,7 +36,7 @@ document.querySelectorAll("[data-confirm-button]").forEach((button) =>
 document.querySelectorAll("[data-submit-once]").forEach((form) =>
   form.addEventListener("submit", (event) => {
     const button = event.submitter;
-    if (button?.value === "quote") return;
+    if (button?.name === "action") return;
     if (button) {
       button.disabled = true;
       button.textContent = "Оформляем…";
@@ -95,6 +95,32 @@ document.querySelectorAll("[data-add-cart]").forEach((form) =>
 );
 
 const liveOrder = document.querySelector("[data-live-order]");
+document.querySelectorAll("[data-suggestion-url]").forEach((input) => {
+  let timer, pending;
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    pending?.abort();
+    const query = input.value.trim();
+    if (query.length < 2) return input.list?.replaceChildren();
+    timer = setTimeout(async () => {
+      pending = new AbortController();
+      try {
+        const url = new URL(input.dataset.suggestionUrl, window.location.href);
+        url.searchParams.set("q", query);
+        const response = await fetch(url, { signal: pending.signal });
+        if (!response.ok || query !== input.value.trim()) return;
+        const result = await response.json();
+        input.list?.replaceChildren(...result.suggestions.map((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          return option;
+        }));
+      } catch {
+        // The search form remains available.
+      }
+    }, 200);
+  });
+});
 if (liveOrder) {
   const checkStatus = async () => {
     if (document.visibilityState !== "visible") return;

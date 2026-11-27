@@ -27,8 +27,10 @@
             </span>
             <div class="cart-row-name">
               <h3>{% translate line.menu_item.name %}</h3>
-              <p>{{ line.menu_item.weight }} · {{ line.menu_item.price|money }} {% translate "сум" %}</p>
-              {% if not line.menu_item.is_available %}
+              <p>{{ line.menu_item.weight }} · {{ line.unit_price|money }} {% translate "сум" %}</p>
+              {% for option in line.options %}<p>{% translate option.name %}</p>{% endfor %}
+              {% if line.note %}<p>{{ line.note }}</p>{% endif %}
+              {% if not line.menu_item.is_available or not line.options_available %}
                 <span class="field-error">Закончилось — удалите из корзины</span>
               {% endif %}
               <form method="post" action="{% url 'remove_from_cart' line.pk %}">

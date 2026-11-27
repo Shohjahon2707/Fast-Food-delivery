@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="container section narrow page-top">
+  <a class="back-link" href="{% url 'partner_dashboard' %}">{% translate "Кабинет ресторана" %}</a>
+  <h1 class="page-title">{{ dish.name|default:_("Добавить блюдо") }}</h1>
+  <form class="panel form-panel" method="post">
+    {% csrf_token %}{% include "includes/form.html" %}
+    <button class="button">{% translate "Сохранить изменения" %}</button>
+  </form>
+</section>
+{% endblock %}

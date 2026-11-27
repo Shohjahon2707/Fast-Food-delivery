@@ -16,12 +16,14 @@ from . import services
 from .delivery import get_point, quote_delivery, remember_point, saved_point
 from .forms import CheckoutForm, ReasonForm
 from .models import Order
+from .promotions import discount_for, promotion_for
+from .schedule import preparation_start
 
 
 @customer_required
 def create_order(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    items = list(cart.items.select_related("menu_item__restaurant"))
+    items = list(cart.items.select_related("menu_item__restaurant").prefetch_related("menu_item__options"))
     initial = {
         "customer_name": request.user.first_name or request.user.username,
         "phone": request.user.phone,
@@ -37,24 +39,47 @@ def create_order(request):
         restaurant, _ = Restaurant.objects.get_or_create(pk=1)
     subtotal = sum(item.total for item in items)
     point = saved_point(request)
+    addresses = list(request.user.saved_addresses.all())
     delivery, delivery_error = None, ""
     posted = request.POST.copy() if request.method == "POST" else None
+    if posted is not None and posted.get("action") == "address":
+        selected = get_object_or_404(
+            request.user.saved_addresses, pk=posted.get("saved_address")
+        ) if posted.get("saved_address", "").isdigit() else None
+        if selected:
+            posted["address"] = selected.address
+            posted["latitude"] = "" if selected.latitude is None else str(selected.latitude)
+            posted["longitude"] = "" if selected.longitude is None else str(selected.longitude)
+            point = get_point({"latitude": selected.latitude, "longitude": selected.longitude})
     form = CheckoutForm(posted, initial=initial)
     valid = form.is_bound and form.is_valid()
+    discount = 0
+    arrival = None
     if valid:
+        arrival = form.cleaned_data.get("scheduled_at")
         point = get_point(form.cleaned_data)
         remember_point(request, point)
-        if request.POST.get("action") != "quote":
+        if request.POST.get("action") not in ("quote", "address"):
             try:
                 order = services.checkout(request.user, form.cleaned_data)
             except ValidationError as exc:
                 form.add_error(None, exc)
             else:
                 return redirect("order_success", order_id=order.pk)
+        try:
+            promotion = promotion_for(form.cleaned_data.get("promo_code", ""), subtotal)
+        except ValidationError as exc:
+            form.add_error("promo_code", exc)
+        else:
+            discount = discount_for(promotion, subtotal)
     if items:
         try:
-            delivery = quote_delivery(restaurant, subtotal, point, require_address=True)
+            delivery = quote_delivery(
+                restaurant, subtotal, point, require_address=True, scheduled_at=arrival,
+            )
+            preparation_start(restaurant, arrival, delivery.minutes)
         except ValidationError as exc:
+            delivery = None
             delivery_error = exc.messages[0]
     fee = delivery.fee if delivery else 0
     if not form.is_bound:
@@ -65,7 +90,7 @@ def create_order(request):
         form = CheckoutForm(initial=initial)
     elif valid and delivery:
         posted["quoted_fee"] = str(fee)
-        posted["quoted_total"] = str(subtotal + fee)
+        posted["quoted_total"] = str(subtotal + fee - discount)
     return render(
         request,
         "orders/checkout.html",
@@ -75,10 +100,12 @@ def create_order(request):
             "subtotal": subtotal,
             "restaurant": restaurant,
             "fee": fee,
-            "total": subtotal + fee,
+            "total": subtotal + fee - discount,
+            "discount": discount,
             "delivery": delivery,
             "delivery_error": delivery_error,
             "payme_available": len(form.fields["payment_method"].choices) > 1,
+            "addresses": addresses,
         },
     )
 

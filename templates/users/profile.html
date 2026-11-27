@@ -4,6 +4,8 @@
   <h1 class="page-title">
     Мой <em>профиль</em>
   </h1>
+  <p><a class="text-link" href="{% url 'saved_addresses' %}">{% translate "Сохранённые адреса" %}</a>
+    · <a class="text-link" href="{% url 'favorites' %}">{% translate "Избранное" %}</a></p>
   <form method="post" class="panel form-panel">
     {% csrf_token %}
     {% include "includes/form.html" %}

@@ -3,7 +3,7 @@
      alt="{% translate item.name %}"
      width="400"
      height="300"
-     loading="lazy">{% if item.is_vegetarian %}<span class="food-badge green">{% translate "Без мяса" %}</span>{% elif item.badge %}<span class="food-badge">{% translate item.badge %}</span>{% endif %}</a><div class="product-info">{% if item.restaurant %}<a class="product-restaurant"
+     loading="lazy">{% if item.is_vegetarian %}<span class="food-badge green">{% translate "Без мяса" %}</span>{% elif item.badge %}<span class="food-badge">{% translate item.badge %}</span>{% endif %}</a><div class="product-info">{% if item.rating %}<span>★ {{ item.rating|floatformat:1 }}</span>{% endif %}{% if item.restaurant %}<a class="product-restaurant"
    href="{% url 'restaurant_detail' item.restaurant_id %}">{{ item.restaurant.name }} <span>↗</span></a>{% endif %}<div class="product-title"><a href="{% url 'menu_item_detail' item.pk %}"><h3>{% translate item.name %}</h3></a></div><p>{{ item.description|truncatechars:85 }}</p><span class="product-weight">{{ item.weight }}</span><div class="product-bottom"><strong>{{ item.price|money }} <small>{% translate "сум" %}</small></strong>{% if user.is_customer or not user.is_authenticated %}{% if not item.restaurant or item.restaurant.is_open %}<form action="{% url 'add_to_cart' item.pk %}" method="post" data-add-cart>{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="add-button"
         type="submit"
         aria-label="{% translate 'Добавить' %} {% translate item.name %}">+ <span>{% translate "Добавить" %}</span></button></form>{% endif %}{% endif %}</div></div></article>

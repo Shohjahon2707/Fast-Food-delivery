@@ -69,8 +69,9 @@ def remember_point(request, point):
     request.session[POINT_SESSION_KEY] = [str(value) for value in point] if point else None
 
 
-def delivery_terms(restaurant, point=None, *, require_address=False):
-    if restaurant and not is_open(restaurant):
+def delivery_terms(restaurant, point=None, *, require_address=False, scheduled_at=None):
+    at = timezone.localtime(scheduled_at).time() if scheduled_at is not None else None
+    if restaurant and not is_open(restaurant, at):
         raise ValidationError(_("Ресторан сейчас закрыт."))
     distance = distance_km(restaurant, point) if restaurant else None
     if restaurant and restaurant.delivery_radius_km is not None:
@@ -93,8 +94,8 @@ def delivery_terms(restaurant, point=None, *, require_address=False):
     )
 
 
-def quote_delivery(restaurant, subtotal, point=None, *, require_address=False):
-    terms = delivery_terms(restaurant, point, require_address=require_address)
+def quote_delivery(restaurant, subtotal, point=None, *, require_address=False, scheduled_at=None):
+    terms = delivery_terms(restaurant, point, require_address=require_address, scheduled_at=scheduled_at)
     if subtotal < terms.minimum:
         raise ValidationError(
             _("Минимальная сумма блюд в этом ресторане — %(amount)s сум."),

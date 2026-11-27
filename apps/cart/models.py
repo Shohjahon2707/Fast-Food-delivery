@@ -21,6 +21,8 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    option_ids = models.JSONField(default=list, blank=True)
+    note = models.CharField(max_length=200, blank=True)
 
     class Meta:
         constraints = [
@@ -32,7 +34,19 @@ class CartItem(models.Model):
 
     @property
     def total(self):
-        return self.menu_item.price * self.quantity
+        return self.unit_price * self.quantity
+
+    @property
+    def unit_price(self):
+        return self.menu_item.price + sum(option.extra_price for option in self.options)
+
+    @property
+    def options(self):
+        return [option for option in self.menu_item.options.all() if option.pk in self.option_ids]
+
+    @property
+    def options_available(self):
+        return len(self.options) == len(self.option_ids) and all(option.active for option in self.options)
 
     def __str__(self):
         return f"{self.quantity} × {self.menu_item}"

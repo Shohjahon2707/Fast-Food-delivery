@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load food i18n %}
+{% block content %}
+<section class="container section page-top">
+  <a class="back-link" href="{% url 'operations' %}">{% translate "Операции" %}</a>
+  <h1 class="page-title">{% translate "Аналитика заказов" %}</h1>
+  <form class="panel form-panel" method="get">
+    {% include "includes/form.html" %}<button class="button">{% translate "Показать отчёт" %}</button>
+  </form>
+  {% if stats %}
+    <section class="panel">
+      <div class="sum-row"><span>{% translate "Создано заказов" %}</span><strong>{{ stats.placed }}</strong></div>
+      <div class="sum-row"><span>{% translate "Доставлено" %}</span><strong>{{ stats.delivered }}</strong></div>
+      <div class="sum-row"><span>{% translate "Доля доставленных заказов" %}</span><strong>{{ stats.completion_rate|floatformat:1 }}%</strong></div>
+      <div class="sum-row"><span>{% translate "Выручка доставленных заказов" %}</span><strong>{{ stats.revenue|money }} {% translate "сум" %}</strong></div>
+      <h2>{% translate "Популярные блюда" %}</h2>
+      {% for dish in popular %}
+        <div class="sum-row"><span>{% translate dish.name %}</span><strong>{{ dish.portions }}</strong></div>
+      {% empty %}<p>{% translate "Заказов пока нет." %}</p>{% endfor %}
+    </section>
+  {% endif %}
+</section>
+{% endblock %}

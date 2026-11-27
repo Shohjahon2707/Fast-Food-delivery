@@ -14,6 +14,8 @@
       {% if item.restaurant %}<a class="text-link"
    href="{% url 'restaurant_detail' item.restaurant_id %}">{{ item.restaurant.name }} ↗</a>{% endif %}
       <h1 class="page-title">{% translate item.name %}</h1>
+      {% if rating %}<p>★ {{ rating|floatformat:1 }} / 5</p>{% endif %}
+      {% include "includes/favorite_button.html" with url_name="favorite_dish" object_id=item.pk active=favorite_dish %}
       <p class="lead">{{ item.description }}</p>
       {% if item.is_vegetarian %}
         <span class="chip">{% translate "Без мяса" %}</span>
@@ -35,6 +37,11 @@
         <form method="post" action="{% url 'add_to_cart' item.id %}" data-add-cart>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">
+          {% if options %}<fieldset><legend>{% translate "Добавки и изменения" %}</legend>
+            {% for option in options %}<label class="choice"><input type="checkbox" name="option" value="{{ option.pk }}"> {% translate option.name %}{% if option.extra_price %} · +{{ option.extra_price|money }} {% translate "сум" %}{% endif %}</label><br>{% endfor %}
+          </fieldset>{% endif %}
+          <label for="dish-note">{% translate "Комментарий к блюду" %}</label>
+          <input type="text" id="dish-note" name="note" maxlength="200">
           <button class="button" type="submit">
             {% translate "Добавить в корзину" %} <span>+</span>
           </button>

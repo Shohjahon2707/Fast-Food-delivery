@@ -134,4 +134,8 @@ PAYME_MERCHANT_ID = os.getenv("PAYME_MERCHANT_ID", "")
 PAYME_API_KEY = os.getenv("PAYME_API_KEY", "")
 PAYME_LOGIN = os.getenv("PAYME_LOGIN", "Paycom")
 PAYME_SANDBOX = os.getenv("PAYME_SANDBOX", "true").lower() == "true"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
+TWILIO_FROM = os.getenv("TWILIO_FROM", "")
 FREE_DELIVERY_FROM = Decimal(os.getenv("FREE_DELIVERY_FROM", "100000"))

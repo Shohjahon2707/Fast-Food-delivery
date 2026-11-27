@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import DeliveryOffer, Order, OrderIssue, OrderItem, Restaurant
+from .models import DeliveryOffer, Order, OrderIssue, OrderItem, Promotion, Restaurant
+
+
+@admin.register(Promotion)
+class PromotionAdmin(admin.ModelAdmin):
+    list_display = ("code", "amount", "minimum_subtotal", "active", "used_count", "max_uses")
+    list_filter = ("active",)
+    readonly_fields = ("used_count",)
 
 
 class OrderItemInline(admin.TabularInline):
@@ -44,6 +51,7 @@ class IssueAdmin(admin.ModelAdmin):
 @admin.register(Restaurant)
 class RestaurantAdmin(admin.ModelAdmin):
     readonly_fields = ("last_dispatch_at",)
+    raw_id_fields = ("partner",)
 
     list_display = ("name", "cuisine", "accepting_orders", "is_demo")
     list_filter = ("accepting_orders", "is_demo")

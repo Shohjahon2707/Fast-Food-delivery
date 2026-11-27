@@ -22,7 +22,8 @@
         <a class="brand" href="{% url 'home' %}" aria-label="Тёпло"><span class="brand-mark">т.</span><span>тёпло<span class="brand-caption">{% translate "доставка со вкусом" %}</span></span></a>
         <a class="city-pill" href="{% url 'profile' %}"><span aria-hidden="true">⌖</span> {% translate "Ташкент" %}<span class="city-sub">{% translate "Указать адрес" %} ↓</span></a>
         <nav class="main-nav" aria-label="{% translate 'Основная навигация' %}">
-        {% if user.role == "kitchen" %}<a href="{% url 'kitchen' %}">Кухня</a>
+        {% if user.role == "partner" and not user.is_staff %}<a href="{% url 'partner_dashboard' %}">{% translate "Кабинет ресторана" %}</a>
+        {% elif user.role == "kitchen" %}<a href="{% url 'kitchen' %}">Кухня</a>
       {% elif user.is_staff %}<a href="{% url 'admin:index' %}">Управление</a>{% if can_operate %}<a href="{% url 'operations' %}">Операции</a>{% endif %}<a href="{% url 'kitchen' %}">Кухня</a>
       {% elif user.is_courier %}<a href="{% url 'courier_orders' %}">Доставки</a>
       {% else %}<a class="{% if request.resolver_match.url_name == 'home' %}nav-active{% endif %}"

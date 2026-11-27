@@ -41,6 +41,12 @@ class CheckoutForm(forms.Form):
     checkout_token = forms.UUIDField(widget=forms.HiddenInput)
     quoted_fee = forms.DecimalField(required=False, min_value=0, widget=forms.HiddenInput)
     quoted_total = forms.DecimalField(required=False, min_value=0, widget=forms.HiddenInput)
+    promo_code = forms.CharField(label=_("Промокод"), max_length=30, required=False)
+    scheduled_at = forms.DateTimeField(
+        label=_("Доставить к указанному времени"), required=False,
+        help_text=_("Время Ташкента. Оставьте пустым для ближайшей доставки."),
+        widget=forms.DateTimeInput(format="%Y-%m-%dT%H:%M", attrs={"type": "datetime-local"}),
+    )
 
     latitude = forms.DecimalField(
         required=False, min_value=-90, max_value=90, decimal_places=6, widget=forms.HiddenInput

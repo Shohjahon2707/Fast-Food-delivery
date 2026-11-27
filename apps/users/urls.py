@@ -3,7 +3,7 @@ from django.urls import path
 
 from apps.courier.views import register
 
-from . import views
+from . import customer, views
 
 urlpatterns = [
     path("", views.home_view, name="user_home"),
@@ -12,6 +12,12 @@ urlpatterns = [
     path("login/", views.RoleBasedLoginView.as_view(), name="login"),
     path("logout/", auth.LogoutView.as_view(), name="user_logout"),
     path("profile/", views.profile, name="profile"),
+    path("addresses/", customer.addresses, name="saved_addresses"),
+    path("addresses/<int:pk>/delete/", customer.delete_address, name="delete_address"),
+    path("favorites/", customer.favorites, name="favorites"),
+    path("favorites/dish/<int:pk>/", customer.favorite, {"kind": "dish"}, name="favorite_dish"),
+    path("favorites/restaurant/<int:pk>/", customer.favorite, {"kind": "restaurant"},
+         name="favorite_restaurant"),
     path("preferences/", views.preferences, name="preferences"),
     path("preferences/save/", views.save_preferences, name="save_preferences"),
     path("password/reset/", auth.PasswordResetView.as_view(), name="password_reset"),

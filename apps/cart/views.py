@@ -15,7 +15,7 @@ from apps.menu.models import MenuItem
 from apps.menu.smart import load_lunch
 from apps.orders.delivery import is_open, quote_delivery, remember_point, saved_point
 
-from .basket import MAX_QUANTITY, SESSION_KEY, Basket
+from .basket import MAX_QUANTITY, OPTIONS_SESSION_KEY, SESSION_KEY, Basket
 
 
 def check_customer(request):
@@ -47,7 +47,9 @@ def cart_detail(request):
             "restaurant": restaurant,
             "delivery": delivery,
             "delivery_error": error,
-            "unavailable": any(not line.menu_item.is_available for line in items),
+            "unavailable": any(
+                not line.menu_item.is_available or not line.options_available for line in items
+            ),
             "guest_conflict": request.user.is_authenticated and request.session.get(SESSION_KEY),
         },
     )
@@ -87,18 +89,36 @@ def add_to_cart(request, item_id):
     )
     if item.restaurant and not is_open(item.restaurant):
         return basket_error(request, _("Ресторан сейчас закрыт."))
+    note = request.POST.get("note", "").strip()
+    selected = set(request.POST.getlist("option"))
+    option_ids = [option.pk for option in item.options.filter(active=True) if str(option.pk) in selected]
+    if len(note) > 200 or len(selected) != len(option_ids):
+        return basket_error(request, _("Проверьте добавки и комментарий к блюду."))
+    options = {"option_ids": option_ids, "note": note}
     basket = Basket(request, lock=True)
     contents = basket.contents
+    existing = {
+        line.menu_item.pk: {"option_ids": line.option_ids, "note": line.note} for line in basket.lines
+    }
     if any(line.menu_item.restaurant_id != item.restaurant_id for line in basket.lines):
         if request.POST.get("replace") != "yes":
             return confirm_replacement(
                 request,
                 _("В корзине блюда другого ресторана. Заменить их?"),
-                item=item,
+                item=item, options=options,
             )
         contents.clear()
+        existing.clear()
+    elif item.pk in existing and existing[item.pk] != options and (selected or note):
+        if request.POST.get("replace") != "yes":
+            return confirm_replacement(
+                request, _("Изменить добавки и комментарий для всех порций блюда?"),
+                item=item, options=options,
+            )
+    elif item.pk in existing and not (selected or note):
+        options = existing[item.pk]
     contents[item.pk] = min(MAX_QUANTITY, contents[item.pk] + 1)
-    basket.store(contents)
+    basket.store(contents, existing | {item.pk: options})
     return basket_response(request, sum(contents.values()), _("Блюдо в корзине."))
 
 
@@ -115,13 +135,14 @@ def add_lunch(request):
         )
     basket = Basket(request, lock=True)
     contents = Counter({item.pk: quantity for item, quantity in lunch.lines})
-    if basket.lines and basket.contents != contents and request.POST.get("replace") != "yes":
+    customized = any(line.option_ids or line.note for line in basket.lines)
+    if basket.lines and (basket.contents != contents or customized) and request.POST.get("replace") != "yes":
         return confirm_replacement(
             request,
             _("Заменить текущие блюда выбранным набором?"),
             lunch_token=token,
         )
-    basket.store(contents)
+    basket.store(contents, {})
     remember_point(request, criteria.get("point"))
     preferences = {
         key: criteria[key] for key in ("people", "diet", "max_minutes", "allergens")
@@ -178,6 +199,11 @@ def resolve_guest_basket(request):
     if guest and request.POST.get("keep") == "guest":
         items = MenuItem.objects.in_bulk(guest)
         if items:
-            Basket(request, lock=True).store({key: guest[str(key)] for key in items})
+            details = request.session.get(OPTIONS_SESSION_KEY, {})
+            Basket(request, lock=True).store(
+                {key: guest[str(key)] for key in items},
+                {int(key): value for key, value in details.items()},
+            )
     request.session.pop(SESSION_KEY, None)
+    request.session.pop(OPTIONS_SESSION_KEY, None)
     return redirect("cart_detail")

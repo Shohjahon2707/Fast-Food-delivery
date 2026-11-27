@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -39,7 +40,7 @@ def board(request):
             "orders": Order.objects.filter(status__in=["new", "cooking", "ready"])
             .exclude(payment__method="payme", payment__status="pending")
             .prefetch_related("items", "issues")
-            .order_by("created_at")[:60]
+            .order_by(F("prepare_at").asc(nulls_first=True), "created_at")[:60]
         },
     )
 

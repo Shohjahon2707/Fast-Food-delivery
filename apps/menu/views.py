@@ -1,14 +1,14 @@
-import re
-
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, F, OuterRef, Q, Subquery
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.orders.delivery import get_point, saved_point
-from apps.orders.models import Restaurant
+from apps.orders.models import OrderReview, Restaurant
 
 from .forms import MealFilterForm
 from .models import Category, MenuItem
+from .search import search
 from .smart import recommend, sign_lunch
 from .smart_forms import ALLERGEN_CHOICES, SmartLunchForm
 
@@ -39,17 +39,13 @@ def catalog(request, restaurant=None):
         ).split(":")[0]
         params["diet"] = preference if preference in ("all", "vegetarian") else "all"
     form = MealFilterForm(params)
-    items = available_items()
+    items = available_items().annotate(rating=Avg("dish_reviews__score"))
     if restaurant:
         items = items.filter(restaurant=restaurant)
     if form.is_valid():
         data = form.cleaned_data
         if data["q"]:
-            items = items.filter(
-                Q(name__iregex=re.escape(data["q"]))
-                | Q(description__iregex=re.escape(data["q"]))
-                | Q(restaurant__name__iregex=re.escape(data["q"]))
-            )
+            items = search(items, data["q"], ("name", "description", "restaurant__name"))
         if data["category"]:
             items = items.filter(category=data["category"])
         if data["min_price"] is not None:
@@ -58,7 +54,10 @@ def catalog(request, restaurant=None):
             items = items.filter(price__lte=data["max_price"])
         if data["diet"] == "vegetarian":
             items = items.filter(is_vegetarian=True)
-        items = items.order_by(data["sort"] or "pk", "pk")
+        if data["sort"] == "rating":
+            items = items.order_by(F("rating").desc(nulls_last=True), "pk")
+        elif data["sort"] or not data["q"]:
+            items = items.order_by(data["sort"] or "pk", "pk")
     else:
         items = items.none()
     return render(
@@ -71,6 +70,10 @@ def catalog(request, restaurant=None):
             "query": params.get("q", ""),
             "selected_category": params.get("category", ""),
             "restaurant": restaurant,
+            "restaurant_rating": restaurant.orders.aggregate(avg=Avg("review__score"))["avg"]
+            if restaurant else None,
+            "favorite_restaurant": restaurant and request.user.is_authenticated
+            and request.user.favorite_restaurants.filter(restaurant=restaurant).exists(),
             "restaurant_count": items.values("restaurant_id").distinct().count(),
         },
     )
@@ -78,6 +81,15 @@ def catalog(request, restaurant=None):
 
 def menu_list(request):
     return catalog(request)
+
+
+def suggestions(request):
+    query = request.GET.get("q", "").strip()[:100]
+    if len(query) < 2:
+        return JsonResponse({"suggestions": []})
+    dishes = search(available_items(), query, ("name",))
+    names = dishes.values_list("name", flat=True)[:18]
+    return JsonResponse({"suggestions": list(dict.fromkeys(names))[:6]})
 
 
 def smart_lunch(request):
@@ -138,6 +150,10 @@ def menu_item_detail(request, item_id):
         "menu/menu_item_detail.html",
         {
             "item": item,
+            "options": item.options.filter(active=True),
+            "rating": item.dish_reviews.aggregate(avg=Avg("score"))["avg"],
+            "favorite_dish": request.user.is_authenticated
+            and request.user.favorite_dishes.filter(dish=item).exists(),
             "allergen_labels": [
                 allergen_labels[code] for code in (item.allergens or []) if code in allergen_labels
             ],
@@ -154,14 +170,18 @@ def home(request):
         return redirect_response
     query = request.GET.get("q", "").strip()[:100]
     restaurants = Restaurant.objects.annotate(
-        dish_count=Count("menu_items", filter=Q(menu_items__is_available=True))
+        dish_count=Count("menu_items", filter=Q(menu_items__is_available=True), distinct=True),
+        rating=Subquery(
+            OrderReview.objects.filter(order__restaurant=OuterRef("pk"))
+            .order_by().values("order__restaurant").annotate(avg=Avg("score")).values("avg")
+        ),
     )
     if query:
-        restaurants = restaurants.filter(
-            Q(name__iregex=re.escape(query))
-            | Q(cuisine__iregex=re.escape(query))
-            | Q(menu_items__name__iregex=re.escape(query))
+        restaurants = search(
+            restaurants, query, ("name", "cuisine", "menu_items__name")
         ).distinct()
+    if request.GET.get("sort") == "rating":
+        restaurants = restaurants.order_by(F("rating").desc(nulls_last=True), "pk")
     return render(
         request,
         "home.html",

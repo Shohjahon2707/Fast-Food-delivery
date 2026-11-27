@@ -1218,5 +1218,313 @@
   "Показано последнее местоположение курьера.": {
     "en": "Showing the courier's latest position.",
     "uz": "Kuryerning so‘nggi joylashuvi ko‘rsatilgan."
+  },
+  "Название адреса": {
+    "en": "Address label",
+    "uz": "Manzil nomi"
+  },
+  "Адрес с таким названием уже существует.": {
+    "en": "An address with this label already exists.",
+    "uz": "Bunday nomdagi manzil allaqachon mavjud."
+  },
+  "Сохранённые адреса": {
+    "en": "Saved addresses",
+    "uz": "Saqlangan manzillar"
+  },
+  "Добавить адрес": {
+    "en": "Add address",
+    "uz": "Manzil qo‘shish"
+  },
+  "Использовать адрес": {
+    "en": "Use address",
+    "uz": "Manzilni ishlatish"
+  },
+  "Сохранить адрес": {
+    "en": "Save address",
+    "uz": "Manzilni saqlash"
+  },
+  "Избранное": {
+    "en": "Favorites",
+    "uz": "Saralanganlar"
+  },
+  "В избранное": {
+    "en": "Add to favorites",
+    "uz": "Saralanganlarga qo‘shish"
+  },
+  "Убрать из избранного": {
+    "en": "Remove from favorites",
+    "uz": "Saralanganlardan olib tashlash"
+  },
+  "Добавлено в избранное.": {
+    "en": "Added to favorites.",
+    "uz": "Saralanganlarga qo‘shildi."
+  },
+  "Удалено из избранного.": {
+    "en": "Removed from favorites.",
+    "uz": "Saralanganlardan olib tashlandi."
+  },
+  "В избранном пока нет ресторанов.": {
+    "en": "No favorite restaurants yet.",
+    "uz": "Saralangan restoranlar hali yo‘q."
+  },
+  "В избранном пока нет блюд.": {
+    "en": "No favorite dishes yet.",
+    "uz": "Saralangan taomlar hali yo‘q."
+  },
+  "Сначала по оценке": {
+    "en": "Highest rated first",
+    "uz": "Yuqori baholanganlar avval"
+  },
+  "Оценить заказ": {
+    "en": "Rate order",
+    "uz": "Buyurtmani baholash"
+  },
+  "Оценка ресторана": {
+    "en": "Restaurant rating",
+    "uz": "Restoran bahosi"
+  },
+  "Отзыв": {
+    "en": "Review",
+    "uz": "Sharh"
+  },
+  "Отзыв на этот заказ уже есть.": {
+    "en": "This order already has a review.",
+    "uz": "Bu buyurtmaga sharh yozilgan."
+  },
+  "Спасибо за отзыв.": {
+    "en": "Thank you for your review.",
+    "uz": "Sharhingiz uchun rahmat."
+  },
+  "Поставьте оценки от 1 до 5.": {
+    "en": "Choose ratings between 1 and 5.",
+    "uz": "1 dan 5 gacha baholang."
+  },
+  "Отправить отзыв": {
+    "en": "Submit review",
+    "uz": "Sharhni yuborish"
+  },
+  "Ваш отзыв": {
+    "en": "Your review",
+    "uz": "Sharhingiz"
+  },
+  "Повторить заказ": {
+    "en": "Order again",
+    "uz": "Buyurtmani takrorlash"
+  },
+  "Доступных блюд для повтора пока нет.": {
+    "en": "No dishes from this order are available.",
+    "uz": "Bu buyurtmadagi taomlar hozir mavjud emas."
+  },
+  "Заменить корзину блюдами из заказа?": {
+    "en": "Replace the basket with this order?",
+    "uz": "Savatni buyurtmadagi taomlar bilan almashtirasizmi?"
+  },
+  "Недоступные блюда: %(dishes)s": {
+    "en": "Unavailable items: %(dishes)s",
+    "uz": "Mavjud bo‘lmagan taomlar: %(dishes)s"
+  },
+  "Доступные блюда добавлены в корзину.": {
+    "en": "Available dishes added to the basket.",
+    "uz": "Mavjud taomlar savatga qo‘shildi."
+  },
+  "Промокод": {
+    "en": "Promo code",
+    "uz": "Promokod"
+  },
+  "Промокод недоступен.": {
+    "en": "The promo code is unavailable.",
+    "uz": "Promokod mavjud emas."
+  },
+  "Сумма блюд ниже минимума для промокода.": {
+    "en": "The food total is below the promo minimum.",
+    "uz": "Taomlar summasi promokod minimumidan kam."
+  },
+  "Пересчитать сумму": {
+    "en": "Recalculate total",
+    "uz": "Summani qayta hisoblash"
+  },
+  "Скидка": {
+    "en": "Discount",
+    "uz": "Chegirma"
+  },
+  "Этот вход предназначен для партнёров ресторанов.": {
+    "en": "Use this sign-in for restaurant partners.",
+    "uz": "Bu kirish restoran hamkorlari uchun."
+  },
+  "Принимать заказы": {
+    "en": "Accept orders",
+    "uz": "Buyurtmalarni qabul qilish"
+  },
+  "Открытие": {
+    "en": "Opening time",
+    "uz": "Ochilish vaqti"
+  },
+  "Закрытие": {
+    "en": "Closing time",
+    "uz": "Yopilish vaqti"
+  },
+  "Минимальная сумма блюд": {
+    "en": "Minimum food total",
+    "uz": "Taomlarning minimal summasi"
+  },
+  "Название": {
+    "en": "Name",
+    "uz": "Nomi"
+  },
+  "Описание": {
+    "en": "Description",
+    "uz": "Tavsif"
+  },
+  "Доступно для заказа": {
+    "en": "Available to order",
+    "uz": "Buyurtma uchun mavjud"
+  },
+  "Роль в наборе": {
+    "en": "Role in a meal set",
+    "uz": "To‘plamdagi roli"
+  },
+  "Число порций": {
+    "en": "Servings",
+    "uz": "Porsiyalar soni"
+  },
+  "Настройки ресторана сохранены.": {
+    "en": "Restaurant settings saved.",
+    "uz": "Restoran sozlamalari saqlandi."
+  },
+  "Вход для партнёров": {
+    "en": "Partner sign-in",
+    "uz": "Hamkorlar uchun kirish"
+  },
+  "Часы и условия работы": {
+    "en": "Hours and ordering settings",
+    "uz": "Ish vaqti va buyurtma sozlamalari"
+  },
+  "Сохранить изменения": {
+    "en": "Save changes",
+    "uz": "O‘zgarishlarni saqlash"
+  },
+  "Меню и стоп-лист": {
+    "en": "Menu and unavailable dishes",
+    "uz": "Menyu va mavjud bo‘lmagan taomlar"
+  },
+  "Добавить блюдо": {
+    "en": "Add a dish",
+    "uz": "Taom qo‘shish"
+  },
+  "В стоп-листе": {
+    "en": "Unavailable",
+    "uz": "Mavjud emas"
+  },
+  "Заказы ресторана": {
+    "en": "Restaurant orders",
+    "uz": "Restoran buyurtmalari"
+  },
+  "Заказов пока нет.": {
+    "en": "No orders yet.",
+    "uz": "Buyurtmalar hali yo‘q."
+  },
+  "Кабинет ресторана": {
+    "en": "Restaurant dashboard",
+    "uz": "Restoran kabineti"
+  },
+  "Начало периода": {
+    "en": "Start date",
+    "uz": "Davr boshi"
+  },
+  "Конец периода": {
+    "en": "End date",
+    "uz": "Davr oxiri"
+  },
+  "Начало периода должно быть раньше конца.": {
+    "en": "The start date must be on or before the end date.",
+    "uz": "Davr boshi oxiridan keyin bo‘lmasligi kerak."
+  },
+  "Аналитика заказов": {
+    "en": "Order analytics",
+    "uz": "Buyurtmalar tahlili"
+  },
+  "Операции": {
+    "en": "Operations",
+    "uz": "Operatsiyalar"
+  },
+  "Показать отчёт": {
+    "en": "Show report",
+    "uz": "Hisobotni ko‘rsatish"
+  },
+  "Создано заказов": {
+    "en": "Orders placed",
+    "uz": "Berilgan buyurtmalar"
+  },
+  "Доставлено": {
+    "en": "Delivered",
+    "uz": "Yetkazilgan"
+  },
+  "Доля доставленных заказов": {
+    "en": "Percentage of orders delivered",
+    "uz": "Yetkazilgan buyurtmalar ulushi"
+  },
+  "Выручка доставленных заказов": {
+    "en": "Delivered order revenue",
+    "uz": "Yetkazilgan buyurtmalar tushumi"
+  },
+  "Популярные блюда": {
+    "en": "Popular dishes",
+    "uz": "Ommabop taomlar"
+  },
+  "Выберите время с учётом доставки в пределах семи дней.": {
+    "en": "Choose a time within seven days, allowing for delivery.",
+    "uz": "Yetkazish vaqtini hisobga olib, yetti kun ichidagi vaqtni tanlang."
+  },
+  "Выбранное время выходит за часы работы ресторана.": {
+    "en": "The chosen time is outside restaurant hours.",
+    "uz": "Tanlangan vaqt restoran ish vaqtidan tashqarida."
+  },
+  "Доставить к указанному времени": {
+    "en": "Deliver by this time",
+    "uz": "Ko‘rsatilgan vaqtgacha yetkazish"
+  },
+  "Время Ташкента. Оставьте пустым для ближайшей доставки.": {
+    "en": "Tashkent time. Leave blank for the earliest delivery.",
+    "uz": "Toshkent vaqti. Tezroq yetkazish uchun bo‘sh qoldiring."
+  },
+  "Время приготовления предзаказа ещё не наступило.": {
+    "en": "It is too early to start preparing this preorder.",
+    "uz": "Oldindan buyurtmani tayyorlash vaqti hali kelmagan."
+  },
+  "Доставка к": {
+    "en": "Delivery by",
+    "uz": "Yetkazish vaqti"
+  },
+  "Добавки и изменения": {
+    "en": "Extras and changes",
+    "uz": "Qo‘shimchalar va o‘zgartirishlar"
+  },
+  "Комментарий к блюду": {
+    "en": "Dish instructions",
+    "uz": "Taomga izoh"
+  },
+  "Проверьте добавки и комментарий к блюду.": {
+    "en": "Check the extras and dish instructions.",
+    "uz": "Qo‘shimchalar va taom izohini tekshiring."
+  },
+  "Изменить добавки и комментарий для всех порций блюда?": {
+    "en": "Change the extras and instructions for all servings of this dish?",
+    "uz": "Taomning barcha porsiyalari uchun qo‘shimcha va izohni o‘zgartirasizmi?"
+  },
+  "Некоторые добавки недоступны. Добавьте блюдо заново.": {
+    "en": "Some extras are unavailable. Add the dish again.",
+    "uz": "Ayrim qo‘shimchalar mavjud emas. Taomni qayta qo‘shing."
+  },
+  "Уведомления по SMS": {
+    "en": "SMS notifications",
+    "uz": "SMS xabarnomalari"
+  },
+  "Уведомления в Telegram": {
+    "en": "Telegram notifications",
+    "uz": "Telegram xabarnomalari"
+  },
+  "Для Telegram администратор привязывает подтверждённый чат.": {
+    "en": "An administrator links a verified Telegram chat.",
+    "uz": "Administrator tasdiqlangan Telegram chatini ulaydi."
   }
 }

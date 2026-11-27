@@ -51,8 +51,15 @@ class CustomerLoginForm(AuthenticationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("first_name", "phone", "address")
-        labels = {"first_name": _("Имя"), "phone": _("Телефон"), "address": _("Адрес по умолчанию")}
+        fields = ("first_name", "phone", "address", "notify_sms", "notify_telegram")
+        labels = {
+            "first_name": _("Имя"), "phone": _("Телефон"), "address": _("Адрес по умолчанию"),
+            "notify_sms": _("Уведомления по SMS"), "notify_telegram": _("Уведомления в Telegram"),
+        }
+
+        help_texts = {
+            "notify_telegram": _("Для Telegram администратор привязывает подтверждённый чат."),
+        }
         widgets = {"address": forms.Textarea(attrs={"rows": 3, "maxlength": 255})}
 
     def clean_phone(self):

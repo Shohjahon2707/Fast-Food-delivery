@@ -9,6 +9,13 @@
     <form class="panel form-panel" method="post" data-submit-once>
       {% csrf_token %}
       <h2>{% translate "Контакты и доставка" %}</h2>
+      {% if addresses %}
+        <label for="saved-address">{% translate "Сохранённые адреса" %}</label>
+        <select id="saved-address" name="saved_address">
+          {% for saved in addresses %}<option value="{{ saved.pk }}">{{ saved }}</option>{% endfor %}
+        </select>
+        <button class="button secondary small" type="submit" name="action" value="address" formnovalidate>{% translate "Использовать адрес" %}</button>
+      {% endif %}
       {% include "includes/form.html" %}
       <details class="delivery-map-panel">
         <summary>Уточнить точку на карте</summary>
@@ -25,7 +32,7 @@
       {% if delivery %}<button type="submit" class="button full">
         {% translate "Подтвердить заказ" %} · {{ total|money }} {% translate "сум" %}
       </button>{% endif %}
-      <button type="submit" class="button secondary full" name="action" value="quote">{% translate "Рассчитать доставку" %}</button>
+      <button type="submit" class="button secondary full" name="action" value="quote">{% translate "Пересчитать сумму" %}</button>
     </form>
     <aside class="panel summary">
       <h2>{% translate "Ваш заказ" %}</h2><p>{{ restaurant.name }}</p>
@@ -47,6 +54,7 @@
         <strong>{% translate "Итого" %}</strong>
         <strong>{% if delivery_error %}—{% else %}{{ total|money }} {% translate "сум" %}{% endif %}</strong>
       </div>
+      {% if discount %}<p>{% translate "Скидка" %} · −{{ discount|money }} {% translate "сум" %}</p>{% endif %}
       {% if delivery %}<p>~{{ delivery.minutes }} {% translate "мин" %}</p>{% endif %}
       <p class="help-text">До начала приготовления заказ можно отменить сразу. После — отправить запрос администратору в деталях заказа.</p>
     </aside>
