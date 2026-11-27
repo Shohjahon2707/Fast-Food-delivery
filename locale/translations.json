@@ -1,4 +1,60 @@
 {
+  "Умный обед V2": {
+    "en": "Smart lunch V2",
+    "uz": "Aqlli tushlik V2"
+  },
+  "Попробовать Умный обед V2": {
+    "en": "Try Smart lunch V2",
+    "uz": "Aqlli tushlik V2 ni sinab ko‘ring"
+  },
+  "Вернуться к Умному обеду": {
+    "en": "Back to Smart lunch",
+    "uz": "Aqlli tushlikka qaytish"
+  },
+  "Бюджет с доставкой, сум": {
+    "en": "Budget including delivery, UZS",
+    "uz": "Yetkazib berish bilan byudjet, so‘m"
+  },
+  "Что исключить?": {
+    "en": "What should we exclude?",
+    "uz": "Nimani chiqarib tashlaymiz?"
+  },
+  "Укажите слова через запятую. Сверим их с названиями и описаниями блюд.": {
+    "en": "Separate words with commas. We check dish names and descriptions.",
+    "uz": "So‘zlarni vergul bilan ajrating. Ularni taom nomi va tavsifidan qidiramiz."
+  },
+  "Максимальное время доставки, мин": {
+    "en": "Maximum delivery time, min",
+    "uz": "Yetkazib berishning eng ko‘p vaqti, daqiqa"
+  },
+  "Координаты нужны для ресторанов с ограниченной зоной доставки.": {
+    "en": "Restaurants with a limited delivery area require coordinates.",
+    "uz": "Yetkazib berish hududi cheklangan restoranlar uchun koordinatalar kerak."
+  },
+  "Исправьте ошибки в форме, чтобы увидеть наборы.": {
+    "en": "Correct the form errors to see meal bundles.",
+    "uz": "To‘plamlarni ko‘rish uchun shakldagi xatolarni tuzating."
+  },
+  "Почему этот набор?": {
+    "en": "Why this bundle?",
+    "uz": "Nega aynan shu to‘plam?"
+  },
+  "Бесплатная доставка": {
+    "en": "Free delivery",
+    "uz": "Bepul yetkazib berish"
+  },
+  "Минимальное время среди показанных наборов": {
+    "en": "Fastest among the bundles shown",
+    "uz": "Ko‘rsatilgan to‘plamlar orasida eng tez yetkaziladi"
+  },
+  "Ближе всего к бюджету": {
+    "en": "Closest to your budget",
+    "uz": "Byudjetingizga eng yaqin"
+  },
+  "Добавить набор в корзину": {
+    "en": "Add bundle to cart",
+    "uz": "To‘plamni savatga qo‘shish"
+  },
   "доставка со вкусом": {
     "en": "delivery with taste",
     "uz": "mazali yetkazib berish"

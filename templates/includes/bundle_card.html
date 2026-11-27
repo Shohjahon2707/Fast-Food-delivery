@@ -1,0 +1,39 @@
+{% load food i18n %}
+<article class="lunch-result">
+  <img src="{{ bundle.lines.0.0.image_url }}" width="400" height="280" loading="lazy" alt="">
+  <div class="lunch-result-body">
+    <div class="lunch-result-meta">
+      <a href="{% url 'restaurant_detail' bundle.restaurant.pk %}">{{ bundle.restaurant.name }}</a>
+      <span>~{{ bundle.eta_minutes }} {% translate "мин" %}</span>
+    </div>
+    <ul>
+      {% for item, quantity in bundle.lines %}
+        <li>{{ quantity }} × <a href="{% url 'menu_item_detail' item.pk %}">{{ item.localized_name }}</a></li>
+      {% endfor %}
+    </ul>
+    {% if bundle.reasons %}
+      <p class="lunch-match">
+        <strong>{% translate "Почему этот набор?" %}</strong>
+        {% for reason in bundle.reasons %}
+          {% if reason == "fits_budget" %}{% translate "В пределах бюджета с доставкой" %}
+          {% elif reason == "free_delivery" %}{% translate "Бесплатная доставка" %}
+          {% elif reason == "fastest" %}{% translate "Минимальное время среди показанных наборов" %}
+          {% elif reason == "closest_to_budget" %}{% translate "Ближе всего к бюджету" %}{% endif %}{% if not forloop.last %} · {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+    <div class="lunch-result-total">
+      <div>
+        <small>{% translate "Блюда" %} {{ bundle.subtotal|money }} + {% translate "Доставка" %} {{ bundle.delivery_fee|money }} {% translate "сум" %}</small>
+        <strong>{% translate "Итого" %} {{ bundle.total|money }} {% translate "сум" %}</strong>
+      </div>
+      {% if token %}
+        <form method="post" action="{% url 'add_lunch' %}">
+          {% csrf_token %}
+          <input type="hidden" name="lunch" value="{{ token }}">
+          <button type="submit" class="button">{% translate "Добавить набор в корзину" %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</article>

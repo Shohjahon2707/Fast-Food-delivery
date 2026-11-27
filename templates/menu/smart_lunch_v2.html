@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static food i18n %}
+{% block title %}{% translate "Умный обед V2" %} — Тёпло{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/smart-lunch.css' %}">
+{% endblock %}
+{% block content %}
+  <div class="container lunch-page lunch-v2">
+    <a class="text-link" href="{% url 'smart_lunch' %}">{% translate "Вернуться к Умному обеду" %}</a>
+    <h1 class="page-title">{% translate "Умный обед V2" %}</h1>
+    <p class="lead">{% translate "Готовые наборы из одного ресторана. Доставка входит в бюджет." %}</p>
+    <div class="lunch-layout">
+      <form method="post" class="panel lunch-filter">
+        {% csrf_token %}
+        <h2>{% translate "Подберите свой обед" %}</h2>
+        {{ form.non_field_errors }}
+        <div class="lunch-fields">
+          {% for field in form.visible_fields %}
+            {% if field.name != "latitude" and field.name != "longitude" and field.name != "allergens" %}
+              <div{% if field.name == "exclude" or field.name == "max_minutes" %} class="lunch-field-wide"{% endif %}>
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<p class="help-text" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+                {{ field.errors }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <details{% if form.allergens.value or form.allergens.errors %} open{% endif %}>
+          <summary>{% translate "Исключить аллергены" %}</summary>
+          <p class="help-text">{% translate "Покажем только блюда, для которых известны аллергены." %}</p>
+          {{ form.allergens.errors }}{{ form.allergens }}
+        </details>
+        <details{% if form.latitude.errors or form.longitude.errors or form.non_field_errors %} open{% endif %}>
+          <summary>{% translate "Точка доставки" %}</summary>
+          <p class="help-text">{% translate "Координаты нужны для ресторанов с ограниченной зоной доставки." %}</p>
+          <div class="lunch-fields">
+            <div>{{ form.latitude.label_tag }}{{ form.latitude }}{{ form.latitude.errors }}</div>
+            <div>{{ form.longitude.label_tag }}{{ form.longitude }}{{ form.longitude.errors }}</div>
+          </div>
+        </details>
+        <button type="submit" class="button full">{% translate "Подобрать обед" %}</button>
+      </form>
+      <section class="lunch-results" aria-labelledby="v2-results">
+        <h2 id="v2-results">{% translate "Ваши варианты" %}</h2>
+        {% for bundle, token in lunches %}
+          {% include "includes/bundle_card.html" with bundle=bundle token=token csrf_token=csrf_token only %}
+        {% empty %}
+          {% if searched %}
+            <div class="lunch-empty">
+              <h3>{% translate "Подходящих наборов нет" %}</h3>
+              {% if closest %}
+                <p>{% translate "Ближайший вариант" %} · <strong>{% translate "Не хватает" %} {{ closest.shortfall|money }} {% translate "сум" %}</strong></p>
+              {% else %}
+                <p>{% translate "Проверьте точку доставки, время или предпочтения." %}</p>
+              {% endif %}
+            </div>
+            {% if closest %}{% include "includes/bundle_card.html" with bundle=closest only %}{% endif %}
+          {% elif form.is_bound %}
+            <p class="lunch-empty">{% translate "Исправьте ошибки в форме, чтобы увидеть наборы." %}</p>
+          {% else %}
+            <p class="lunch-empty">{% translate "Укажите бюджет и число человек, чтобы увидеть наборы." %}</p>
+          {% endif %}
+        {% endfor %}
+      </section>
+    </div>
+  </div>
+{% endblock %}

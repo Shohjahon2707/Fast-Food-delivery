@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
+from apps.menu.management.lunch_v2_demo import LUNCH_V2_DISHES
 from apps.menu.models import Category, MenuItem
 from apps.orders.models import Restaurant
 
@@ -477,24 +478,30 @@ class Command(BaseCommand):
             )
             restaurants.append(restaurant)
         added = 0
-        for index, category_name, name, price, weight, image, veg, description in DISHES:
+        dishes = [
+            (*dish, *DISH_TRANSLATIONS.get(dish[2], ("", "")), None, None) for dish in DISHES
+        ] + LUNCH_V2_DISHES
+        for (
+            index, category_name, name, price, weight, image, veg, description, en, uz, halal, allergens,
+        ) in dishes:
             category, _ = Category.objects.get_or_create(name=category_name)
             role = {
                 "Салаты": "side", "Закуски": "side", "Гарниры": "side",
                 "Напитки": "drink", "Десерты": "dessert",
             }.get(category_name, "main")
-            name_en, name_uz = DISH_TRANSLATIONS.get(name, ("", ""))
             item, created = MenuItem.objects.get_or_create(
                 restaurant=restaurants[index],
                 name=name,
                 defaults={
                     "category": category,
-                    "name_en": name_en,
-                    "name_uz": name_uz,
+                    "name_en": en,
+                    "name_uz": uz,
                     "price": price,
                     "weight": weight,
                     "seed_image": "food/" + image,
                     "is_vegetarian": veg,
+                    "is_halal": halal,
+                    "allergens": allergens,
                     "description": description,
                     "lunch_role": role,
                 },
