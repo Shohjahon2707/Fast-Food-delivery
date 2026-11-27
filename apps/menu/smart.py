@@ -2,6 +2,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
 from itertools import product
+from re import split
+from unicodedata import normalize
 
 from django.core import signing
 from django.core.exceptions import ValidationError
@@ -13,6 +15,7 @@ from .models import MenuItem
 
 TOKEN_SALT = "teplo-smart-lunch"
 ROLE_LIMIT = 5
+EXCLUSION_FIELDS = ("name", "name_uz", "name_en", "description", "description_uz", "description_en")
 
 
 @dataclass(frozen=True)
@@ -60,9 +63,20 @@ def matches_preferences(item, criteria):
     if diet == "mild" and item.spice_level != 0:
         return False
     exclusions = set(criteria.get("allergens", ()))
-    return not exclusions or (
-        item.allergens is not None and not exclusions.intersection(item.allergens)
-    )
+    if exclusions and (item.allergens is None or exclusions.intersection(item.allergens)):
+        return False
+    terms = exclusion_terms(criteria.get("exclude", ""))
+    return not terms or matches_text((getattr(item, field) for field in EXCLUSION_FIELDS), terms)
+
+
+def exclusion_terms(text):
+    return tuple(normalize("NFKC", part.strip()).casefold() for part in split(r"[,;\n]", text)
+                 if part.strip())
+
+
+def matches_text(fields, exclusions):
+    searchable = normalize("NFKC", "\n".join(fields)).casefold()
+    return not any(term in searchable for term in exclusions)
 
 
 def recommend(criteria):

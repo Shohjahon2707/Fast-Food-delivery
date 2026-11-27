@@ -37,11 +37,17 @@ msgstr "Meat free"
 msgid "Белки"
 msgstr "Protein"
 
+msgid "Бесплатная доставка"
+msgstr "Free delivery"
+
 msgid "Бесплатно"
 msgstr "Free"
 
 msgid "Ближайший вариант"
 msgstr "Closest option"
+
+msgid "Ближе всего к бюджету"
+msgstr "Closest to your budget"
 
 msgid "Блюда"
 msgstr "Dishes"
@@ -54,6 +60,9 @@ msgstr "Dish added to the basket."
 
 msgid "Бургеры и фастфуд"
 msgstr "Burgers and fast food"
+
+msgid "Бюджет с доставкой, сум"
+msgstr "Budget including delivery, UZS"
 
 msgid "В избранное"
 msgstr "Add to favorites"
@@ -108,6 +117,9 @@ msgstr "Your delicious stories"
 
 msgid "Вернуться в меню"
 msgstr "Back to menu"
+
+msgid "Вернуться к Умному обеду"
+msgstr "Back to Smart lunch"
 
 msgid "Весь бюджет, сум"
 msgstr "Total budget, UZS"
@@ -286,6 +298,9 @@ msgstr "Add to cart"
 msgid "Добавить набор"
 msgstr "Add set"
 
+msgid "Добавить набор в корзину"
+msgstr "Add bundle to cart"
+
 msgid "Добавки и изменения"
 msgstr "Extras and changes"
 
@@ -400,6 +415,9 @@ msgstr "Exclude allergens"
 msgid "Использовать адрес"
 msgstr "Use address"
 
+msgid "Исправьте ошибки в форме, чтобы увидеть наборы."
+msgstr "Correct the form errors to see meal bundles."
+
 msgid "История заказа"
 msgstr "Order history"
 
@@ -457,6 +475,9 @@ msgstr "Contact and delivery"
 msgid "Контакты, адрес и пожелания к заказу."
 msgstr "Contact details, address and order notes."
 
+msgid "Координаты нужны для ресторанов с ограниченной зоной доставки."
+msgstr "Restaurants with a limited delivery area require coordinates."
+
 msgid "Корзина"
 msgstr "Cart"
 
@@ -505,6 +526,9 @@ msgstr "LESS SEARCHING. MORE FLAVOUR."
 msgid "МЕНЮ ВСЕГО ГОРОДА"
 msgstr "THE CITY'S MENU"
 
+msgid "Максимальное время доставки, мин"
+msgstr "Maximum delivery time, min"
+
 msgid "Маргарита"
 msgstr "Margherita"
 
@@ -522,6 +546,9 @@ msgstr "Minimum food total"
 
 msgid "Минимальная сумма блюд в этом ресторане — %(amount)s сум."
 msgstr "This restaurant has a food minimum of %(amount)s UZS."
+
+msgid "Минимальное время среди показанных наборов"
+msgstr "Fastest among the bundles shown"
 
 msgid "Можно выбрать от 1 до 30 порций."
 msgstr "You can choose 1 to 30 servings."
@@ -778,6 +805,9 @@ msgstr "View all"
 msgid "Показать отчёт"
 msgstr "Show report"
 
+msgid "Попробовать Умный обед V2"
+msgstr "Try Smart lunch V2"
+
 msgid "Попробуйте другое название."
 msgstr "Try another name."
 
@@ -786,6 +816,9 @@ msgstr "Popular dishes"
 
 msgid "Поставьте оценки от 1 до 5."
 msgstr "Choose ratings between 1 and 5."
+
+msgid "Почему этот набор?"
+msgstr "Why this bundle?"
 
 msgid "Почти"
 msgstr "Almost"
@@ -1030,6 +1063,9 @@ msgstr "Enter opening and closing times."
 msgid "Укажите обе координаты доставки."
 msgstr "Enter both delivery coordinates."
 
+msgid "Укажите слова через запятую. Сверим их с названиями и описаниями блюд."
+msgstr "Separate words with commas. We check dish names and descriptions."
+
 msgid "Укажите список кодов аллергенов."
 msgstr "Enter a list of allergen codes."
 
@@ -1047,6 +1083,9 @@ msgstr "Medium spicy"
 
 msgid "Умный обед"
 msgstr "Smart lunch"
+
+msgid "Умный обед V2"
+msgstr "Smart lunch V2"
 
 msgid "Условия изменились. Подберите обед ещё раз."
 msgstr "The options changed. Search for lunch again."
@@ -1083,6 +1122,9 @@ msgstr "Servings"
 
 msgid "Что вам по вкусу?"
 msgstr "What are you craving?"
+
+msgid "Что исключить?"
+msgstr "What should we exclude?"
 
 msgid "Широта"
 msgstr "Latitude"

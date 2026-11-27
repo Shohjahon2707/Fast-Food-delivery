@@ -3,6 +3,7 @@
 .lunch-hero > div { padding: clamp(1.5rem, 5vw, 4.5rem); align-self: center; }
 .lunch-hero h1 { margin: 0; color: #fff; font-size: clamp(2.3rem, 6vw, 5rem); line-height: 1; }
 .lunch-hero p { max-width: 28rem; margin: 1.15rem 0 0; color: #ede3ff; }
+.lunch-hero .button { margin-top: 1rem; white-space: normal; }
 .lunch-hero img { width: 100%; height: 100%; min-height: 12rem; object-fit: cover; }
 .lunch-layout { display: grid; grid-template-columns: minmax(240px, 335px) minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.5rem); margin-top: 2rem; align-items: start; }
 .lunch-filter { padding: 1.25rem; }
@@ -26,6 +27,9 @@
 .lunch-result-total { border-top: 1px solid #ded3ee; padding-top: .75rem; }
 .lunch-result-total strong, .lunch-result-total small { display: block; }
 .lunch-result-total strong { font-size: 1.15rem; }
+.lunch-v2 .lunch-field-wide { grid-column: 1 / -1; }
+.lunch-v2 .lunch-filter, .lunch-v2 .lunch-result-body { min-width: 0; overflow-wrap: anywhere; }
+.lunch-v2 .lunch-result-total .button { white-space: normal; }
 @media (max-width: 740px) {
   .lunch-layout { grid-template-columns: 1fr; }
   .lunch-hero { grid-template-columns: 1.4fr 1fr; }

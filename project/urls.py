@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
 from apps.common.health import readiness
-from apps.menu.views import home, restaurant_detail, smart_lunch
+from apps.menu.views import home, restaurant_detail, smart_lunch, smart_lunch_v2
 from apps.orders import analytics, kitchen, operations, partner
 
 admin.site.site_header = "Тёпло · управление"
@@ -24,6 +24,7 @@ urlpatterns = [
     path("", home, name="home"),
     path("restaurants/<int:pk>/", restaurant_detail, name="restaurant_detail"),
     path("smart-lunch/", smart_lunch, name="smart_lunch"),
+    path("smart-lunch/v2/", smart_lunch_v2, name="smart_lunch_v2"),
     path("i18n/", include("django.conf.urls.i18n")),
     path("menu/", include("apps.menu.urls")),
     path("cart/", include("apps.cart.urls")),

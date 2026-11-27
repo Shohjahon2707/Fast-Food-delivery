@@ -10,7 +10,8 @@ from .forms import MealFilterForm
 from .models import Category, MenuItem
 from .search import search
 from .smart import recommend, sign_lunch
-from .smart_forms import ALLERGEN_CHOICES, SmartLunchForm
+from .smart_forms import ALLERGEN_CHOICES, SmartLunchForm, SmartLunchV2Form
+from .smart_lunch import build_bundles
 from .structured import restaurant_schema
 
 
@@ -133,6 +134,34 @@ def smart_lunch(request):
             "form": form, "lunches": lunches, "closest": closest,
             "searched": submitted and form.is_valid(),
         },
+    )
+
+
+def smart_lunch_v2(request):
+    redirect_response = portal_redirect(request)
+    if redirect_response:
+        return redirect_response
+    point = saved_point(request)
+    initial = {"latitude": point[0], "longitude": point[1]} if point else {}
+    is_post = request.method == "POST"
+    params = request.POST if is_post else request.GET
+    submitted = is_post or bool(params.keys() & SmartLunchV2Form.base_fields.keys())
+    form = SmartLunchV2Form(params if submitted else None, initial=initial)
+    lunches, closest = [], None
+    searched = form.is_valid()
+    if searched:
+        criteria = {
+            key: form.cleaned_data[key]
+            for key in ("budget", "people", "diet", "exclude", "max_minutes", "allergens")
+        }
+        criteria["point"] = get_point(form.cleaned_data)
+        if not is_post and "latitude" not in params and "longitude" not in params:
+            criteria["point"] = point
+        bundles, closest = build_bundles(**criteria)
+        lunches = [(bundle, sign_lunch(bundle, criteria)) for bundle in bundles]
+    return render(
+        request, "menu/smart_lunch_v2.html",
+        {"form": form, "lunches": lunches, "closest": closest, "searched": searched},
     )
 
 

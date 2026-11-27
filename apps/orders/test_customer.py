@@ -11,7 +11,15 @@ from apps.cart.models import Cart, CartItem
 from apps.menu.models import Category, DishOption, MenuItem
 from apps.users.models import SavedAddress
 
-from .models import DishReview, Order, OrderItem, OrderReview, Promotion, Restaurant, StatusNotification
+from .models import (
+    DishReview,
+    Order,
+    OrderItem,
+    OrderReview,
+    Promotion,
+    Restaurant,
+    StatusNotification,
+)
 from .schedule import preparation_start
 from .services import event
 
