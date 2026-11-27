@@ -361,7 +361,98 @@ DISHES = [
         True,
         "Лимон, мята и прохладная газированная вода.",
     ),
+    (
+        0,
+        "Выпечка",
+        "Самса с говядиной",
+        18000,
+        "160 г",
+        "demo/beef-samsa.webp",
+        False,
+        "Слоёное тесто, рубленая говядина и лук.",
+    ),
+    (
+        0,
+        "Выпечка",
+        "Самса с тыквой",
+        14000,
+        "150 г",
+        "demo/pumpkin-samsa.webp",
+        True,
+        "Слоёная самса с тыквой, луком и зирой.",
+    ),
+    (
+        3,
+        "Завтраки",
+        "Сырники со сметаной",
+        34000,
+        "200 г",
+        "demo/syrniki.webp",
+        True,
+        "Творожные сырники со сметаной и ягодами.",
+    ),
+    (
+        3,
+        "Завтраки",
+        "Омлет с томатами",
+        29000,
+        "220 г",
+        "demo/tomato-omelette.webp",
+        True,
+        "Омлет с томатами, зеленью и тостом.",
+    ),
+    (
+        0,
+        "Блюда на гриле",
+        "Шашлык из говядины",
+        51000,
+        "250 г",
+        "demo/beef-shashlik.webp",
+        False,
+        "Говядина на углях с маринованным луком.",
+    ),
+    (
+        3,
+        "Блюда на гриле",
+        "Овощи на гриле",
+        32000,
+        "260 г",
+        "demo/grilled-vegetables.webp",
+        True,
+        "Цукини, баклажан и сладкий перец с зеленью.",
+    ),
+    (
+        0,
+        "Гарниры",
+        "Картофель по-деревенски",
+        19000,
+        "180 г",
+        "demo/potato-wedges.webp",
+        True,
+        "Запечённые картофельные дольки с паприкой.",
+    ),
+    (
+        2,
+        "Гарниры",
+        "Запечённая цветная капуста",
+        21000,
+        "180 г",
+        "demo/roasted-cauliflower.webp",
+        True,
+        "Цветная капуста с оливковым маслом и зеленью.",
+    ),
 ]
+
+DISH_TRANSLATIONS = {
+    "Самса с говядиной": ("Beef samsa", "Mol go‘shtli somsa"),
+    "Самса с тыквой": ("Pumpkin samsa", "Qovoqli somsa"),
+    "Сырники со сметаной": ("Syrniki with sour cream", "Smetanali sirniklar"),
+    "Омлет с томатами": ("Tomato omelette", "Pomidorli omlet"),
+    "Шашлык из говядины": ("Beef shashlik", "Mol go‘shtli shashlik"),
+    "Овощи на гриле": ("Grilled vegetables", "Grilda pishirilgan sabzavotlar"),
+    "Картофель по-деревенски": ("Roasted potato wedges", "Pechda pishirilgan kartoshka"),
+    "Запечённая цветная капуста": ("Roasted cauliflower", "Pechda pishirilgan gulkaram"),
+}
 
 
 class Command(BaseCommand):
@@ -392,11 +483,14 @@ class Command(BaseCommand):
                 "Салаты": "side", "Закуски": "side", "Гарниры": "side",
                 "Напитки": "drink", "Десерты": "dessert",
             }.get(category_name, "main")
+            name_en, name_uz = DISH_TRANSLATIONS.get(name, ("", ""))
             item, created = MenuItem.objects.get_or_create(
                 restaurant=restaurants[index],
                 name=name,
                 defaults={
                     "category": category,
+                    "name_en": name_en,
+                    "name_uz": name_uz,
                     "price": price,
                     "weight": weight,
                     "seed_image": "food/" + image,
@@ -414,3 +508,4 @@ class Command(BaseCommand):
                 f"Demo restaurants: 6; new dishes: {added}. Existing data preserved."
             )
         )
+

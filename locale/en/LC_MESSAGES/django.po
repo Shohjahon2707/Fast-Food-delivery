@@ -46,6 +46,9 @@ msgstr "Closest option"
 msgid "Блюда"
 msgstr "Dishes"
 
+msgid "Блюда на гриле"
+msgstr "Grilled dishes"
+
 msgid "Блюдо в корзине."
 msgstr "Dish added to the basket."
 
@@ -184,11 +187,17 @@ msgstr "Choose a restaurant"
 msgid "Выйти"
 msgstr "Log out"
 
+msgid "Выпечка"
+msgstr "Baked goods"
+
 msgid "Выручка доставленных заказов"
 msgstr "Delivered order revenue"
 
 msgid "Гарнир или салат"
 msgstr "Side or salad"
+
+msgid "Гарниры"
+msgstr "Side dishes"
 
 msgid "Глютен"
 msgstr "Gluten"
@@ -336,6 +345,9 @@ msgstr "Get comfortable"
 
 msgid "Жиры"
 msgstr "Fat"
+
+msgid "Завтраки"
+msgstr "Breakfast"
 
 msgid "Заказ"
 msgstr "Order"

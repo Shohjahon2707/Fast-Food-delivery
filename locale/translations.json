@@ -1526,5 +1526,21 @@
   "Для Telegram администратор привязывает подтверждённый чат.": {
     "en": "An administrator links a verified Telegram chat.",
     "uz": "Administrator tasdiqlangan Telegram chatini ulaydi."
+  },
+  "Выпечка": {
+    "en": "Baked goods",
+    "uz": "Pishiriqlar"
+  },
+  "Завтраки": {
+    "en": "Breakfast",
+    "uz": "Nonushta"
+  },
+  "Блюда на гриле": {
+    "en": "Grilled dishes",
+    "uz": "Gril taomlari"
+  },
+  "Гарниры": {
+    "en": "Side dishes",
+    "uz": "Garnirlar"
   }
 }

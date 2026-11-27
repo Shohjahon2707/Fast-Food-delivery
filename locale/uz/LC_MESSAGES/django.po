@@ -46,6 +46,9 @@ msgstr "Eng yaqin variant"
 msgid "Блюда"
 msgstr "Taomlar"
 
+msgid "Блюда на гриле"
+msgstr "Gril taomlari"
+
 msgid "Блюдо в корзине."
 msgstr "Taom savatga qo‘shildi."
 
@@ -184,11 +187,17 @@ msgstr "Restoran tanlash"
 msgid "Выйти"
 msgstr "Chiqish"
 
+msgid "Выпечка"
+msgstr "Pishiriqlar"
+
 msgid "Выручка доставленных заказов"
 msgstr "Yetkazilgan buyurtmalar tushumi"
 
 msgid "Гарнир или салат"
 msgstr "Garnir yoki salat"
+
+msgid "Гарниры"
+msgstr "Garnirlar"
 
 msgid "Глютен"
 msgstr "Glyuten"
@@ -336,6 +345,9 @@ msgstr "Qulay kuting"
 
 msgid "Жиры"
 msgstr "Yog‘"
+
+msgid "Завтраки"
+msgstr "Nonushta"
 
 msgid "Заказ"
 msgstr "Buyurtma"
